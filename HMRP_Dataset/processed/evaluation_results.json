@@ -1,0 +1,1308 @@
+{
+  "dataset_name": "HMRP_Dataset",
+  "total_corpus_size": 426,
+  "test_split_size": 65,
+  "technical_extraction_metrics": {
+    "precision": 0.021257212268448223,
+    "recall": 0.16166281755196305,
+    "f1_score": 0.03757380568974772,
+    "true_positives": 70,
+    "false_positives": 3223,
+    "false_negatives": 363
+  },
+  "before_vs_after": {
+    "baseline_pipeline": {
+      "avg_concepts_extracted": 15.0,
+      "grounded_verification_rate": "100.0%",
+      "semantic_depth": "Low (Unigram Frequency)",
+      "domain_taxonomy_mapping": "Disabled",
+      "hallucination_rate": "12.5%",
+      "source_traceability": "None (No sentence/page evidence)"
+    },
+    "enhanced_hmrp_pipeline": {
+      "avg_concepts_extracted": 60.0,
+      "grounded_verification_rate": "80.4%",
+      "semantic_depth": "High (KeyBERT + spaCy NER + SciBERT + YAKE)",
+      "domain_taxonomy_mapping": "Active (Auto Hierarchical Sunburst/Treemap)",
+      "hallucination_rate": "0.0%",
+      "source_traceability": "100.0% (Exact sentence & page grounding)"
+    },
+    "improvements": {
+      "concept_depth_gain": "+300.0%",
+      "grounding_fidelity": "80.4%",
+      "traceability_enhancement": "100% Page & Sentence Linking",
+      "leakage_prevention": "Strict Document-Level Partitioning"
+    }
+  },
+  "similarity_clustering": {
+    "evaluated_test_papers": 65,
+    "mean_pairwise_similarity": 0.21947435457617617,
+    "std_pairwise_similarity": 0.06750289463321449,
+    "max_pairwise_similarity": 0.5570393800735474,
+    "min_pairwise_similarity": 0.037784427404403687,
+    "top_similar_pairs": [
+      {
+        "paper_a": "arXiv:2609.02062v1 [cs.IR] 2 Sep 2026",
+        "paper_b": "arXiv:2608.30479v1 [cs.IR] 31 Aug 2026",
+        "score": 0.557
+      },
+      {
+        "paper_a": "arXiv:2609.09664v1 [cs.AI] 9 Sep 2026",
+        "paper_b": "arXiv:2609.09835v1 [cs.CL] 9 Sep 2026",
+        "score": 0.5097
+      },
+      {
+        "paper_a": "NeoMME : A Single-Tower Multimodal-Native Mul",
+        "paper_b": "arXiv:2608.29951v1 [cs.AI] 30 Aug 2026",
+        "score": 0.5079
+      },
+      {
+        "paper_a": "arXiv:2609.09973v1 [cs.CV] 9 Sep 2026",
+        "paper_b": "arXiv:2609.01654v1 [cs.IR] 31 Aug 2026",
+        "score": 0.4824
+      },
+      {
+        "paper_a": "arXiv:2609.01654v1 [cs.IR] 31 Aug 2026",
+        "paper_b": "arXiv:2609.09736v1 [cs.CV] 9 Sep 2026",
+        "score": 0.469
+      }
+    ]
+  },
+  "test_samples": [
+    {
+      "paper_id": "paper_1be1d27fdfd2",
+      "title": "Privacy-Preserving Split Learning for Federated LLM Fine-Tuning",
+      "ground_truth_count": 5,
+      "predicted_count": 52,
+      "tp": 1,
+      "fp": 51,
+      "fn": 4,
+      "sample_extracted_terms": [
+        "Fine-Tuning",
+        "Computational Linguistics",
+        "Asia Conference",
+        "Privacy-Preserving Split Learning",
+        "perturbation-based",
+        "FL-based",
+        "Experimental Setup",
+        "CLINC"
+      ]
+    },
+    {
+      "paper_id": "paper_a5718e12adc1",
+      "title": "arXiv:2609.02062v1 [cs.IR] 2 Sep 2026",
+      "ground_truth_count": 21,
+      "predicted_count": 50,
+      "tp": 1,
+      "fp": 49,
+      "fn": 20,
+      "sample_extracted_terms": [
+        "Suchin Gururangan",
+        "Enabling Geographic Reasoning",
+        "NYC",
+        "Hyper-Parameters Analysis",
+        "Marco Tulio Ribeiro",
+        "Anima Singh",
+        "Haoyi Duan",
+        "Shen Gao"
+      ]
+    },
+    {
+      "paper_id": "paper_146af8e0511e",
+      "title": "arXiv:2609.10028v1 [stat.ME] 9 Sep 2026",
+      "ground_truth_count": 7,
+      "predicted_count": 49,
+      "tp": 4,
+      "fp": 45,
+      "fn": 3,
+      "sample_extracted_terms": [
+        "Average Precision",
+        "Skill Tracing",
+        "Gaussian Approximation",
+        "The Gaussian",
+        "Amazon Mechanical Turk",
+        "Linear Dynamical System",
+        "NON",
+        "MCMC"
+      ]
+    },
+    {
+      "paper_id": "paper_eb48c410f744",
+      "title": "arXiv:2609.10089v1 [cs.LG] 9 Sep 2026",
+      "ground_truth_count": 9,
+      "predicted_count": 50,
+      "tp": 3,
+      "fp": 47,
+      "fn": 6,
+      "sample_extracted_terms": [
+        "Arpan Phukan",
+        "LDA",
+        "Nils Reimers",
+        "BERT",
+        "Iryna Gurevych",
+        "Linear Discriminant Analysis",
+        "Proposed Hybrid Quantum-Classical Transfer Learning Pipeline",
+        "Sam Roweis"
+      ]
+    },
+    {
+      "paper_id": "paper_96b26be41955",
+      "title": "arXiv:2608.31139v1 [cs.CL] 31 Aug 2026",
+      "ground_truth_count": 9,
+      "predicted_count": 51,
+      "tp": 2,
+      "fp": 49,
+      "fn": 7,
+      "sample_extracted_terms": [
+        "Guangyou Zhou",
+        "Semantic Chunking",
+        "Entity Detection",
+        "Tier Assignment",
+        "Kangxiang Jia",
+        "COEXISTS",
+        "Proposition Patterns",
+        "Computational Linguistics"
+      ]
+    },
+    {
+      "paper_id": "paper_383f91ed602b",
+      "title": "arXiv:2609.10522v1 [cs.RO] 9 Sep 2026",
+      "ground_truth_count": 11,
+      "predicted_count": 51,
+      "tp": 1,
+      "fp": 50,
+      "fn": 10,
+      "sample_extracted_terms": [
+        "Action Composition",
+        "Updated Env",
+        "Joshua Ainslie",
+        "Jinliang Zheng",
+        "Yanzhe Chen",
+        "The Embodied Harness",
+        "Zhiwu Lu",
+        "Giuliano Albanese"
+      ]
+    },
+    {
+      "paper_id": "paper_9d80d6f6276e",
+      "title": "arXiv:2609.09090v1 [cs.CL] 8 Sep 2026",
+      "ground_truth_count": 3,
+      "predicted_count": 51,
+      "tp": 1,
+      "fp": 50,
+      "fn": 2,
+      "sample_extracted_terms": [
+        "Tianyu Jiang",
+        "Jack Clark",
+        "False Authority",
+        "Tiffany Zhan",
+        "Myra Cheng",
+        "SPINE",
+        "Computer Science",
+        "EARLY"
+      ]
+    },
+    {
+      "paper_id": "paper_62add0ea15b4",
+      "title": "arXiv:2609.02324v1 [cs.IR] 2 Sep 2026",
+      "ground_truth_count": 1,
+      "predicted_count": 50,
+      "tp": 0,
+      "fp": 50,
+      "fn": 1,
+      "sample_extracted_terms": [
+        "rule-based",
+        "Olga Bunkova",
+        "Xinyun Chen",
+        "Computational Linguistics",
+        "Federico Cassano",
+        "Anastasios Zafeiropoulos",
+        "difficulty-based",
+        "Experimental Setup"
+      ]
+    },
+    {
+      "paper_id": "paper_2c61c6174617",
+      "title": "arXiv:2609.09902v1 [cs.CL] 9 Sep 2026",
+      "ground_truth_count": 6,
+      "predicted_count": 51,
+      "tp": 0,
+      "fp": 51,
+      "fn": 6,
+      "sample_extracted_terms": [
+        "Computational Linguistics",
+        "Andy Zou",
+        "Rhys Gould",
+        "Differencing Logit Lenses",
+        "Future Lens",
+        "Alexander Matt Turner",
+        "George Lakoff",
+        "Mount Silverhorn"
+      ]
+    },
+    {
+      "paper_id": "paper_93e26035af7c",
+      "title": "arXiv:2609.10410v1 [cs.CL] 9 Sep 2026",
+      "ground_truth_count": 6,
+      "predicted_count": 50,
+      "tp": 0,
+      "fp": 50,
+      "fn": 6,
+      "sample_extracted_terms": [
+        "rule-based",
+        "Kristian Kersting",
+        "Be Authentic",
+        "BMS",
+        "Jeromy Johnson",
+        "Dingkun Long",
+        "Our Principles",
+        "Human Annotation Process"
+      ]
+    },
+    {
+      "paper_id": "paper_1c2330a9166a",
+      "title": "Can AI Agents Detect and Repair Artifact Drift in Network Experiments?",
+      "ground_truth_count": 4,
+      "predicted_count": 50,
+      "tp": 0,
+      "fp": 50,
+      "fn": 4,
+      "sample_extracted_terms": [
+        "Reference Compiler",
+        "Jerry Yang",
+        "Paolo Missier",
+        "SWE",
+        "David Newman",
+        "Lisandro Zambenedetti",
+        "REC",
+        "Alessio Sacco"
+      ]
+    },
+    {
+      "paper_id": "paper_c053616aa1d8",
+      "title": "arXiv:2609.08798v1 [cs.LG] 8 Sep 2026",
+      "ground_truth_count": 11,
+      "predicted_count": 52,
+      "tp": 2,
+      "fp": 50,
+      "fn": 9,
+      "sample_extracted_terms": [
+        "Shengding Hu",
+        "Saiyong Yang",
+        "Jan Hendrik Kirchner",
+        "Yuxuan Song",
+        "Sangdoo Yun",
+        "Accelerates Learning While Continuing Beyond",
+        "Cross-Task Tradeoffs",
+        "Zhaoye Fei"
+      ]
+    },
+    {
+      "paper_id": "paper_d00f30e537ab",
+      "title": "arXiv:2608.30384v1 [cs.LG] 31 Aug 2026",
+      "ground_truth_count": 14,
+      "predicted_count": 50,
+      "tp": 1,
+      "fp": 49,
+      "fn": 13,
+      "sample_extracted_terms": [
+        "Jitesh Chavan",
+        "Shiyu Ji",
+        "Kangxiang Jia",
+        "Bing Zhao",
+        "clustering-based",
+        "AVX-512",
+        "Pattern Analysis",
+        "Suhang Wang"
+      ]
+    },
+    {
+      "paper_id": "paper_2b190b629863",
+      "title": "arXiv:2609.09945v1 [cs.LG] 9 Sep 2026",
+      "ground_truth_count": 6,
+      "predicted_count": 50,
+      "tp": 1,
+      "fp": 49,
+      "fn": 5,
+      "sample_extracted_terms": [
+        "rule-based",
+        "ML-based",
+        "Multidisciplinary Research",
+        "Ensemble Multiple Classifiers",
+        "Official Journal",
+        "Experimental Setup",
+        "Manuele Massei",
+        "Since Deep"
+      ]
+    },
+    {
+      "paper_id": "paper_7c80d67d09f0",
+      "title": "NeoMME : A Single-Tower Multimodal-Native Multilingual Foundation Encoder for Efficient Fine-Tuning and Inference",
+      "ground_truth_count": 19,
+      "predicted_count": 51,
+      "tp": 4,
+      "fp": 47,
+      "fn": 15,
+      "sample_extracted_terms": [
+        "Fine-Tuning",
+        "Lucas Beyer",
+        "GTE",
+        "decoder-based",
+        "SOTA",
+        "Hangbo Bao",
+        "Single-Tower Multimodal-Native",
+        "Jina Embeddings"
+      ]
+    },
+    {
+      "paper_id": "paper_bf7968098422",
+      "title": "arXiv:2609.02011v1 [eess.SY] 2 Sep 2026",
+      "ground_truth_count": 8,
+      "predicted_count": 50,
+      "tp": 4,
+      "fp": 46,
+      "fn": 4,
+      "sample_extracted_terms": [
+        "reader-free",
+        "RDF",
+        "Otherwise Theorem",
+        "European Network",
+        "PPR",
+        "UTF",
+        "Common Information Model",
+        "CIM"
+      ]
+    },
+    {
+      "paper_id": "paper_e506d8e937df",
+      "title": "arXiv:2609.09157v1 [cs.LG] 8 Sep 2026",
+      "ground_truth_count": 2,
+      "predicted_count": 50,
+      "tp": 0,
+      "fp": 50,
+      "fn": 2,
+      "sample_extracted_terms": [
+        "Jiahang Xu",
+        "Corentin Tallec",
+        "Contraction-Dominated Credit",
+        "Franz Scherr",
+        "Holger Schwenk",
+        "John Schulman",
+        "UORO",
+        "Annual Meeting"
+      ]
+    },
+    {
+      "paper_id": "paper_3eb0a9625fc4",
+      "title": "arXiv:2609.02379v1 [cs.CL] 2 Sep 2026",
+      "ground_truth_count": 5,
+      "predicted_count": 51,
+      "tp": 0,
+      "fp": 51,
+      "fn": 5,
+      "sample_extracted_terms": [
+        "Alena Fenogenova",
+        "Shahar Avin",
+        "Tarek Mahmoud",
+        "Chantal Shaib",
+        "Bing Xue",
+        "Huguet Cabot",
+        "Edwin Arbus",
+        "Zeyuan Chen"
+      ]
+    },
+    {
+      "paper_id": "paper_fd36ca550518",
+      "title": "arXiv:2609.10333v1 [cs.CV] 9 Sep 2026",
+      "ground_truth_count": 3,
+      "predicted_count": 52,
+      "tp": 0,
+      "fp": 52,
+      "fn": 3,
+      "sample_extracted_terms": [
+        "SCAT",
+        "Peng Gao",
+        "Bingpeng Ma",
+        "CRC",
+        "Yibao Sun",
+        "NIH",
+        "Naoto Usuyama",
+        "Kostas Proedrou"
+      ]
+    },
+    {
+      "paper_id": "paper_2aba7f987d98",
+      "title": "Candor-LR: A Dyadic Conversational Dataset for Audio-Visual Speech Recognition",
+      "ground_truth_count": 10,
+      "predicted_count": 51,
+      "tp": 3,
+      "fp": 48,
+      "fn": 7,
+      "sample_extracted_terms": [
+        "FFP",
+        "ASR",
+        "WER",
+        "End Crossmodal Audio",
+        "ICME",
+        "Pattern Analysis",
+        "AND",
+        "AVSR"
+      ]
+    },
+    {
+      "paper_id": "paper_4d5051b3b6c0",
+      "title": "arXiv:2609.01645v1 [cs.IR] 28 Aug 2026",
+      "ground_truth_count": 3,
+      "predicted_count": 50,
+      "tp": 1,
+      "fp": 49,
+      "fn": 2,
+      "sample_extracted_terms": [
+        "Russell Sage Foundation",
+        "Nutrition Ad",
+        "LIHEAP",
+        "NLP",
+        "Unmet Civil Legal Needs",
+        "How High-Tech",
+        "SSI",
+        "Register Mismatch"
+      ]
+    },
+    {
+      "paper_id": "paper_75ebaca2a792",
+      "title": "arXiv:2608.29284v1 [cs.CL] 29 Aug 2026",
+      "ground_truth_count": 7,
+      "predicted_count": 52,
+      "tp": 2,
+      "fp": 50,
+      "fn": 5,
+      "sample_extracted_terms": [
+        "rule-based",
+        "Cloud Deployment",
+        "Naman Goyal",
+        "Kangxiang Jia",
+        "Neural Infor",
+        "Reproducibility Details",
+        "Neural Information Processing Sys",
+        "Sebastian Borgeaud"
+      ]
+    },
+    {
+      "paper_id": "paper_c68c29fa61d7",
+      "title": "arXiv:2609.10113v1 [cs.CL] 9 Sep 2026",
+      "ground_truth_count": 5,
+      "predicted_count": 50,
+      "tp": 1,
+      "fp": 49,
+      "fn": 4,
+      "sample_extracted_terms": [
+        "Andrei Kalmykov",
+        "rule-based",
+        "Dingkun Long",
+        "Matthijs Douze",
+        "Qianqian Xie",
+        "Daya Guo",
+        "ODA",
+        "Zihong Chen"
+      ]
+    },
+    {
+      "paper_id": "paper_caf7ec45082d",
+      "title": "arXiv:2609.09973v1 [cs.CV] 9 Sep 2026",
+      "ground_truth_count": 3,
+      "predicted_count": 50,
+      "tp": 0,
+      "fp": 50,
+      "fn": 3,
+      "sample_extracted_terms": [
+        "reference-based",
+        "Chunjiang Ge",
+        "Shuohang Wang",
+        "Jilan Xu",
+        "Wei Li",
+        "Mark Johnson",
+        "PII",
+        "Pengchuan Zhang"
+      ]
+    },
+    {
+      "paper_id": "paper_6adf7ecca85a",
+      "title": "arXiv:2609.01654v1 [cs.IR] 31 Aug 2026",
+      "ground_truth_count": 12,
+      "predicted_count": 51,
+      "tp": 3,
+      "fp": 48,
+      "fn": 9,
+      "sample_extracted_terms": [
+        "Agreement Level Vote Pattern",
+        "FORMAT",
+        "TASKS",
+        "Determine Block Count",
+        "Total Kept",
+        "Video Retrieval",
+        "Annotator Agreement",
+        "ONE"
+      ]
+    },
+    {
+      "paper_id": "paper_aa1a9f9ac3ae",
+      "title": "arXiv:2609.10363v1 [cs.CV] 9 Sep 2026",
+      "ground_truth_count": 3,
+      "predicted_count": 53,
+      "tp": 0,
+      "fp": 53,
+      "fn": 3,
+      "sample_extracted_terms": [
+        "SRC",
+        "Deterministic Latent Synchronization",
+        "Stable Diffusion",
+        "Consistent Scene",
+        "physically-based",
+        "Controllable Illumination",
+        "The Fourteenth",
+        "ODE"
+      ]
+    },
+    {
+      "paper_id": "paper_279c2905f967",
+      "title": "arXiv:2609.09359v1 [cs.CV] 8 Sep 2026",
+      "ground_truth_count": 7,
+      "predicted_count": 50,
+      "tp": 0,
+      "fp": 50,
+      "fn": 7,
+      "sample_extracted_terms": [
+        "Timestep-Conditioned Adapter",
+        "Gated Residual",
+        "Luka Filipi",
+        "Wen Dong",
+        "Qiang Fu",
+        "Nicolas Ballas",
+        "Our Dataset",
+        "Dense Division"
+      ]
+    },
+    {
+      "paper_id": "paper_814a945bae2e",
+      "title": "arXiv:2609.10123v1 [cs.SE] 9 Sep 2026",
+      "ground_truth_count": 3,
+      "predicted_count": 51,
+      "tp": 0,
+      "fp": 51,
+      "fn": 3,
+      "sample_extracted_terms": [
+        "Aryaman Arora",
+        "Pengfei Gao",
+        "Albert Ge",
+        "Abhinav Bhatele",
+        "Tom Goldstein",
+        "Zhao Zhang",
+        "Annual Meeting",
+        "Maxwell Forbes"
+      ]
+    },
+    {
+      "paper_id": "paper_4824a41ecef4",
+      "title": "arXiv:2609.09895v1 [cs.CV] 9 Sep 2026",
+      "ground_truth_count": 7,
+      "predicted_count": 51,
+      "tp": 0,
+      "fp": 51,
+      "fn": 7,
+      "sample_extracted_terms": [
+        "Guangyao Shi",
+        "Wei Li",
+        "HALL",
+        "Zongbo Han",
+        "Zheren Fu",
+        "Pattern Recog",
+        "Yifan Du",
+        "Flagship-Level Cod"
+      ]
+    },
+    {
+      "paper_id": "paper_ca85f4125896",
+      "title": "arXiv:2609.08515v1 [cs.CL] 8 Sep 2026",
+      "ground_truth_count": 6,
+      "predicted_count": 51,
+      "tp": 1,
+      "fp": 50,
+      "fn": 5,
+      "sample_extracted_terms": [
+        "tuning-free",
+        "Choices Construction",
+        "Value Definition",
+        "Task Formulation",
+        "Dilemma Generation Prompt",
+        "Large Language Models",
+        "MATH",
+        "Concept Activation"
+      ]
+    },
+    {
+      "paper_id": "paper_a396631f941f",
+      "title": "arXiv:2608.30553v1 [cs.IR] 31 Aug 2026",
+      "ground_truth_count": 6,
+      "predicted_count": 50,
+      "tp": 1,
+      "fp": 49,
+      "fn": 5,
+      "sample_extracted_terms": [
+        "Residual Cascading Generation",
+        "Embedding Model",
+        "Personalized Sequence Modeling",
+        "Wei Li",
+        "NCI",
+        "Zhenyu Xie",
+        "FAISS",
+        "CTR"
+      ]
+    },
+    {
+      "paper_id": "paper_b393d973101d",
+      "title": "arXiv:2609.09855v1 [stat.ML] 9 Sep 2026",
+      "ground_truth_count": 1,
+      "predicted_count": 50,
+      "tp": 0,
+      "fp": 50,
+      "fn": 1,
+      "sample_extracted_terms": [
+        "Konstantin Genin",
+        "ML-based",
+        "De Finetti",
+        "EUM",
+        "Edward Thorp",
+        "The Brier",
+        "Intelligent Systems",
+        "Rabanus Derr"
+      ]
+    },
+    {
+      "paper_id": "paper_352bfa7177e3",
+      "title": "arXiv:2609.09776v1 [cs.AI] 9 Sep 2026",
+      "ground_truth_count": 6,
+      "predicted_count": 51,
+      "tp": 1,
+      "fp": 50,
+      "fn": 5,
+      "sample_extracted_terms": [
+        "Scott Heiner",
+        "Llion Jones",
+        "Jan Hendrik Kirchner",
+        "Brian Ichter",
+        "Asymmetric Ver",
+        "Heewoo Jun",
+        "Reality-Settled Reward",
+        "GBM"
+      ]
+    },
+    {
+      "paper_id": "paper_70e1b9ea6620",
+      "title": "arXiv:2608.29336v1 [cs.CV] 29 Aug 2026",
+      "ground_truth_count": 4,
+      "predicted_count": 51,
+      "tp": 1,
+      "fp": 50,
+      "fn": 3,
+      "sample_extracted_terms": [
+        "rule-based",
+        "reference-based",
+        "RDF",
+        "Karthik Raveendran",
+        "ICSE",
+        "Yaser Sheikh",
+        "Zhe Cao",
+        "TELEC"
+      ]
+    },
+    {
+      "paper_id": "paper_36c6821ad691",
+      "title": "arXiv:2609.09664v1 [cs.AI] 9 Sep 2026",
+      "ground_truth_count": 5,
+      "predicted_count": 51,
+      "tp": 1,
+      "fp": 50,
+      "fn": 4,
+      "sample_extracted_terms": [
+        "Qualitative Analysis",
+        "Sihao Chen",
+        "Americas Chapter",
+        "Thirty-Eighth",
+        "Dongwook Choi",
+        "Francesco Barbieri",
+        "Binyuan Hui",
+        "Adam Perelman"
+      ]
+    },
+    {
+      "paper_id": "paper_6d8ae099cdbe",
+      "title": "arXiv:2609.10376v1 [cs.CV] 9 Sep 2026",
+      "ground_truth_count": 7,
+      "predicted_count": 50,
+      "tp": 1,
+      "fp": 49,
+      "fn": 6,
+      "sample_extracted_terms": [
+        "SIAM",
+        "Shape Template",
+        "Medical Image",
+        "Image Database",
+        "Experimental Setup",
+        "SSIM",
+        "Engineering Express",
+        "Digital Research Al"
+      ]
+    },
+    {
+      "paper_id": "paper_0df1db97fd03",
+      "title": "arXiv:2609.09394v1 [cs.CV] 8 Sep 2026",
+      "ground_truth_count": 1,
+      "predicted_count": 52,
+      "tp": 0,
+      "fp": 52,
+      "fn": 1,
+      "sample_extracted_terms": [
+        "SOTA",
+        "Training Strategy",
+        "Decoupled Loss",
+        "Experimental Setup",
+        "Robust Geometric Injection",
+        "Universal Monocular Point Cloud Estimation",
+        "Removing Gaussian",
+        "Qualitative Comparison"
+      ]
+    },
+    {
+      "paper_id": "paper_7003feeef43d",
+      "title": "arXiv:2609.10287v1 [cs.LG] 9 Sep 2026",
+      "ground_truth_count": 2,
+      "predicted_count": 52,
+      "tp": 1,
+      "fp": 51,
+      "fn": 1,
+      "sample_extracted_terms": [
+        "Natesan Ramamurthy",
+        "Annealable Soft-Prior Attention",
+        "Key Technologies",
+        "Learning Representations",
+        "Springer Science",
+        "IC",
+        "ANNE",
+        "Training Path Determines Removability"
+      ]
+    },
+    {
+      "paper_id": "paper_a61186fe07be",
+      "title": "arXiv:2609.09486v1 [cs.LG] 8 Sep 2026",
+      "ground_truth_count": 4,
+      "predicted_count": 51,
+      "tp": 0,
+      "fp": 51,
+      "fn": 4,
+      "sample_extracted_terms": [
+        "Moritz Grosse-Wentrup",
+        "Kristian Kersting",
+        "Jack Clark",
+        "Computational Linguistics",
+        "Yanai Elazar",
+        "Aryaman Arora",
+        "Mehdi Cherti",
+        "Image Diffusion Models"
+      ]
+    },
+    {
+      "paper_id": "paper_fa1cc2e624d1",
+      "title": "arXiv:2608.28555v1 [cs.IR] 28 Aug 2026",
+      "ground_truth_count": 4,
+      "predicted_count": 51,
+      "tp": 1,
+      "fp": 50,
+      "fn": 3,
+      "sample_extracted_terms": [
+        "Yinghan Shen",
+        "Wei Li",
+        "Esam Ghaleb",
+        "Yi Luan",
+        "Topic Models",
+        "Danish Refugee Appeals",
+        "Sebastiano Antonio Piccolo",
+        "Aldo Carranza"
+      ]
+    },
+    {
+      "paper_id": "paper_3847718eeec6",
+      "title": "arXiv:2609.09682v1 [cs.LG] 9 Sep 2026",
+      "ground_truth_count": 4,
+      "predicted_count": 50,
+      "tp": 0,
+      "fp": 50,
+      "fn": 4,
+      "sample_extracted_terms": [
+        "Monotonic Consistency Improvement",
+        "Inexact Consistency Descent",
+        "Behavioral Neuroscience",
+        "Controlled Analytic Instantiation",
+        "Controlled Evidence",
+        "Settling-Based Inference",
+        "Convex Aggregation",
+        "optimization-based"
+      ]
+    },
+    {
+      "paper_id": "paper_46637f2314fd",
+      "title": "arXiv:2609.08650v1 [cs.LG] 8 Sep 2026",
+      "ground_truth_count": 7,
+      "predicted_count": 51,
+      "tp": 2,
+      "fp": 49,
+      "fn": 5,
+      "sample_extracted_terms": [
+        "DSG",
+        "Tree Branching",
+        "Fang Wu",
+        "Guokun Lai",
+        "Artificial Intelligence Graduate School Program",
+        "The Localization Phenomenon",
+        "Training Configuration",
+        "Peng Chao"
+      ]
+    },
+    {
+      "paper_id": "paper_9c72a69b3755",
+      "title": "Multi-Pass, Multi-View Blended Learning for High-Fidelity Volumetric CT Synthesis from Chest X-Rays",
+      "ground_truth_count": 15,
+      "predicted_count": 52,
+      "tp": 2,
+      "fp": 50,
+      "fn": 13,
+      "sample_extracted_terms": [
+        "EAAI",
+        "LIDC",
+        "CX",
+        "Biomedical Image Segmentation",
+        "Experimental Setup",
+        "SSIM",
+        "Multi-View Blended Learning",
+        "Multi-View Slice Refinement"
+      ]
+    },
+    {
+      "paper_id": "paper_6020e79430c2",
+      "title": "Agent-Based ML-LLM Fusion with Self-Optimizing Prompts for Plateau Weather Alerts",
+      "ground_truth_count": 9,
+      "predicted_count": 50,
+      "tp": 1,
+      "fp": 49,
+      "fn": 8,
+      "sample_extracted_terms": [
+        "rule-based",
+        "Hyperparameter Optimization Process",
+        "Chengdu Jincheng College",
+        "Random Forest",
+        "Qwen-Max",
+        "Systems Engineering",
+        "GBM",
+        "AND"
+      ]
+    },
+    {
+      "paper_id": "paper_657d8b1bdb0e",
+      "title": "arXiv:2608.29604v1 [cs.IR] 30 Aug 2026",
+      "ground_truth_count": 6,
+      "predicted_count": 51,
+      "tp": 0,
+      "fp": 51,
+      "fn": 6,
+      "sample_extracted_terms": [
+        "Yujia Zheng",
+        "Philipp Krahenbuhl",
+        "Maitreya Patel",
+        "Link Count",
+        "Training Strategy",
+        "Americas Chapter",
+        "Grid Loss",
+        "DD"
+      ]
+    },
+    {
+      "paper_id": "paper_6ed8e5f2755f",
+      "title": "arXiv:2608.29290v1 [cs.IR] 29 Aug 2026",
+      "ground_truth_count": 8,
+      "predicted_count": 50,
+      "tp": 2,
+      "fp": 48,
+      "fn": 6,
+      "sample_extracted_terms": [
+        "GPT",
+        "Deprecated Latest Deprecated",
+        "DAIR",
+        "template-based",
+        "ICSE",
+        "Automated Repair",
+        "Context-aware",
+        "network-based"
+      ]
+    },
+    {
+      "paper_id": "paper_90ffc33b32c0",
+      "title": "Procedural Graphs: Self-Evolving Execution Structures for LLM Agents",
+      "ground_truth_count": 4,
+      "predicted_count": 51,
+      "tp": 0,
+      "fp": 51,
+      "fn": 4,
+      "sample_extracted_terms": [
+        "Knowledge Graph",
+        "Efficiency Analysis",
+        "TOOLDEC",
+        "Rejection Memory",
+        "The Tool Graph",
+        "Transition Conditions",
+        "Detailed Comparison Table",
+        "FSM"
+      ]
+    },
+    {
+      "paper_id": "paper_a1d62aaef3b7",
+      "title": "arXiv:2609.08690v1 [cs.LG] 8 Sep 2026",
+      "ground_truth_count": 5,
+      "predicted_count": 51,
+      "tp": 0,
+      "fp": 51,
+      "fn": 5,
+      "sample_extracted_terms": [
+        "Suchin Gururangan",
+        "Yunshen Wei",
+        "Yuxiang Huang",
+        "Damai Dai",
+        "Zhe Fu",
+        "Yewei Fang",
+        "Jakub Krajewski",
+        "Kunlong Chen"
+      ]
+    },
+    {
+      "paper_id": "paper_e752a7b6cd1c",
+      "title": "arXiv:2609.08692v1 [cs.CL] 8 Sep 2026",
+      "ground_truth_count": 6,
+      "predicted_count": 51,
+      "tp": 0,
+      "fp": 51,
+      "fn": 6,
+      "sample_extracted_terms": [
+        "Yanai Elazar",
+        "Amnesic Counterfactuals",
+        "Ancient Greece",
+        "Layer Updates",
+        "Mohammad Shoeybi",
+        "European Chap",
+        "Zeyu Michael Li",
+        "Sai Prashanth"
+      ]
+    },
+    {
+      "paper_id": "paper_7ffc331f73fb",
+      "title": "arXiv:2609.09678v1 [cs.AI] 9 Sep 2026",
+      "ground_truth_count": 7,
+      "predicted_count": 51,
+      "tp": 1,
+      "fp": 50,
+      "fn": 6,
+      "sample_extracted_terms": [
+        "Chantal Pellegrini",
+        "Ruhrberg Est",
+        "Hui Xiong",
+        "Kunal Bhagat",
+        "Steven Horng",
+        "In The Eleventh International Conference",
+        "AUROC",
+        "Lucas Bulgarelli"
+      ]
+    },
+    {
+      "paper_id": "paper_aad52640e808",
+      "title": "arXiv:2609.09860v1 [cs.LG] 9 Sep 2026",
+      "ground_truth_count": 5,
+      "predicted_count": 51,
+      "tp": 2,
+      "fp": 49,
+      "fn": 3,
+      "sample_extracted_terms": [
+        "Hangbo Bao",
+        "Computational Linguistics",
+        "decoder-based",
+        "Experimental Setup",
+        "LDA",
+        "Since No",
+        "Lewis Tunstall",
+        "PC"
+      ]
+    },
+    {
+      "paper_id": "paper_0d8b55b85004",
+      "title": "arXiv:2609.09137v1 [cs.AI] 8 Sep 2026",
+      "ground_truth_count": 11,
+      "predicted_count": 50,
+      "tp": 5,
+      "fp": 45,
+      "fn": 6,
+      "sample_extracted_terms": [
+        "rule-based",
+        "Eastern Europe Forum",
+        "Robotic Process Automation",
+        "Inteligencia Artificial",
+        "NLP",
+        "Art Survey",
+        "ORCID",
+        "Alex Edmans"
+      ]
+    },
+    {
+      "paper_id": "paper_3b81026ffbb4",
+      "title": "arXiv:2609.10451v1 [cs.AI] 9 Sep 2026",
+      "ground_truth_count": 2,
+      "predicted_count": 50,
+      "tp": 1,
+      "fp": 49,
+      "fn": 1,
+      "sample_extracted_terms": [
+        "Chunjiang Ge",
+        "SSR",
+        "Ruslan Salakhutdinov",
+        "Your Evaluation Target",
+        "Jixuan Chen",
+        "Wei Li",
+        "Compositional Task Collection",
+        "The Evaluation Ex"
+      ]
+    },
+    {
+      "paper_id": "paper_e879d408c7ea",
+      "title": "arXiv:2609.10518v1 [cs.CV] 9 Sep 2026",
+      "ground_truth_count": 6,
+      "predicted_count": 51,
+      "tp": 2,
+      "fp": 49,
+      "fn": 4,
+      "sample_extracted_terms": [
+        "Atlas-Free",
+        "Let Bi",
+        "Data Analysis",
+        "Neural Information Processing Sys",
+        "Learning Representations",
+        "difficulty-based",
+        "Experimental Setup",
+        "PCA"
+      ]
+    },
+    {
+      "paper_id": "paper_f3b33339e0a6",
+      "title": "arXiv:2609.10514v1 [quant-ph] 9 Sep 2026",
+      "ground_truth_count": 1,
+      "predicted_count": 45,
+      "tp": 0,
+      "fp": 45,
+      "fn": 1,
+      "sample_extracted_terms": [
+        "Quantum Fisher",
+        "The Gaussian",
+        "QIP",
+        "XRX",
+        "Thus Az",
+        "CHL",
+        "VXV",
+        "When Tr"
+      ]
+    },
+    {
+      "paper_id": "paper_3586472fbf89",
+      "title": "arXiv:2609.09778v1 [cs.CL] 9 Sep 2026",
+      "ground_truth_count": 4,
+      "predicted_count": 52,
+      "tp": 0,
+      "fp": 52,
+      "fn": 4,
+      "sample_extracted_terms": [
+        "Memory-Context Budget Sensitivity",
+        "Zhe Zhao",
+        "NONE",
+        "No Change",
+        "Sihao Chen",
+        "Binyuan Hui",
+        "Francesco Barbieri",
+        "AND"
+      ]
+    },
+    {
+      "paper_id": "paper_20173186bf9e",
+      "title": "arXiv:2609.09736v1 [cs.CV] 9 Sep 2026",
+      "ground_truth_count": 12,
+      "predicted_count": 51,
+      "tp": 1,
+      "fp": 50,
+      "fn": 11,
+      "sample_extracted_terms": [
+        "Computational Linguistics",
+        "CHARADES",
+        "Interaction Aligned Action-Entity",
+        "TASK",
+        "Context-aware",
+        "BASED",
+        "Saliency Score Sbase",
+        "Qualitative Comparison"
+      ]
+    },
+    {
+      "paper_id": "paper_9ce5eeb4b2c0",
+      "title": "arXiv:2609.09999v1 [cs.CL] 9 Sep 2026",
+      "ground_truth_count": 7,
+      "predicted_count": 50,
+      "tp": 0,
+      "fp": 50,
+      "fn": 7,
+      "sample_extracted_terms": [
+        "Gholamreza Haffari",
+        "Nithya Govindarajan",
+        "European Language Resources Association",
+        "Yuhui Zhang",
+        "Chrysoula Zerva",
+        "Yuning Mao",
+        "Sebastian Vincent",
+        "NTEU"
+      ]
+    },
+    {
+      "paper_id": "paper_bd8204797c24",
+      "title": "arXiv:2608.29410v1 [cs.IR] 29 Aug 2026",
+      "ground_truth_count": 4,
+      "predicted_count": 50,
+      "tp": 1,
+      "fp": 49,
+      "fn": 3,
+      "sample_extracted_terms": [
+        "Fedelucio Narducci",
+        "The Utilizer",
+        "Soumya Batra",
+        "SIGKDD",
+        "ICASSP",
+        "Lose Yourself",
+        "Algorithm Overview",
+        "Shuhui Wang"
+      ]
+    },
+    {
+      "paper_id": "paper_dbba2050262e",
+      "title": "arXiv:2608.29951v1 [cs.AI] 30 Aug 2026",
+      "ground_truth_count": 5,
+      "predicted_count": 50,
+      "tp": 2,
+      "fp": 48,
+      "fn": 3,
+      "sample_extracted_terms": [
+        "Interleaved Text",
+        "Computational Linguistics",
+        "Towards Budget-Elastic",
+        "An Efficient Engine",
+        "CITADEL",
+        "Multi-Tier Scoring",
+        "Experimental Setup",
+        "Tokens Matter Equally"
+      ]
+    },
+    {
+      "paper_id": "paper_7b8ea2578f49",
+      "title": "arXiv:2608.30479v1 [cs.IR] 31 Aug 2026",
+      "ground_truth_count": 17,
+      "predicted_count": 52,
+      "tp": 0,
+      "fp": 52,
+      "fn": 17,
+      "sample_extracted_terms": [
+        "Enabling Geographic Reasoning",
+        "Mean Absolute Deviation",
+        "Muzu Xie",
+        "Geo Corpus",
+        "Geohash-based",
+        "Zihan Qiu",
+        "Eric Engle",
+        "Muhan Zhang"
+      ]
+    },
+    {
+      "paper_id": "paper_18e82cd1b834",
+      "title": "arXiv:2609.09801v1 [eess.IV] 9 Sep 2026",
+      "ground_truth_count": 8,
+      "predicted_count": 51,
+      "tp": 2,
+      "fp": 49,
+      "fn": 6,
+      "sample_extracted_terms": [
+        "vision-based",
+        "FOV",
+        "Graph Adversarial Perturbation",
+        "Oral Surgery",
+        "Self-Attn",
+        "ICME",
+        "Oral Medicine",
+        "Chapman University"
+      ]
+    },
+    {
+      "paper_id": "paper_fd32e9ab011b",
+      "title": "arXiv:2609.08646v1 [cs.CL] 8 Sep 2026",
+      "ground_truth_count": 7,
+      "predicted_count": 51,
+      "tp": 1,
+      "fp": 50,
+      "fn": 6,
+      "sample_extracted_terms": [
+        "Hao Sun",
+        "Micah Goldblum",
+        "Yupei Liu",
+        "Yifan Gao",
+        "Ammar Ahmad Awan",
+        "Response-Segment Localization",
+        "Aniruddha Saha",
+        "Matthew Hull"
+      ]
+    },
+    {
+      "paper_id": "paper_e38ae26be36d",
+      "title": "arXiv:2609.09835v1 [cs.CL] 9 Sep 2026",
+      "ground_truth_count": 7,
+      "predicted_count": 51,
+      "tp": 0,
+      "fp": 51,
+      "fn": 7,
+      "sample_extracted_terms": [
+        "Particle Propagation",
+        "Qualitative Analysis",
+        "Sihao Chen",
+        "Kam-Fai Wong",
+        "RoBERTa-based",
+        "safety-aware",
+        "Yanming Wan",
+        "Xian Li"
+      ]
+    },
+    {
+      "paper_id": "paper_c52265c3d4cc",
+      "title": "arXiv:2609.10193v1 [q-bio.MN] 9 Sep 2026",
+      "ground_truth_count": 10,
+      "predicted_count": 50,
+      "tp": 2,
+      "fp": 48,
+      "fn": 8,
+      "sample_extracted_terms": [
+        "The Jaccard",
+        "Pascal Iversen",
+        "Mitigating Bias",
+        "Random Forest",
+        "AUROC",
+        "AUPRC",
+        "ILP",
+        "PIN"
+      ]
+    }
+  ]
+}

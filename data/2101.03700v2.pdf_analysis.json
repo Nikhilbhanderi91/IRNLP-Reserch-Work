@@ -1,0 +1,962 @@
+{
+  "paper": {
+    "paper_id": "paper_0954631c8b4d",
+    "file_hash": "0954631c8b4d7c3267d7b67126ab4935d15bc78b1f5e415a3f1a74448dc8b471",
+    "file_name": "2101.03700v2.pdf",
+    "title": "arXiv:2101.03700v2 [cs.CL] 12 Jan 2021",
+    "authors": [
+      "Danqing Zhu",
+      "Wangli Lin",
+      "Yang Zhang",
+      "Qiwei Zhong",
+      "Guanxiong Zeng",
+      "Weilin Wu",
+      "Jiayu Tang",
+      "Alibaba Group"
+    ],
+    "year": "2021",
+    "abstract": "Acronym identi\ufb01cation focuses on \ufb01nding the acronyms and the phrases that have been abbreviated, which is crucial for scienti\ufb01c document understanding tasks. However, the lim- ited size of manually annotated datasets hinders further im- provement for the problem. Recent breakthroughs of lan- guage models pre-trained on large corpora clearly show that unsupervised pre-training can vastly improve the per- formance of downstream tasks. In this paper, we present an Adversarial Training BERT method named AT-BERT, our winning solution to acronym identi\ufb01cation task for Scienti\ufb01c Document Understanding (SDU) Challenge of AAAI 2021. Speci\ufb01cally, the pre-trained BERT is adopted to capture better semantic representation. Then we incorporate the FGM ad- versarial training strategy into the \ufb01ne-tuning of BERT, which makes the model more robust and generalized. Furthermore, an ensemble mechanism is devised to involve the represen- tations learned from multiple BERT variants. Assembling all these components together, the experimental results on the SciAI dataset show that our proposed approach outperforms all other competitive state-of-the-art methods.",
+    "keywords": [
+      "adversarial training strategy",
+      "adversarial training bert",
+      "training bert acronym",
+      "sequence labeling problem",
+      "acronym identi\ufb01cation task",
+      "roberta albert electra",
+      "scienti\ufb01c document understanding",
+      "loss nlp task",
+      "trained language scienti\ufb01c",
+      "bertlarge roberta albert",
+      "term recognition bioinformatics",
+      "acronym widespread technical",
+      "word machine versus",
+      "deep learning model",
+      "task training larger",
+      "acronym long form",
+      "given text datasets",
+      "largest manually annotated",
+      "research ial training",
+      "workshop scienti\ufb01c document",
+      "outperform evaluation metric",
+      "question answering patent",
+      "recurrent neural net",
+      "information traction provides",
+      "leveraging domain agnostic",
+      "growing scienti\ufb01c",
+      "identi\ufb01cation task scienti\ufb01c",
+      "predict ken corrupted",
+      "provides apis quickly",
+      "mainly method okazaki"
+    ],
+    "research_domain": [
+      "Natural Language Processing",
+      "Artificial Intelligence",
+      "Cybersecurity",
+      "Bioinformatics"
+    ],
+    "page_count": 8,
+    "word_count": 3984
+  },
+  "problem": "However, the lim- ited size of manually annotated datasets hinders further im- provement for the problem",
+  "objective": "In this paper, we present an Adversarial Training BERT method named AT-BERT, our winning solution to acronym identi\ufb01cation task for Scienti\ufb01c Document Understanding (SDU) Challenge of AAAI 2021",
+  "existing_methods": [
+    "Standard BERT",
+    "CRF baselines"
+  ],
+  "proposed_method": {
+    "name": "AT-BERT: Adversarial Training BERT",
+    "description": "Adversarial training on BERT for acronym identification using Fast Gradient Method (FGM) and multi-BERT ensemble."
+  },
+  "models": [
+    "BERT",
+    "SciBERT",
+    "RoBERTa",
+    "ALBERT",
+    "ELECTRA",
+    "Transformer",
+    "LSTM",
+    "CNN",
+    "AT-BERT"
+  ],
+  "algorithms": [
+    "Adversarial Training",
+    "Fast Gradient Method",
+    "FGM",
+    "Sequence Labeling",
+    "CRF",
+    "Gradient Descent"
+  ],
+  "datasets": [
+    "SDU@AAAI-21"
+  ],
+  "evaluation_metrics": [
+    "Precision",
+    "Recall",
+    "F1",
+    "Accuracy"
+  ],
+  "results": [
+    "Assembling all\nthese components together, the experimental results on the\nSciAI dataset show that our proposed approach outperforms\nall other competitive state-of-the-art methods",
+    "Combining these re-\nspective advantages, our proposed model won the \ufb01rst prize\nin the SDU@AAAI-21, outperforming all the other compet-\nitive methods",
+    "Recently, deep learning models have achieved\npromising results, for instance, the LSTM-CRF (Li et al",
+    "With the development of pre-trained language models,\nBERT-based models achieve state-of-the-art results in nat-\nural language related tasks",
+    "It optimizes the training strat-\negy of BERT and achieves better performance"
+  ],
+  "advantages": [
+    "Then we incorporate the FGM ad-\nversarial training strategy into the \ufb01ne-tuning of BERT, which\nmakes the model more robust and generalized",
+    "Combining these re-\nspective advantages, our proposed model won the \ufb01rst prize\nin the SDU@AAAI-21, outperforming all the other compet-\nitive methods",
+    "\u2022 Extensive experiments are conducted on the data offered\nby the SDU@AAAI-21, demonstrating the effectiveness\nof our proposed method",
+    "We use the FGM to add pertur-\nbation to the input samples for adversarial training, making\nthe model more robust and generalized",
+    "The model\nis trained with both the original input sample and generated\nadversarial samples to enhance its robustness and general-\nization"
+  ],
+  "limitations": [],
+  "research_gap": [],
+  "future_work": [],
+  "technical_concepts": [
+    "Focal Loss",
+    "TRA",
+    "In Bengio",
+    "gradient-based",
+    "LSTM",
+    "Machine Learning Approach",
+    "Harnessing Adversarial Examples",
+    "Pouran Ben Veyseh",
+    "Adversarial Training",
+    "All You Need",
+    "Training Methods",
+    "CRF",
+    "Question Answering Systems",
+    "ELEC",
+    "BIOADI",
+    "Utilizing Contextual Infor",
+    "What Does This Acronym Mean",
+    "Evaluation Metrics",
+    "KDD",
+    "In Biocomputing",
+    "Language Processing",
+    "Labeling Model",
+    "EMNLP",
+    "Using Common Semantic Space",
+    "Accelerating Adversarial Train",
+    "Weilin Wu",
+    "MLM",
+    "Qiwei Zhong",
+    "Improving Slot Filling",
+    "Language Understanding",
+    "Robustly Optimized",
+    "AAAI",
+    "Enhanced Representation Through Knowledge Integration",
+    "Identifying Ab",
+    "YOPO",
+    "NLP",
+    "DEV",
+    "Human Performance",
+    "Dense Object Detection",
+    "Gradient Boosting",
+    "Rather Than Generators",
+    "rule-based",
+    "Biological Literature",
+    "Dice Loss",
+    "Fine-Tuning",
+    "Scalable Tree",
+    "Related Work",
+    "BPE",
+    "NAACL",
+    "Adversarial Training For"
+  ],
+  "entities": [
+    {
+      "text": "Adversarial Training BERT for Acronym Identi\ufb01cation\nWinning Solution",
+      "label": "ORG"
+    },
+    {
+      "text": "Alibaba Group",
+      "label": "ORG"
+    },
+    {
+      "text": "Hangzhou",
+      "label": "GPE"
+    },
+    {
+      "text": "China",
+      "label": "GPE"
+    },
+    {
+      "text": "jiayu.tangjy}@alibaba-inc.com\nAbstract\nAcronym",
+      "label": "ORG"
+    },
+    {
+      "text": "Adversarial Training BERT",
+      "label": "ORG"
+    },
+    {
+      "text": "AT-BERT",
+      "label": "ORG"
+    },
+    {
+      "text": "Scienti\ufb01c\nDocument Understanding",
+      "label": "ORG"
+    },
+    {
+      "text": "SDU",
+      "label": "ORG"
+    },
+    {
+      "text": "BERT",
+      "label": "ORG"
+    },
+    {
+      "text": "FGM",
+      "label": "ORG"
+    },
+    {
+      "text": "XGBoost",
+      "label": "ORG"
+    },
+    {
+      "text": "Hearst 2002",
+      "label": "ORG"
+    },
+    {
+      "text": "Okazaki",
+      "label": "ORG"
+    },
+    {
+      "text": "the Scienti\ufb01c Document Understanding",
+      "label": "WORK_OF_ART"
+    },
+    {
+      "text": "Table 1",
+      "label": "LAW"
+    },
+    {
+      "text": "Beltagy",
+      "label": "ORG"
+    },
+    {
+      "text": "Cohan",
+      "label": "GPE"
+    },
+    {
+      "text": "Models",
+      "label": "ORG"
+    },
+    {
+      "text": "Kenton",
+      "label": "ORG"
+    },
+    {
+      "text": "Toutanova",
+      "label": "ORG"
+    },
+    {
+      "text": "Transformer",
+      "label": "ORG"
+    },
+    {
+      "text": "Wikipedia",
+      "label": "ORG"
+    },
+    {
+      "text": "BooksCorpus",
+      "label": "ORG"
+    },
+    {
+      "text": "NLP",
+      "label": "ORG"
+    },
+    {
+      "text": "BPE(Byte Pair Encoding",
+      "label": "ORG"
+    },
+    {
+      "text": "ERINE",
+      "label": "ORG"
+    },
+    {
+      "text": "Sun et al",
+      "label": "ORG"
+    },
+    {
+      "text": "FGSM",
+      "label": "ORG"
+    },
+    {
+      "text": "Goodfellow",
+      "label": "GPE"
+    },
+    {
+      "text": "Shlens",
+      "label": "GPE"
+    },
+    {
+      "text": "linear",
+      "label": "ORG"
+    },
+    {
+      "text": "the Projected Gradient Descent (PGD",
+      "label": "ORG"
+    },
+    {
+      "text": "PGD",
+      "label": "ORG"
+    },
+    {
+      "text": "YOPO",
+      "label": "ORG"
+    },
+    {
+      "text": "FreeLB",
+      "label": "GPE"
+    },
+    {
+      "text": "fed",
+      "label": "ORG"
+    },
+    {
+      "text": "Dataset",
+      "label": "ORG"
+    },
+    {
+      "text": "Table 2",
+      "label": "LAW"
+    },
+    {
+      "text": "BIO",
+      "label": "ORG"
+    },
+    {
+      "text": "Model\nEnsemble",
+      "label": "PRODUCT"
+    },
+    {
+      "text": "BERT Models",
+      "label": "ORG"
+    },
+    {
+      "text": "MLM",
+      "label": "ORG"
+    },
+    {
+      "text": "BERTBASE",
+      "label": "ORG"
+    },
+    {
+      "text": "BERTLARGE",
+      "label": "ORG"
+    },
+    {
+      "text": "Zhong",
+      "label": "GPE"
+    },
+    {
+      "text": "ALBERT",
+      "label": "ORG"
+    },
+    {
+      "text": "TRA",
+      "label": "ORG"
+    },
+    {
+      "text": "AT-BERT-E.\nImplementation\nAll",
+      "label": "ORG"
+    },
+    {
+      "text": "Pytorch",
+      "label": "ORG"
+    },
+    {
+      "text": "2e-5",
+      "label": "ORG"
+    },
+    {
+      "text": "GPU",
+      "label": "ORG"
+    },
+    {
+      "text": "Table 3",
+      "label": "LAW"
+    },
+    {
+      "text": "Table 4",
+      "label": "LAW"
+    },
+    {
+      "text": "CRF",
+      "label": "PRODUCT"
+    },
+    {
+      "text": "ELECTRA",
+      "label": "ORG"
+    },
+    {
+      "text": "AT-BERT-E",
+      "label": "ORG"
+    },
+    {
+      "text": "DEV-1629",
+      "label": "ORG"
+    },
+    {
+      "text": "Macro F1",
+      "label": "ORG"
+    },
+    {
+      "text": "the AAAI-21 Workshop on Scienti\ufb01c Document",
+      "label": "ORG"
+    }
+  ],
+  "traceable_concepts": [
+    {
+      "concept": "adversarial training strategy",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "Furthermore, we leverage the FGM (Miyato, Dai, and\nGoodfellow 2017), an adversarial training strategy to im-\nprove the generalization ability of the model, making it more\nrobust to noisy data",
+      "page": 1
+    },
+    {
+      "concept": "adversarial training bert",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "AT-BERT: Adversarial Training BERT for Acronym Identi\ufb01cation\nWinning Solution for SDU@AAAI-21\nDanqing Zhu, Wangli Lin, Yang Zhang, Qiwei Zhong, Guanxiong Zeng, Weilin Wu, Jiayu Tang\nAlibaba Group, Han",
+      "page": 1
+    },
+    {
+      "concept": "training bert acronym",
+      "source": "paper",
+      "confidence": 0.8,
+      "evidence": "Extracted from paper text matching 'training bert acronym'.",
+      "page": 1
+    },
+    {
+      "concept": "sequence labeling problem",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "Related Work\nIn this section, we mainly introduce the related studies for\nthe sequence labeling problem especially the BERT-based\nmodels, then we review the existing researches on adversar-\nial traini",
+      "page": 2
+    },
+    {
+      "concept": "acronym identi\ufb01cation task",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "In this paper, we present an\nAdversarial Training BERT method named AT-BERT, our\nwinning solution to acronym identi\ufb01cation task for Scienti\ufb01c\nDocument Understanding (SDU) Challenge of AAAI 2021",
+      "page": 1
+    },
+    {
+      "concept": "roberta albert electra",
+      "source": "paper",
+      "confidence": 0.8,
+      "evidence": "Extracted from paper text matching 'roberta albert electra'.",
+      "page": 1
+    },
+    {
+      "concept": "scienti\ufb01c document understanding",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "AT-BERT: Adversarial Training BERT for Acronym Identi\ufb01cation\nWinning Solution for SDU@AAAI-21\nDanqing Zhu, Wangli Lin, Yang Zhang, Qiwei Zhong, Guanxiong Zeng, Weilin Wu, Jiayu Tang\nAlibaba Group, Han",
+      "page": 1
+    },
+    {
+      "concept": "loss nlp task",
+      "source": "paper",
+      "confidence": 0.8,
+      "evidence": "Extracted from paper text matching 'loss nlp task'.",
+      "page": 1
+    },
+    {
+      "concept": "trained language scienti\ufb01c",
+      "source": "paper",
+      "confidence": 0.8,
+      "evidence": "Extracted from paper text matching 'trained language scienti\ufb01c'.",
+      "page": 1
+    },
+    {
+      "concept": "bertlarge roberta albert",
+      "source": "paper",
+      "confidence": 0.8,
+      "evidence": "Extracted from paper text matching 'bertlarge roberta albert'.",
+      "page": 1
+    },
+    {
+      "concept": "term recognition bioinformatics",
+      "source": "paper",
+      "confidence": 0.8,
+      "evidence": "Extracted from paper text matching 'term recognition bioinformatics'.",
+      "page": 1
+    },
+    {
+      "concept": "acronym widespread technical",
+      "source": "paper",
+      "confidence": 0.8,
+      "evidence": "Extracted from paper text matching 'acronym widespread technical'.",
+      "page": 1
+    },
+    {
+      "concept": "word machine versus",
+      "source": "paper",
+      "confidence": 0.8,
+      "evidence": "Extracted from paper text matching 'word machine versus'.",
+      "page": 1
+    },
+    {
+      "concept": "deep learning model",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "On the contrast, taking advantage of pre-trained word em-\nbeddings and deep architecture, deep learning models like\nLSTM-CRF show promising results for acronym identi\ufb01ca-\ntion (Veyseh et al",
+      "page": 1
+    },
+    {
+      "concept": "task training larger",
+      "source": "paper",
+      "confidence": 0.8,
+      "evidence": "Extracted from paper text matching 'task training larger'.",
+      "page": 1
+    },
+    {
+      "concept": "acronym long form",
+      "source": "paper",
+      "confidence": 0.8,
+      "evidence": "Extracted from paper text matching 'acronym long form'.",
+      "page": 1
+    },
+    {
+      "concept": "given text datasets",
+      "source": "paper",
+      "confidence": 0.8,
+      "evidence": "Extracted from paper text matching 'given text datasets'.",
+      "page": 1
+    },
+    {
+      "concept": "largest manually annotated",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "Motivated by the above observations, the \ufb01rst publicly\navailable and the largest manually annotated acronym iden-\nti\ufb01cation the dataset in scienti\ufb01c domain is released (Veyseh\net al",
+      "page": 1
+    },
+    {
+      "concept": "research ial training",
+      "source": "paper",
+      "confidence": 0.8,
+      "evidence": "Extracted from paper text matching 'research ial training'.",
+      "page": 1
+    },
+    {
+      "concept": "workshop scienti\ufb01c document",
+      "source": "paper",
+      "confidence": 0.8,
+      "evidence": "Extracted from paper text matching 'workshop scienti\ufb01c document'.",
+      "page": 1
+    },
+    {
+      "concept": "Acronym Identi\ufb01cation\nWinning Solution",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "AT-BERT: Adversarial Training BERT for Acronym Identi\ufb01cation\nWinning Solution for SDU@AAAI-21\nDanqing Zhu, Wangli Lin, Yang Zhang, Qiwei Zhong, Guanxiong Zeng, Weilin Wu, Jiayu Tang\nAlibaba Group, Han",
+      "page": 1
+    },
+    {
+      "concept": "SDU@AAAI-21\nDanqing Zhu",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "AT-BERT: Adversarial Training BERT for Acronym Identi\ufb01cation\nWinning Solution for SDU@AAAI-21\nDanqing Zhu, Wangli Lin, Yang Zhang, Qiwei Zhong, Guanxiong Zeng, Weilin Wu, Jiayu Tang\nAlibaba Group, Han",
+      "page": 1
+    },
+    {
+      "concept": "Wangli Lin",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "AT-BERT: Adversarial Training BERT for Acronym Identi\ufb01cation\nWinning Solution for SDU@AAAI-21\nDanqing Zhu, Wangli Lin, Yang Zhang, Qiwei Zhong, Guanxiong Zeng, Weilin Wu, Jiayu Tang\nAlibaba Group, Han",
+      "page": 1
+    },
+    {
+      "concept": "Yang Zhang",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "AT-BERT: Adversarial Training BERT for Acronym Identi\ufb01cation\nWinning Solution for SDU@AAAI-21\nDanqing Zhu, Wangli Lin, Yang Zhang, Qiwei Zhong, Guanxiong Zeng, Weilin Wu, Jiayu Tang\nAlibaba Group, Han",
+      "page": 1
+    },
+    {
+      "concept": "Qiwei Zhong",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "AT-BERT: Adversarial Training BERT for Acronym Identi\ufb01cation\nWinning Solution for SDU@AAAI-21\nDanqing Zhu, Wangli Lin, Yang Zhang, Qiwei Zhong, Guanxiong Zeng, Weilin Wu, Jiayu Tang\nAlibaba Group, Han",
+      "page": 1
+    },
+    {
+      "concept": "Guanxiong Zeng",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "AT-BERT: Adversarial Training BERT for Acronym Identi\ufb01cation\nWinning Solution for SDU@AAAI-21\nDanqing Zhu, Wangli Lin, Yang Zhang, Qiwei Zhong, Guanxiong Zeng, Weilin Wu, Jiayu Tang\nAlibaba Group, Han",
+      "page": 1
+    },
+    {
+      "concept": "Weilin Wu",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "AT-BERT: Adversarial Training BERT for Acronym Identi\ufb01cation\nWinning Solution for SDU@AAAI-21\nDanqing Zhu, Wangli Lin, Yang Zhang, Qiwei Zhong, Guanxiong Zeng, Weilin Wu, Jiayu Tang\nAlibaba Group, Han",
+      "page": 1
+    },
+    {
+      "concept": "Jiayu Tang\nAlibaba Group",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "AT-BERT: Adversarial Training BERT for Acronym Identi\ufb01cation\nWinning Solution for SDU@AAAI-21\nDanqing Zhu, Wangli Lin, Yang Zhang, Qiwei Zhong, Guanxiong Zeng, Weilin Wu, Jiayu Tang\nAlibaba Group, Han",
+      "page": 1
+    },
+    {
+      "concept": "jiayu.tangjy}@alibaba-inc.com\nAbstract\nAcronym identi\ufb01cation",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "AT-BERT: Adversarial Training BERT for Acronym Identi\ufb01cation\nWinning Solution for SDU@AAAI-21\nDanqing Zhu, Wangli Lin, Yang Zhang, Qiwei Zhong, Guanxiong Zeng, Weilin Wu, Jiayu Tang\nAlibaba Group, Han",
+      "page": 1
+    },
+    {
+      "concept": "the acronyms",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "AT-BERT: Adversarial Training BERT for Acronym Identi\ufb01cation\nWinning Solution for SDU@AAAI-21\nDanqing Zhu, Wangli Lin, Yang Zhang, Qiwei Zhong, Guanxiong Zeng, Weilin Wu, Jiayu Tang\nAlibaba Group, Han",
+      "page": 1
+    },
+    {
+      "concept": "the phrases",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "AT-BERT: Adversarial Training BERT for Acronym Identi\ufb01cation\nWinning Solution for SDU@AAAI-21\nDanqing Zhu, Wangli Lin, Yang Zhang, Qiwei Zhong, Guanxiong Zeng, Weilin Wu, Jiayu Tang\nAlibaba Group, Han",
+      "page": 1
+    },
+    {
+      "concept": "scienti\ufb01c document understanding tasks",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "AT-BERT: Adversarial Training BERT for Acronym Identi\ufb01cation\nWinning Solution for SDU@AAAI-21\nDanqing Zhu, Wangli Lin, Yang Zhang, Qiwei Zhong, Guanxiong Zeng, Weilin Wu, Jiayu Tang\nAlibaba Group, Han",
+      "page": 1
+    },
+    {
+      "concept": "the lim-\nited size",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "However, the lim-\nited size of manually annotated datasets hinders further im-\nprovement for the problem",
+      "page": 1
+    },
+    {
+      "concept": "manually annotated datasets",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "However, the lim-\nited size of manually annotated datasets hinders further im-\nprovement for the problem",
+      "page": 1
+    },
+    {
+      "concept": "further im-\nprovement",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "However, the lim-\nited size of manually annotated datasets hinders further im-\nprovement for the problem",
+      "page": 1
+    },
+    {
+      "concept": "the problem",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "However, the lim-\nited size of manually annotated datasets hinders further im-\nprovement for the problem",
+      "page": 1
+    },
+    {
+      "concept": "Recent breakthroughs",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "Recent breakthroughs of lan-\nguage models pre-trained on large corpora clearly show\nthat unsupervised pre-training can vastly improve the per-\nformance of downstream tasks",
+      "page": 1
+    },
+    {
+      "concept": "lan-\nguage models",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "Recent breakthroughs of lan-\nguage models pre-trained on large corpora clearly show\nthat unsupervised pre-training can vastly improve the per-\nformance of downstream tasks",
+      "page": 1
+    },
+    {
+      "concept": "large corpora",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "Recent breakthroughs of lan-\nguage models pre-trained on large corpora clearly show\nthat unsupervised pre-training can vastly improve the per-\nformance of downstream tasks",
+      "page": 1
+    },
+    {
+      "concept": "unsupervised pre-training",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "Recent breakthroughs of lan-\nguage models pre-trained on large corpora clearly show\nthat unsupervised pre-training can vastly improve the per-\nformance of downstream tasks",
+      "page": 1
+    },
+    {
+      "concept": "the per-\nformance",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "Recent breakthroughs of lan-\nguage models pre-trained on large corpora clearly show\nthat unsupervised pre-training can vastly improve the per-\nformance of downstream tasks",
+      "page": 1
+    },
+    {
+      "concept": "downstream tasks",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "Recent breakthroughs of lan-\nguage models pre-trained on large corpora clearly show\nthat unsupervised pre-training can vastly improve the per-\nformance of downstream tasks",
+      "page": 1
+    },
+    {
+      "concept": "this paper",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "In this paper, we present an\nAdversarial Training BERT method named AT-BERT, our\nwinning solution to acronym identi\ufb01cation task for Scienti\ufb01c\nDocument Understanding (SDU) Challenge of AAAI 2021",
+      "page": 1
+    },
+    {
+      "concept": "an\nAdversarial Training BERT method",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "In this paper, we present an\nAdversarial Training BERT method named AT-BERT, our\nwinning solution to acronym identi\ufb01cation task for Scienti\ufb01c\nDocument Understanding (SDU) Challenge of AAAI 2021",
+      "page": 1
+    },
+    {
+      "concept": "our\nwinning solution",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "In this paper, we present an\nAdversarial Training BERT method named AT-BERT, our\nwinning solution to acronym identi\ufb01cation task for Scienti\ufb01c\nDocument Understanding (SDU) Challenge of AAAI 2021",
+      "page": 1
+    },
+    {
+      "concept": "identi\ufb01cation task",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "In this paper, we present an\nAdversarial Training BERT method named AT-BERT, our\nwinning solution to acronym identi\ufb01cation task for Scienti\ufb01c\nDocument Understanding (SDU) Challenge of AAAI 2021",
+      "page": 1
+    },
+    {
+      "concept": "Scienti\ufb01c\nDocument Understanding (SDU) Challenge",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "In this paper, we present an\nAdversarial Training BERT method named AT-BERT, our\nwinning solution to acronym identi\ufb01cation task for Scienti\ufb01c\nDocument Understanding (SDU) Challenge of AAAI 2021",
+      "page": 1
+    },
+    {
+      "concept": "the pre-trained BERT",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "Speci\ufb01cally, the pre-trained BERT is adopted to capture better\nsemantic representation",
+      "page": 1
+    },
+    {
+      "concept": "better\nsemantic representation",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "Speci\ufb01cally, the pre-trained BERT is adopted to capture better\nsemantic representation",
+      "page": 1
+    },
+    {
+      "concept": "the \ufb01ne-tuning",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "Then we incorporate the FGM ad-\nversarial training strategy into the \ufb01ne-tuning of BERT, which\nmakes the model more robust and generalized",
+      "page": 1
+    },
+    {
+      "concept": "the model",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "Then we incorporate the FGM ad-\nversarial training strategy into the \ufb01ne-tuning of BERT, which\nmakes the model more robust and generalized",
+      "page": 1
+    },
+    {
+      "concept": "an ensemble mechanism",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "Furthermore,\nan ensemble mechanism is devised to involve the represen-\ntations learned from multiple BERT variants",
+      "page": 1
+    },
+    {
+      "concept": "the represen-\ntations",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "Furthermore,\nan ensemble mechanism is devised to involve the represen-\ntations learned from multiple BERT variants",
+      "page": 1
+    },
+    {
+      "concept": "multiple BERT variants",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "Furthermore,\nan ensemble mechanism is devised to involve the represen-\ntations learned from multiple BERT variants",
+      "page": 1
+    },
+    {
+      "concept": "all\nthese components",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "Assembling all\nthese components together, the experimental results on the\nSciAI dataset show that our proposed approach outperforms\nall other competitive state-of-the-art methods",
+      "page": 1
+    },
+    {
+      "concept": "the\nSciAI dataset show",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "Assembling all\nthese components together, the experimental results on the\nSciAI dataset show that our proposed approach outperforms\nall other competitive state-of-the-art methods",
+      "page": 1
+    },
+    {
+      "concept": "Introduction\nAcronyms",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "Introduction\nAcronyms are widespread used in many technical docu-\nments to reduce duplicate references to the same concept",
+      "page": 1
+    },
+    {
+      "concept": "many technical docu-\nments",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "Introduction\nAcronyms are widespread used in many technical docu-\nments to reduce duplicate references to the same concept",
+      "page": 1
+    },
+    {
+      "concept": "duplicate references",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "Introduction\nAcronyms are widespread used in many technical docu-\nments to reduce duplicate references to the same concept",
+      "page": 1
+    },
+    {
+      "concept": "the same concept",
+      "source": "paper",
+      "confidence": 0.95,
+      "evidence": "Introduction\nAcronyms are widespread used in many technical docu-\nments to reduce duplicate references to the same concept",
+      "page": 1
+    }
+  ],
+  "embeddings": {},
+  "similarity": {},
+  "hierarchy": {
+    "Natural Language Processing": {
+      "Natural Language Processing": {
+        "Sequence Labeling": {
+          "sequence labeling problem": {}
+        }
+      }
+    },
+    "Artificial Intelligence": {
+      "Artificial Intelligence": {
+        "Deep Learning": {
+          "deep learning model": {}
+        }
+      }
+    },
+    "Cybersecurity": {
+      "adversarial training strategy": {},
+      "adversarial training bert": {},
+      "training bert acronym": {},
+      "sequence labeling problem": {},
+      "acronym identi\ufb01cation task": {},
+      "roberta albert electra": {},
+      "scienti\ufb01c document understanding": {},
+      "loss nlp task": {},
+      "trained language scienti\ufb01c": {},
+      "bertlarge roberta albert": {},
+      "term recognition bioinformatics": {},
+      "acronym widespread technical": {},
+      "word machine versus": {},
+      "deep learning model": {},
+      "task training larger": {}
+    },
+    "Bioinformatics": {
+      "term recognition bioinformatics": {}
+    },
+    "Other Concepts": {
+      "acronym long form": {},
+      "given text datasets": {},
+      "largest manually annotated": {},
+      "research ial training": {},
+      "workshop scienti\ufb01c document": {},
+      "Acronym Identi\ufb01cation\nWinning Solution": {},
+      "SDU@AAAI-21\nDanqing Zhu": {},
+      "Wangli Lin": {},
+      "Yang Zhang": {},
+      "Qiwei Zhong": {},
+      "Guanxiong Zeng": {},
+      "Weilin Wu": {},
+      "Jiayu Tang\nAlibaba Group": {},
+      "jiayu.tangjy}@alibaba-inc.com\nAbstract\nAcronym identi\ufb01cation": {},
+      "the acronyms": {},
+      "the phrases": {},
+      "scienti\ufb01c document understanding tasks": {},
+      "the lim-\nited size": {},
+      "manually annotated datasets": {},
+      "further im-\nprovement": {},
+      "the problem": {},
+      "Recent breakthroughs": {},
+      "lan-\nguage models": {},
+      "large corpora": {},
+      "unsupervised pre-training": {}
+    }
+  },
+  "mindmap": {
+    "root": "arXiv:2101.03700v2 [cs.CL] 12 Jan 2021",
+    "children": {
+      "Natural Language Processing": {
+        "Natural Language Processing": {
+          "Sequence Labeling": {
+            "sequence labeling problem": {}
+          }
+        }
+      },
+      "Artificial Intelligence": {
+        "Artificial Intelligence": {
+          "Deep Learning": {
+            "deep learning model": {}
+          }
+        }
+      },
+      "Cybersecurity": {
+        "adversarial training strategy": {},
+        "adversarial training bert": {},
+        "training bert acronym": {},
+        "sequence labeling problem": {},
+        "acronym identi\ufb01cation task": {},
+        "roberta albert electra": {},
+        "scienti\ufb01c document understanding": {},
+        "loss nlp task": {},
+        "trained language scienti\ufb01c": {},
+        "bertlarge roberta albert": {},
+        "term recognition bioinformatics": {},
+        "acronym widespread technical": {},
+        "word machine versus": {},
+        "deep learning model": {},
+        "task training larger": {}
+      },
+      "Bioinformatics": {
+        "term recognition bioinformatics": {}
+      },
+      "Other Concepts": {
+        "acronym long form": {},
+        "given text datasets": {},
+        "largest manually annotated": {},
+        "research ial training": {},
+        "workshop scienti\ufb01c document": {},
+        "Acronym Identi\ufb01cation\nWinning Solution": {},
+        "SDU@AAAI-21\nDanqing Zhu": {},
+        "Wangli Lin": {},
+        "Yang Zhang": {},
+        "Qiwei Zhong": {},
+        "Guanxiong Zeng": {},
+        "Weilin Wu": {},
+        "Jiayu Tang\nAlibaba Group": {},
+        "jiayu.tangjy}@alibaba-inc.com\nAbstract\nAcronym identi\ufb01cation": {},
+        "the acronyms": {},
+        "the phrases": {},
+        "scienti\ufb01c document understanding tasks": {},
+        "the lim-\nited size": {},
+        "manually annotated datasets": {},
+        "further im-\nprovement": {},
+        "the problem": {},
+        "Recent breakthroughs": {},
+        "lan-\nguage models": {},
+        "large corpora": {},
+        "unsupervised pre-training": {}
+      }
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "papers": [
+    {
+      "file_name": "2101.09893v1.pdf",
+      "title": "arXiv:2101.09893v1 [cs.CL] 25 Jan 2021",
+      "authors": [
+        "Amir Pouran Ben Veyseh",
+        "Franck Dernoncourt",
+        "Walter Chang",
+        "Adobe Research",
+        "San Jose"
+      ],
+      "abstract": "Acronyms and abbreviations are the short- form of longer phrases and they are ubiqui- tously employed in various types of writing. Despite their usefulness to save space in writ- ing and reader’s time in reading, they also pro- vide challenges for understanding the text es- pecially if the acronym is not deﬁned in the text or if it is used far from its deﬁnition in long texts. To alleviate this issue, there are consider- able efforts both from the research community and software developers to build systems for identifying acronyms and ﬁnding their correct meanings in the text. However, none of the existing works provide a uniﬁed solution capa- ble of processing acronyms in various domains and to be publicly available. Thus, we pro- vide the ﬁrst web-based acronym identiﬁcation and disambiguation system which can process acronyms from various domains including sci- entiﬁc, biomedical, and general domains. The web-based system is publicly available at http://iq.cs.uoregon.edu:5000 and a demo video is available at https://youtu. be/IkSh7LqI42M. The system source code is also available at https://github.com/ amirveyseh/MadDog.",
+      "keywords": [
+        "acronym identiﬁcation disambiguation",
+        "acronym identiﬁcation acronym",
+        "acronym identiﬁcation research",
+        "pouran ben veyseh",
+        "acronym word text",
+        "acronym introduce challenge",
+        "model acronym identiﬁcation",
+        "identiﬁcation disambiguation system",
+        "system acronym identiﬁcation",
+        "deep learning model",
+        "vide ﬁrst acronym",
+        "given text ous",
+        "amir pouran ben",
+        "glossary dog contains",
+        "perform dictionary",
+        "biomedical text biocomputing",
+        "limited ciﬁc domain",
+        "word mitigate issue",
+        "dataset acronym disambiguation",
+        "teractive search classiﬁcation"
+      ],
+      "technical_terms": [
+        "CRF",
+        "LSTM",
+        "Toshihisa Takagi",
+        "Christian Wartena",
+        "Jinling Liu",
+        "Yang Li",
+        "Qiaozhu Mei",
+        "Jun Xu",
+        "Acronym Detector",
+        "Capital Initials",
+        "Rui Antunes",
+        "DOG",
+        "Zhi Wen",
+        "COLING",
+        "PMC",
+        "Nicholas Miller",
+        "Miguel Grinberg",
+        "David Nadeau",
+        "Canadian Society",
+        "Huu Nguyen"
+      ],
+      "research_domains": [
+        "Artificial Intelligence",
+        "Natural Language Processing"
+      ],
+      "page_count": 8,
+      "word_count": 4180
+    }
+  ],
+  "similarity_labels": [],
+  "tfidf_matrix": null
+}

@@ -1,0 +1,18 @@
+# Ignore raw paper dataset PDFs (1.6GB+)
+HMRP_Dataset/PDFs/
+data/*.pdf
+
+# Ignore large binary models & weights
+*.pkl
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# OS and temporary files
+.DS_Store
+*.log
+logs/
+HMRP_Dataset/logs/

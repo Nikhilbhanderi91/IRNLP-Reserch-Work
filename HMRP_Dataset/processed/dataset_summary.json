@@ -1,0 +1,402 @@
+{
+  "total_pdfs_scanned": 500,
+  "domain_pdf_counts": {
+    "NLP": 100,
+    "IR": 100,
+    "AI": 100,
+    "ML": 100,
+    "CV": 100
+  },
+  "previously_processed": 50,
+  "newly_processed": 376,
+  "valid_papers_processed": 426,
+  "failed_or_skipped": 73,
+  "skipped_details": [
+    {
+      "file": "2609.09768.pdf",
+      "domain": "AI",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09790.pdf",
+      "domain": "AI",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09793.pdf",
+      "domain": "AI",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09815.pdf",
+      "domain": "AI",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09899.pdf",
+      "domain": "AI",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09953.pdf",
+      "domain": "AI",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10016.pdf",
+      "domain": "AI",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10052.pdf",
+      "domain": "AI",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10055.pdf",
+      "domain": "AI",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10058.pdf",
+      "domain": "AI",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10092.pdf",
+      "domain": "AI",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10142.pdf",
+      "domain": "AI",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10239.pdf",
+      "domain": "AI",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10253.pdf",
+      "domain": "AI",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10293.pdf",
+      "domain": "AI",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10305.pdf",
+      "domain": "AI",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10335.pdf",
+      "domain": "AI",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09659.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09698.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09768.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09776.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09783.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09793.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09799.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09883.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09899.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09905.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09949.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10002.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10016.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10022.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10036.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10049.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10052.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10058.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10084.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10108.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10135.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10142.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10144.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10210.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10225.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10296.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10311.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10315.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10350.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10364.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10439.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10464.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10494.pdf",
+      "domain": "ML",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09606.pdf",
+      "domain": "CV",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09626.pdf",
+      "domain": "CV",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09634.pdf",
+      "domain": "CV",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09737.pdf",
+      "domain": "CV",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09762.pdf",
+      "domain": "CV",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09790.pdf",
+      "domain": "CV",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09884.pdf",
+      "domain": "CV",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09899.pdf",
+      "domain": "CV",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09905.pdf",
+      "domain": "CV",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09949.pdf",
+      "domain": "CV",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.09985.pdf",
+      "domain": "CV",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10002.pdf",
+      "domain": "CV",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10018.pdf",
+      "domain": "CV",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10084.pdf",
+      "domain": "CV",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10125.pdf",
+      "domain": "CV",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10307.pdf",
+      "domain": "CV",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10311.pdf",
+      "domain": "CV",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10346.pdf",
+      "domain": "CV",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10355.pdf",
+      "domain": "CV",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10372.pdf",
+      "domain": "CV",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10464.pdf",
+      "domain": "CV",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10495.pdf",
+      "domain": "CV",
+      "reason": "duplicate_title"
+    },
+    {
+      "file": "2609.10522.pdf",
+      "domain": "CV",
+      "reason": "duplicate_title"
+    }
+  ],
+  "splits": {
+    "train_count": 298,
+    "val_count": 63,
+    "test_count": 65
+  },
+  "totals": {
+    "total_pages": 8716,
+    "total_words": 3534832,
+    "total_keywords": 13239,
+    "total_concepts": 25560
+  },
+  "averages": {
+    "avg_pages": 20.460093896713616,
+    "min_pages": 4,
+    "max_pages": 175,
+    "avg_words": 8297.727699530516,
+    "min_words": 1296,
+    "max_words": 59952,
+    "avg_concepts": 60.0,
+    "avg_keywords": 31.077464788732396
+  }
+}
