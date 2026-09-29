@@ -90,8 +90,10 @@ class HierarchyViz:
                 parents=parents,
                 values=values,
                 branchvalues="total",
-                hovertemplate="<b>%{label}</b><extra></extra>",
-                maxdepth=4,
+                tiling=dict(orientation="v"),
+                hovertemplate="<b>%{label}</b><br>Concepts under branch: %{value}<extra></extra>",
+                textinfo="label+percent entry",
+                maxdepth=5,
             )
         )
         self._style(fig, title)
@@ -188,14 +190,15 @@ class HierarchyViz:
         id_counter: List | None = None,
     ) -> Tuple[List, List, List, List]:
         """Recursively flatten nested dict into Plotly hierarchy arrays."""
-        if ids is None:
+        is_root = ids is None
+        if is_root:
             ids, labels, parents, values = [], [], [], []
             id_counter = [0]
-            # Add virtual root
+            # Add virtual root placeholder
             ids.append(root)
             labels.append(root)
             parents.append("")
-            values.append(1)
+            values.append(0)
 
         for key, children in tree.items():
             id_counter[0] += 1
@@ -210,6 +213,13 @@ class HierarchyViz:
                 self._flatten_tree(
                     children, root, node_id, ids, labels, parents, values, id_counter
                 )
+
+        if is_root and ids:
+            # Root value should equal sum of its direct children for branchvalues='total'
+            root_children_sum = sum(
+                v for p, v in zip(parents[1:], values[1:]) if p == root
+            )
+            values[0] = max(1, root_children_sum)
 
         return ids, labels, parents, values  # type: ignore
 

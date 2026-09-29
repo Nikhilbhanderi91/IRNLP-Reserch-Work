@@ -94,18 +94,30 @@ class HierarchyBuilder:
         ranked = sorted(scores.items(), key=lambda x: x[1], reverse=True)
         return [d for d, _ in ranked[:top_n]]
 
-    def get_hierarchy_paths(self, tree: Dict, prefix: str = "") -> List[str]:
+    def get_hierarchy_paths(
+        self,
+        tree: Dict,
+        prefix: str = "",
+        only_main_concepts: bool = True,
+    ) -> List[str]:
         """
-        Return all root-to-leaf paths as strings like:
-          "AI > Machine Learning > Deep Learning > CNN"
+        Return root-to-leaf paths as strings like:
+          "AI > Machine Learning > Deep Learning > Transformers > BERT"
+
+        Args:
+            tree: Hierarchical concept dictionary.
+            prefix: Recursive path accumulator.
+            only_main_concepts: If True, excludes non-hierarchical 'Other Concepts' buckets.
         """
         paths: List[str] = []
         for key, children in tree.items():
+            if only_main_concepts and not prefix and key.lower() in ["other concepts", "other", "uncategorized"]:
+                continue
             current_path = f"{prefix} > {key}" if prefix else key
             if not children:
                 paths.append(current_path)
             else:
-                paths.extend(self.get_hierarchy_paths(children, current_path))
+                paths.extend(self.get_hierarchy_paths(children, current_path, only_main_concepts=only_main_concepts))
         return paths
 
     def flatten_tree(self, tree: Dict, depth: int = 0) -> List[Tuple[str, str, int]]:

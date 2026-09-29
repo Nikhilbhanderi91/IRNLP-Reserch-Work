@@ -1,96 +1,127 @@
 # 🔬 HMRP — Hierarchical Concept Mapping for Research Paper Similarity Analysis
 
-A production-ready Python application that automatically reads research papers (PDFs), extracts concepts, builds hierarchical concept maps, computes paper similarity, and visualizes everything through an interactive Streamlit dashboard.
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+[![Streamlit App](https://img.shields.io/badge/Streamlit-1.40%2B-FF4B4B.svg)](https://streamlit.io)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+**HMRP (Hierarchical Matching & Research Parsing)** is a comprehensive NLP and machine learning platform designed to ingest raw scientific research papers (PDFs), perform **strict zero-leakage paper isolation**, extract multi-faceted metadata and concepts, build **multi-tier concept hierarchies**, construct **Concept-to-Concept (CCC) semantic networks**, compute **dense semantic similarity matrices**, and present all insights through a modern glassmorphic Streamlit dashboard.
 
 ---
 
-## ✨ Features
+## ✨ Key Features & Capabilities
 
-| Feature | Details |
+| Module | Features & Capabilities |
 |---|---|
-| **PDF Extraction** | Title · Authors · Abstract · Keywords · Introduction · Full Text |
-| **Text Processing** | Cleaning · Tokenization · Lemmatization · Stopword Removal |
-| **Keyword Extraction** | TF-IDF · KeyBERT · YAKE with confidence scores |
-| **Concept Extraction** | spaCy NER · Technical Terms · Noun Chunks |
-| **Hierarchy Building** | Auto parent-child tree from domain taxonomy |
-| **Similarity Analysis** | TF-IDF Cosine · Sentence Transformers |
-| **Visualizations** | Sunburst · Treemap · Icicle · Mind Map · Knowledge Graph · Heatmap |
-| **Search** | Keyword / concept / text search with fuzzy matching |
-| **Export** | CSV · Excel · JSON · PNG · SVG · Interactive HTML |
+| **📑 PDF Identity & Isolation** | PyMuPDF & `pdfplumber` extraction · SHA-256 identity hashing · Zero concept leakage across papers · Strict schema validation |
+| **🔍 Source Traceability** | Exact sentence evidence extraction · Page number grounding · Concept confidence scoring |
+| **🔑 Tri-Model Keywords** | Comparative ranked keywords using **TF-IDF**, **KeyBERT** (Dense embeddings), and **YAKE** (Statistical) + interactive association graph |
+| **🌳 Taxonomic Hierarchy** | Multi-tier structured domain taxonomy · **Sunburst**, **Treemap**, and **Icicle** Plotly charts · Filterable concept breadcrumb path list |
+| **🕸️ Knowledge Graph** | Interactive network topology (Plotly + PyVis) · Multi-paper shared bridges · Single-paper taxonomic trees · CCC semantic network |
+| **📊 Similarity Analysis** | Dual-model similarity matrix (**TF-IDF Cosine** + **Dense Sentence Transformers**) · Heatmap visualizations · Top similar paper pairs |
+| **📚 Literature Review** | Consolidated Excel matrix with research gaps, objectives, models, algorithms, datasets, metrics, and quantitative results |
+| **💾 Academic Export** | Standardized Section 6 JSON export · Full structured reports · High-res Plotly HTML & image exports |
 
 ---
 
-## 📁 Project Structure
+## 🏗️ System Architecture
+
+```mermaid
+flowchart TD
+    A[📄 Upload Research Papers PDFs] --> B[PDF Extractor & Identity Hasher]
+    B --> C[Text Processing & Tokenization]
+    C --> D[Tri-Model Keyword Extraction]
+    C --> E[Concept Extraction & Page Grounding]
+    
+    D --> F[Taxonomy & Hierarchy Builder]
+    E --> F
+    
+    F --> G1[☀️ Sunburst / 🗂️ Treemap / 🌊 Icicle]
+    F --> G2[📋 Taxonomic Breadcrumb Paths]
+    
+    C --> H[Dense Embeddings & TF-IDF Similarity]
+    H --> I[📊 Pairwise Similarity Heatmap]
+    
+    E --> J[CCC Mapper & Semantic Association]
+    J --> K[🕸️ Knowledge Graph & Cross-Domain Bridges]
+    
+    G1 & G2 & I & K --> L[🖥️ Streamlit Interactive UI]
+    L --> M[💾 Section 6 Structured JSON Export]
+```
+
+---
+
+## 📁 Repository Structure
 
 ```
-HMRP/
+IRNLP-Research-Work/
 ├── app/
-│   ├── config.py           # Global configuration
-│   ├── main.py             # Streamlit UI entry point
-│   └── pipeline.py         # End-to-end analysis orchestrator
+│   ├── config.py                 # System configurations, domain taxonomy, thresholds
+│   ├── main.py                   # Streamlit glassmorphic web dashboard
+│   └── pipeline.py               # End-to-end multi-stage pipeline orchestrator
 ├── extraction/
-│   ├── pdf_extractor.py    # PyMuPDF + pdfplumber
-│   ├── text_processor.py   # NLTK cleaning & tokenization
-│   ├── keyword_extractor.py # TF-IDF + KeyBERT + YAKE
-│   └── concept_extractor.py # spaCy NER + technical terms
+│   ├── pdf_extractor.py          # PyMuPDF + pdfplumber document parser
+│   ├── text_processor.py         # NLTK cleaner, lemmatizer, and vocabulary tokenizer
+│   ├── keyword_extractor.py      # TF-IDF + KeyBERT + YAKE extraction algorithms
+│   └── concept_extractor.py      # spaCy NER + technical terminology extractor
 ├── hierarchy/
-│   ├── concept_hierarchy.py # Tree construction
-│   └── hierarchy_builder.py # Domain detection + orchestration
+│   ├── concept_hierarchy.py      # Multi-tier DAG taxonomy & lineage assignment
+│   ├── hierarchy_builder.py      # Domain detection & path generator
+│   └── ccc_mapper.py             # Concept-to-Concept & cross-domain semantic mapper
 ├── similarity/
-│   └── similarity_engine.py # TF-IDF cosine + Sentence Transformers
+│   └── similarity_engine.py      # TF-IDF Cosine & Sentence Transformer similarity engine
 ├── visualization/
-│   ├── knowledge_graph.py   # NetworkX + PyVis + Plotly
-│   ├── hierarchy_viz.py     # Sunburst, Treemap, Icicle
-│   ├── heatmap_viz.py       # Similarity heatmap
-│   └── mindmap_viz.py       # Radial mind map
-├── search/
-│   └── search_engine.py     # Fuzzy + exact search
-├── export/
-│   └── exporter.py          # Multi-format export
+│   ├── hierarchy_viz.py          # Plotly Sunburst, Treemap, and Icicle visualizers
+│   ├── knowledge_graph.py        # NetworkX, Kamada-Kawai, & PyVis network graphs
+│   └── heatmap_viz.py            # Pairwise similarity heatmap charts
 ├── models/
-│   └── paper.py             # Paper dataclass
+│   └── paper.py                  # Paper dataclass with Section 6 JSON schema serialisation
 ├── utils/
-│   ├── logger.py            # Centralized logging
-│   └── helpers.py           # Shared utilities
+│   ├── logger.py                 # Centralized logging utility
+│   ├── validator.py              # Data schema and paper integrity validator
+│   └── helpers.py                # Text processing & formatting helper functions
+├── tests/
+│   ├── test_ccc_mapping.py       # Concept-to-Concept & cross-domain tests
+│   └── test_dataset_expansion.py # Data pipeline & incremental process tests
+├── HMRP_Dataset/                 # Dataset processing scripts & papers dataset
 ├── data/
-│   ├── uploads/             # PDF input files
-│   ├── processed/           # Processed JSON outputs
-│   └── exports/             # Exported results
-├── requirements.txt
-├── setup.py
-└── run.py                   # Launch script
+│   ├── uploads/                  # PDF paper uploads
+│   ├── processed/                # Normalized JSON intermediate representations
+│   └── exports/                  # Exported Section 6 JSON files
+├── requirements.txt              # Production dependencies
+└── run.py                        # Application entry launcher
 ```
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Installation & Quick Start
 
-### 1. Create a virtual environment
+### 1. Clone & Set Up Virtual Environment
 
 ```bash
-python -m venv venv
+git clone https://github.com/Nikhilbhanderi91/IRNLP-Reserch-Work.git
+cd IRNLP-Reserch-Work
+
+# Create virtual environment
+python3 -m venv venv
 source venv/bin/activate       # macOS / Linux
-# OR
-venv\Scripts\activate          # Windows
+# OR: venv\Scripts\activate    # Windows
 ```
 
-### 2. Install dependencies
+### 2. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 3. Download spaCy model
+### 3. Download NLP Language Model
 
 ```bash
-python -m spacy download en_core_web_sm
+python3 -m spacy download en_core_web_sm
 ```
 
-### 4. Run the application
+### 4. Launch the Web Dashboard
 
 ```bash
-python run.py
-# OR directly:
 streamlit run app/main.py
 ```
 
@@ -98,70 +129,43 @@ Open your browser at **http://localhost:8501**
 
 ---
 
-## 🖥️ Usage
+## 🖥️ Using the Dashboard
 
-1. **Upload PDFs** via the sidebar (one or multiple)
-2. Click **🚀 Analyse Papers**
-3. Explore the tabs:
-   - **Papers** — Metadata, abstract, authors, entities
-   - **Keywords** — TF-IDF / KeyBERT / YAKE results
-   - **Hierarchy** — Sunburst, Treemap, Icicle, Path list
-   - **Knowledge Graph** — Interactive network (Plotly + PyVis)
-   - **Mind Map** — Radial concept visualization
-   - **Similarity** — Heatmap + top similar pairs
-   - **Search** — Keyword/concept search with highlighting
-   - **Export** — Download CSV, Excel, JSON, HTML
+1. **Upload Papers**: Use the left sidebar to drag & drop one or more PDF research papers.
+2. **Select Parameters**: Choose your preferred similarity algorithm (`combined`, `tfidf`, or `semantic`) and keyword top-N limits.
+3. **Execute Analysis**: Click **🚀 Analyse Papers**.
+4. **Explore the 8 Core Modules**:
+   - **📄 Overview**: Inspect extracted metadata, research problem, objective, proposed methods, datasets, models, metrics, and quantitative results.
+   - **🔍 Concept Traceability**: View grounded sentence citations with exact page numbers and confidence scores.
+   - **🔑 Keywords**: Inspect side-by-side comparative extraction tables and the **Keyword Semantic & Co-occurrence Network Graph**.
+   - **🌳 Hierarchy**: Navigate concept parent-child relationships via **Sunburst**, **Treemap**, **Icicle**, and search-filtered **Path Lists**.
+   - **🕸️ Knowledge Graph**: Analyze cross-paper bridges, single-paper hierarchies, and **Concept-to-Concept (CCC)** semantic networks.
+   - **📊 Similarity**: Examine pairwise heatmaps and ranked top similar paper pairs.
+   - **📚 Literature Review**: Review the consolidated matrix comparing research papers across objectives and metrics.
+   - **💾 Export & JSON**: Preview and download academic-compliant **Section 6 Structured JSON**.
 
 ---
 
-## ⚙️ CLI Demo Mode
+## 🧪 Testing
 
-Run a quick pipeline test on a single PDF without the Streamlit UI:
+Execute the automated test suite with pytest:
 
 ```bash
-python run.py --demo /path/to/paper.pdf
+pytest
 ```
 
 ---
 
-## 🔧 Configuration
+## ⚙️ Configuration & Customization
 
-Edit `app/config.py` to customize:
-
-- **spaCy model** — switch to `en_core_sci_sm` for scientific text
-- **Sentence model** — change embedding model name
-- **Domain taxonomy** — add/edit research domain seed keywords
-- **Top-N settings** — control keyword/concept counts
-- **Color palette** — customize visualization colors
+Modify [`app/config.py`](file:///Users/nikhilbhanderi/Documents/Reserch%20Work/Reserch%20Project/app/config.py) to customize:
+- `DOMAIN_TAXONOMY`: Extend domain seed keywords for automatic classification.
+- `SENTENCE_MODEL`: Swap dense embedding models (defaults to `all-MiniLM-L6-v2`).
+- `KEYWORD_TOP_N`: Configure top keyword limits and n-gram ranges.
+- `COLOR_PALETTE`: Customize UI theme and graph node colors.
 
 ---
 
-## 📦 Technology Stack
+## 📜 License
 
-| Layer | Libraries |
-|---|---|
-| **Web UI** | Streamlit |
-| **PDF** | PyMuPDF (fitz), pdfplumber |
-| **NLP** | spaCy, NLTK |
-| **Keyword Extraction** | scikit-learn (TF-IDF), KeyBERT, YAKE |
-| **Similarity** | scikit-learn, sentence-transformers |
-| **Visualization** | Plotly, NetworkX, PyVis |
-| **Data** | NumPy, Pandas |
-| **Export** | openpyxl, kaleido |
-
----
-
-## 📝 License
-
-MIT License — free for academic and commercial use.
-
----
-
-## 🎓 Academic Use
-
-This project is designed as a final-year engineering project / research tool. It supports:
-
-- Literature review automation
-- Research gap identification via concept maps
-- Paper clustering and grouping
-- Citation graph-style keyword analysis
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.

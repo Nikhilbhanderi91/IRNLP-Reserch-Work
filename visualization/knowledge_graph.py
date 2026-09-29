@@ -50,36 +50,45 @@ class KnowledgeGraph:
 
     def build_from_papers(self, papers_data: List[Dict]) -> "KnowledgeGraph":
         """
-        Construct the graph from a list of paper summary dicts.
-
-        Each dict should have: title, keywords, research_concepts,
-        research_domains, named_entities.
-
-        Args:
-            papers_data: List of paper summary dicts.
+        Construct an accurate semantic graph from paper metadata.
+        Builds a structured taxonomy network: Paper -> Domain -> Subtopics & Models -> Key Concepts.
         """
         self.G = nx.Graph()
 
         for paper in papers_data:
-            title = paper.get("title", "Unknown")[:60]
+            title = paper.get("title", "Unknown")[:50]
             self.G.add_node(title, node_type="paper", label=title)
 
-            # ── Domains ──────────────────────────────────────────────────────
-            for domain in paper.get("research_domains", []):
+            domains = paper.get("research_domains", [])
+            primary_domain = domains[0] if domains else "Artificial Intelligence"
+
+            # Connect paper to verified domains
+            for domain in domains:
                 self.G.add_node(domain, node_type="domain", label=domain)
                 self.G.add_edge(title, domain, weight=3, rel="belongs_to")
 
-            # ── Top keywords ────────────────────────────────────────────────
-            for kw in paper.get("keywords", [])[:12]:
-                self.G.add_node(kw, node_type="keyword", label=kw)
-                self.G.add_edge(title, kw, weight=2, rel="has_keyword")
+            # Structured concept attachment: attach concepts to domains, not directly to paper
+            concepts = paper.get("technical_terms", []) + paper.get("keywords", [])
+            seen_concepts = set()
 
-            # ── Top concepts ─────────────────────────────────────────────────
-            for concept in paper.get("technical_terms", [])[:10]:
-                self.G.add_node(concept, node_type="concept", label=concept)
-                self.G.add_edge(title, concept, weight=1, rel="has_concept")
+            for c in concepts[:15]:
+                c_clean = c.strip()
+                if not c_clean or len(c_clean) < 3 or c_clean.lower() in seen_concepts:
+                    continue
+                seen_concepts.add(c_clean.lower())
 
-        # ── Cross-paper shared keyword edges ─────────────────────────────────
+                # Determine if concept relates directly to a domain
+                matched_domain = None
+                for d in domains:
+                    if d.lower() in c_clean.lower() or c_clean.lower() in d.lower():
+                        matched_domain = d
+                        break
+
+                target_parent = matched_domain if matched_domain else (domains[0] if domains else title)
+                self.G.add_node(c_clean, node_type="concept", label=c_clean)
+                self.G.add_edge(target_parent, c_clean, weight=2, rel="has_concept")
+
+        # Add cross-paper shared concept links
         self._add_shared_concept_edges(papers_data)
 
         log.info(
@@ -91,38 +100,50 @@ class KnowledgeGraph:
     def build_from_hierarchy(
         self, tree: Dict, paper_title: str = "Paper"
     ) -> "KnowledgeGraph":
-        """Build graph from a single paper's hierarchy tree."""
+        """Build structured hierarchical graph from concept tree with proper taxonomic lineage."""
         self.G = nx.Graph()
-        self.G.add_node(paper_title, node_type="paper", label=paper_title)
-        self._add_tree_edges(tree, paper_title)
+        p_title = paper_title[:50]
+        self.G.add_node(p_title, node_type="paper", label=p_title)
+        self._add_tree_edges(tree, p_title)
         return self
 
     def build_from_ccc(self, ccc_data: Dict, paper_title: str = "Paper") -> "KnowledgeGraph":
-        """Build an interactive graph directly from Concept-to-Concept (CCC) mapping."""
+        """Build semantic association graph directly from Concept-to-Concept (CCC) mapping."""
         self.G = nx.Graph()
-        self.G.add_node(paper_title, node_type="paper", label=paper_title)
+        p_title = paper_title[:50]
+        self.G.add_node(p_title, node_type="paper", label=p_title)
 
-        nodes = ccc_data.get("nodes", [])
         edges = ccc_data.get("c2c_edges", [])
         bridges = ccc_data.get("cross_domain_bridges", [])
         alignments = ccc_data.get("domain_alignments", {})
 
-        # Add domain nodes
+        # Add domain nodes and align verified concepts
         for domain, d_concepts in alignments.items():
+            if not d_concepts:
+                continue
             self.G.add_node(domain, node_type="domain", label=domain)
-            self.G.add_edge(paper_title, domain, weight=1.0)
-            for c in d_concepts[:10]:
+            self.G.add_edge(p_title, domain, weight=2.5, rel="domain")
+            for c in d_concepts[:8]:
                 self.G.add_node(c, node_type="concept", label=c)
-                self.G.add_edge(domain, c, weight=0.8)
+                self.G.add_edge(domain, c, weight=1.5, rel="domain_concept")
 
-        # Add concept-to-concept direct edges
+        # Add concept-to-concept direct semantic association edges
         for e in edges:
             u, v = e.get("source"), e.get("target")
-            w = e.get("weight", 0.5)
-            if u and v:
+            w = float(e.get("weight", 0.5))
+            if u and v and u != v:
                 self.G.add_node(u, node_type="concept", label=u)
                 self.G.add_node(v, node_type="concept", label=v)
-                self.G.add_edge(u, v, weight=w, relation=e.get("relation", "association"))
+                self.G.add_edge(u, v, weight=w, rel=e.get("relation", "association"))
+
+        # Highlight cross-domain bridge concepts
+        for b in bridges:
+            b_concept = b.get("concept")
+            if b_concept:
+                self.G.add_node(b_concept, node_type="entity", label=f"🌉 {b_concept}")
+                for d in b.get("connected_domains", []):
+                    self.G.add_node(d, node_type="domain", label=d)
+                    self.G.add_edge(d, b_concept, weight=2.0, rel="cross_domain_bridge")
 
         return self
 
@@ -261,11 +282,17 @@ class KnowledgeGraph:
     # ──────────────────────────────────────────────────────────────────────────
 
     def _layout(self) -> Dict:
-        """Choose spring layout with good parameters."""
+        """Choose clean, non-overlapping layout with optimal node spacing."""
         try:
-            return nx.spring_layout(self.G, seed=42, k=0.5, iterations=50)
+            # Try Kamada-Kawai for clean path and cluster separation
+            if len(self.G.nodes) > 1:
+                return nx.kamada_kawai_layout(self.G)
+            return nx.spring_layout(self.G, seed=42, k=0.8, iterations=100)
         except Exception:
-            return nx.random_layout(self.G, seed=42)
+            try:
+                return nx.spring_layout(self.G, seed=42, k=0.8, iterations=100)
+            except Exception:
+                return nx.random_layout(self.G, seed=42)
 
     def _add_tree_edges(self, tree: Dict, parent: str) -> None:
         """Recursively add tree edges to graph."""

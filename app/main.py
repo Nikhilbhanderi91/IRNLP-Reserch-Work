@@ -25,6 +25,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
+import networkx as nx
 
 # ── Local modules ─────────────────────────────────────────────────────────────
 from app.config import APP_TITLE, APP_ICON, APP_LAYOUT, UPLOAD_DIR, EXPORT_DIR
@@ -57,26 +58,36 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
-    html, body, [class*="css"] {
-        font-family: 'Inter', sans-serif !important;
+    * {
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+    }
+
+    code, pre, .hierarchy-path {
+        font-family: 'JetBrains Mono', monospace !important;
     }
 
     /* ── Global background ── */
-    .main {
-        background: linear-gradient(135deg, #0a0a14 0%, #0f0f1e 50%, #12121f 100%);
-        min-height: 100vh;
+    .stApp {
+        background: radial-gradient(circle at 15% 15%, #15122e 0%, #0c0a18 50%, #07060e 100%) !important;
+        color: #F0F2F6;
     }
-    .block-container { padding: 2rem 2.5rem; }
+    .block-container { 
+        padding: 2.5rem 3rem 4rem !important; 
+        max-width: 1400px;
+    }
 
     /* ── Hero banner ── */
     .hero-banner {
-        background: linear-gradient(135deg, #1a0a2e 0%, #16213e 40%, #0f3460 100%);
-        border: 1px solid rgba(108,99,255,0.3);
-        border-radius: 20px;
-        padding: 2.5rem 3rem;
-        margin-bottom: 2rem;
+        background: linear-gradient(135deg, rgba(30, 24, 66, 0.85) 0%, rgba(20, 27, 65, 0.8) 50%, rgba(12, 38, 70, 0.75) 100%);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(139, 92, 246, 0.35);
+        box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        border-radius: 24px;
+        padding: 2.8rem 3rem;
+        margin-bottom: 2.2rem;
         text-align: center;
         position: relative;
         overflow: hidden;
@@ -84,181 +95,234 @@ st.markdown(
     .hero-banner::before {
         content: '';
         position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(108,99,255,0.1) 0%, transparent 60%);
-        animation: pulse 4s ease-in-out infinite;
+        top: -60%;
+        left: -40%;
+        width: 180%;
+        height: 180%;
+        background: radial-gradient(circle, rgba(108,99,255,0.18) 0%, rgba(67,188,205,0.08) 35%, transparent 70%);
+        animation: pulse 6s ease-in-out infinite;
+        pointer-events: none;
     }
     @keyframes pulse {
-        0%, 100% { transform: scale(1); opacity: 0.5; }
-        50%       { transform: scale(1.1); opacity: 1; }
+        0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.7; }
+        50%       { transform: scale(1.15) rotate(3deg); opacity: 1; }
     }
     .hero-title {
-        font-size: 2.4rem;
+        font-size: 2.8rem;
         font-weight: 800;
-        background: linear-gradient(90deg, #6C63FF, #43BCCD, #00C49A);
+        background: linear-gradient(90deg, #A78BFA 0%, #60A5FA 40%, #34D399 80%, #FBBF24 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
+        letter-spacing: -0.5px;
         margin: 0;
         position: relative;
+        text-shadow: 0 10px 30px rgba(108, 99, 255, 0.2);
     }
     .hero-sub {
-        color: rgba(255,255,255,0.6);
-        font-size: 1rem;
-        margin-top: 0.5rem;
+        color: rgba(240, 242, 246, 0.75);
+        font-size: 1.05rem;
+        font-weight: 400;
+        margin-top: 0.75rem;
+        letter-spacing: 0.2px;
         position: relative;
     }
 
     /* ── Metric cards ── */
     .metric-card {
-        background: linear-gradient(135deg, rgba(108,99,255,0.15), rgba(67,188,205,0.1));
-        border: 1px solid rgba(108,99,255,0.25);
-        border-radius: 14px;
-        padding: 1.2rem 1.5rem;
+        background: rgba(22, 20, 48, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(139, 92, 246, 0.25);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+        padding: 1.4rem 1.2rem;
         text-align: center;
-        transition: transform 0.2s, border-color 0.2s;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .metric-card:hover {
-        transform: translateY(-3px);
-        border-color: rgba(108,99,255,0.5);
+        transform: translateY(-5px);
+        border-color: rgba(139, 92, 246, 0.6);
+        box-shadow: 0 16px 36px rgba(108, 99, 255, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
     }
     .metric-value {
-        font-size: 2rem;
-        font-weight: 700;
-        color: #6C63FF;
+        font-size: 2.2rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #A78BFA 0%, #60A5FA 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 1.2;
     }
     .metric-label {
         font-size: 0.8rem;
-        color: rgba(255,255,255,0.5);
+        color: rgba(224, 224, 255, 0.6);
         text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-top: 0.3rem;
+        letter-spacing: 1.2px;
+        font-weight: 600;
+        margin-top: 0.4rem;
     }
 
     /* ── Section headers ── */
     .section-header {
-        font-size: 1.3rem;
+        font-size: 1.4rem;
         font-weight: 700;
-        color: #6C63FF;
-        border-left: 4px solid #6C63FF;
-        padding-left: 0.8rem;
-        margin: 1.5rem 0 1rem 0;
+        color: #F3F4F6;
+        border-left: 4px solid #8B5CF6;
+        padding-left: 0.9rem;
+        margin: 1.8rem 0 1.2rem 0;
+        letter-spacing: -0.2px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     /* ── Keyword chips ── */
     .kw-chip {
-        display: inline-block;
-        background: linear-gradient(135deg, rgba(108,99,255,0.2), rgba(67,188,205,0.2));
-        border: 1px solid rgba(108,99,255,0.4);
-        border-radius: 20px;
-        padding: 0.25rem 0.7rem;
-        font-size: 0.78rem;
-        color: #c8c3ff;
-        margin: 0.2rem;
-        transition: background 0.2s;
+        display: inline-flex;
+        align-items: center;
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.18), rgba(59, 130, 246, 0.18));
+        border: 1px solid rgba(139, 92, 246, 0.4);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        border-radius: 9999px;
+        padding: 0.35rem 0.9rem;
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: #DDD6FE;
+        margin: 0.25rem;
+        transition: all 0.2s ease;
     }
     .kw-chip:hover {
-        background: rgba(108,99,255,0.4);
-        color: #fff;
+        background: rgba(139, 92, 246, 0.45);
+        color: #FFFFFF;
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
     }
 
     /* ── Abstract box ── */
     .abstract-box {
-        background: rgba(15,15,26,0.8);
-        border: 1px solid rgba(108,99,255,0.2);
-        border-radius: 12px;
-        padding: 1.2rem 1.5rem;
-        color: rgba(255,255,255,0.8);
-        font-size: 0.9rem;
-        line-height: 1.7;
+        background: rgba(18, 16, 38, 0.7);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(139, 92, 246, 0.25);
+        border-radius: 16px;
+        padding: 1.4rem 1.8rem;
+        color: rgba(240, 242, 246, 0.9);
+        font-size: 0.93rem;
+        line-height: 1.8;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     }
 
     /* ── Hierarchy path ── */
     .hierarchy-path {
-        background: rgba(108,99,255,0.08);
-        border-left: 3px solid #6C63FF;
-        border-radius: 0 8px 8px 0;
-        padding: 0.5rem 1rem;
-        margin: 0.3rem 0;
-        color: #c8c3ff;
-        font-size: 0.85rem;
-        font-family: monospace;
+        background: rgba(22, 20, 48, 0.5);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 12px;
+        padding: 0.75rem 1.2rem;
+        margin: 0.5rem 0;
+        color: #DDD6FE;
+        font-size: 0.88rem;
+        transition: all 0.2s ease;
     }
-
-    /* ── Search result ── */
-    .search-result {
-        background: rgba(0,196,154,0.08);
-        border: 1px solid rgba(0,196,154,0.25);
-        border-radius: 10px;
-        padding: 0.8rem 1.2rem;
-        margin: 0.4rem 0;
+    .hierarchy-path:hover {
+        border-color: rgba(139, 92, 246, 0.5);
+        background: rgba(26, 23, 58, 0.75);
     }
 
     /* ── Similarity pair ── */
     .sim-pair {
         display: flex;
         align-items: center;
-        gap: 1rem;
-        padding: 0.6rem 1rem;
-        border-radius: 8px;
-        background: rgba(249,168,38,0.08);
-        border: 1px solid rgba(249,168,38,0.2);
-        margin: 0.3rem 0;
+        gap: 1.2rem;
+        padding: 0.85rem 1.4rem;
+        border-radius: 12px;
+        background: rgba(25, 22, 50, 0.6);
+        border: 1px solid rgba(139, 92, 246, 0.25);
+        margin: 0.45rem 0;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        transition: all 0.2s ease;
+    }
+    .sim-pair:hover {
+        border-color: rgba(249, 168, 38, 0.6);
+        background: rgba(32, 28, 64, 0.8);
+        transform: translateX(4px);
     }
     .sim-score {
-        font-weight: 700;
-        color: #F9A826;
-        min-width: 50px;
+        font-weight: 800;
+        color: #FBBF24;
+        min-width: 60px;
         text-align: right;
+        font-size: 1.05rem;
     }
 
     /* ── Sidebar ── */
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #0a0a18 0%, #0f0f24 100%);
-        border-right: 1px solid rgba(108,99,255,0.2);
+        background: linear-gradient(180deg, #0f0c22 0%, #080614 100%) !important;
+        border-right: 1px solid rgba(139, 92, 246, 0.25) !important;
     }
 
     /* ── Tabs ── */
     .stTabs [data-baseweb="tab-list"] {
         gap: 8px;
-        background: transparent;
+        background: rgba(14, 12, 30, 0.5);
+        padding: 6px;
+        border-radius: 14px;
+        border: 1px solid rgba(139, 92, 246, 0.2);
     }
     .stTabs [data-baseweb="tab"] {
-        background: rgba(108,99,255,0.1);
-        border: 1px solid rgba(108,99,255,0.25);
-        border-radius: 8px;
-        color: #c8c3ff;
-        font-weight: 500;
-        padding: 0.5rem 1.2rem;
+        background: transparent;
+        border: 1px solid transparent;
+        border-radius: 10px;
+        color: rgba(224, 224, 255, 0.75);
+        font-weight: 600;
+        font-size: 0.9rem;
+        padding: 0.6rem 1.3rem;
+        transition: all 0.2s ease;
+    }
+    .stTabs [data-baseweb="tab"]:hover {
+        color: #FFFFFF;
+        background: rgba(139, 92, 246, 0.15);
     }
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #6C63FF, #43BCCD) !important;
-        color: white !important;
-        border-color: transparent !important;
+        background: linear-gradient(135deg, #7C3AED 0%, #3B82F6 100%) !important;
+        color: #FFFFFF !important;
+        box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
     }
 
     /* ── Buttons ── */
     .stButton > button {
-        background: linear-gradient(135deg, #6C63FF, #43BCCD);
-        color: white;
-        border: none;
-        border-radius: 10px;
-        font-weight: 600;
-        padding: 0.5rem 1.5rem;
-        transition: opacity 0.2s, transform 0.2s;
+        background: linear-gradient(135deg, #7C3AED 0%, #2563EB 100%) !important;
+        color: white !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 12px !important;
+        font-weight: 700 !important;
+        padding: 0.65rem 1.8rem !important;
+        box-shadow: 0 6px 20px rgba(124, 58, 237, 0.35) !important;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
     .stButton > button:hover {
-        opacity: 0.85;
-        transform: translateY(-2px);
+        opacity: 0.95;
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 10px 28px rgba(124, 58, 237, 0.5) !important;
+    }
+
+    /* ── Streamlit elements polish ── */
+    [data-testid="stMetricValue"] {
+        font-weight: 800 !important;
+        color: #A78BFA !important;
+    }
+    .stDataFrame {
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid rgba(139, 92, 246, 0.2) !important;
     }
 
     /* ── Scrollbar ── */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0a0a14; }
-    ::-webkit-scrollbar-thumb { background: #6C63FF; border-radius: 3px; }
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
+    ::-webkit-scrollbar-track { background: #07060e; }
+    ::-webkit-scrollbar-thumb { 
+        background: linear-gradient(180deg, #7C3AED, #3B82F6); 
+        border-radius: 4px; 
+    }
     </style>
     """,
     unsafe_allow_html=True,
@@ -424,40 +488,56 @@ if not papers:
     # ── Landing state ────────────────────────────────────────────────────────
     st.markdown(
         """
-        <div style="text-align:center; padding: 4rem 2rem;">
-            <div style="font-size:5rem">📄</div>
-            <h2 style="color:#6C63FF; font-weight:700">Upload Research Papers to Begin</h2>
-            <p style="color:rgba(255,255,255,0.5); max-width:600px; margin:1rem auto">
-                Upload one or more PDF research papers. Every paper is analyzed in complete
-                isolation with SHA-256 identity hashing, concept traceability, and strict validation.
+        <div style="text-align:center; padding: 3rem 1rem 2rem;">
+            <div style="font-size:4.5rem; animation: pulse 3s infinite;">🔬</div>
+            <h2 style="font-size:2.2rem; font-weight:800; background:linear-gradient(90deg,#A78BFA,#60A5FA,#34D399); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-top:0.5rem;">
+                Intelligent Research Paper Analysis Suite
+            </h2>
+            <p style="color:rgba(224,224,255,0.7); max-width:650px; margin:0.8rem auto 2.5rem; font-size:1.05rem; line-height:1.6;">
+                Upload one or multiple PDF research papers in the sidebar to automatically extract concepts, construct multi-tier taxonomic hierarchies, compute semantic similarities, and explore interactive knowledge graphs.
             </p>
         </div>
-
-        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:1rem; max-width:900px; margin: 0 auto;">
         """,
         unsafe_allow_html=True,
     )
+
+    st.markdown("### ⚡ Core Capabilities")
     features = [
-        ("📑", "PDF Identity Hashing", "SHA-256 paper isolation & verification"),
-        ("🔑", "Keyword Analysis", "TF-IDF · KeyBERT · YAKE"),
-        ("🌳", "Concept Hierarchy", "Dynamic parent-child tree mapping"),
-        ("🔗", "Similarity Matrix", "Cosine · Sentence Transformers"),
-        ("🕸️", "Knowledge Graph", "Interactive network visualization"),
-        ("🧠", "Mind Map", "Radial paper concept tree"),
-        ("🔍", "Source Traceability", "Concept evidence & page tracing"),
-        ("💾", "Structured JSON Export", "Section 6 schema export"),
+        ("📑", "Identity & Isolation", "SHA-256 zero-leakage paper isolation & schema validation"),
+        ("🔑", "Tri-Model Keywords", "Ranked comparisons using TF-IDF, KeyBERT, & YAKE algorithms"),
+        ("🌳", "Multi-Tier Hierarchy", "Interactive Sunburst, Treemap, & Icicle concept visualizers"),
+        ("🔗", "Semantic Similarity", "Pairwise cosine matrix & dense SentenceTransformer embeddings"),
+        ("🕸️", "Knowledge Graph", "Cross-domain and CCC concept-to-concept semantic networks"),
+        ("🔍", "Source Traceability", "Full citation evidence with page numbers and confidence scores"),
+        ("📚", "Literature Review", "Unified comparative analysis across papers, methods, and results"),
+        ("💾", "Structured Export", "Instant Section 6 JSON export compliant with academic standards"),
     ]
     cols = st.columns(4)
     for i, (icon, title_f, desc) in enumerate(features):
         with cols[i % 4]:
             st.markdown(
-                f"""<div class="metric-card">
-                    <div style="font-size:2rem">{icon}</div>
-                    <div style="color:#c8c3ff;font-weight:600;margin-top:.5rem">{title_f}</div>
-                    <div style="color:rgba(255,255,255,0.4);font-size:.75rem;margin-top:.3rem">{desc}</div>
+                f"""<div class="metric-card" style="margin-bottom:1.2rem;min-height:160px;display:flex;flex-direction:column;justify-content:center;">
+                    <div style="font-size:2.2rem">{icon}</div>
+                    <div style="color:#FFFFFF;font-weight:700;font-size:1rem;margin-top:.6rem">{title_f}</div>
+                    <div style="color:rgba(224,224,255,0.65);font-size:.82rem;margin-top:.3rem;line-height:1.4;">{desc}</div>
                 </div>""",
                 unsafe_allow_html=True,
             )
+
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div class="hierarchy-path" style="padding:1.4rem 1.8rem;background:rgba(124,58,237,0.1);border-left:4px solid #7C3AED;border-radius:14px;">
+            <h4 style="margin:0 0 8px 0;color:#A78BFA;font-size:1.1rem;font-weight:700;">🚀 Quick Start Workflow:</h4>
+            <div style="color:#E0E0E0;font-size:0.92rem;line-height:1.7;">
+                1️⃣ Use the left sidebar to upload <b>one or more PDF research papers</b>.<br>
+                2️⃣ Select your preferred <b>Similarity Algorithm</b> (TF-IDF, Semantic, or Combined).<br>
+                3️⃣ Click <b>🚀 Analyse Papers</b> to process papers and generate your interactive concept dashboards!
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
 else:
     total_words   = sum(p.word_count for p in papers)
@@ -486,9 +566,7 @@ else:
         "🔑 Keywords",
         "🌳 Hierarchy",
         "🕸️ Knowledge Graph",
-        "🧠 Mind Map",
         "📊 Similarity",
-        "🔍 Search",
         "📚 Literature Review",
         "💾 Export & JSON",
     ])
@@ -527,31 +605,79 @@ else:
         st.markdown(f'<div class="abstract-box">{p.abstract or "Abstract not detected."}</div>', unsafe_allow_html=True)
 
         # Structured Paper Sections
-        st.markdown('<div class="section-header">Paper Structural Analysis</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-header">📑 Paper Structural Analysis</div>', unsafe_allow_html=True)
         col_sec1, col_sec2 = st.columns(2)
         with col_sec1:
-            st.markdown(f"**Research Problem:** {p.problem or 'Not explicitly extracted'}")
-            st.markdown(f"**Research Objective:** {p.objective or 'Not explicitly extracted'}")
-            st.markdown(f"**Proposed Method:** {p.proposed_method.get('name', 'N/A')}")
-            st.write(p.proposed_method.get('description', ''))
+            st.markdown(
+                f"""<div class="hierarchy-path" style="margin-bottom:12px;">
+                    <div style="font-weight:700;color:#A78BFA;font-size:0.95rem;margin-bottom:4px;">🎯 Research Problem</div>
+                    <div style="color:#E5E7EB;font-size:0.9rem;">{p.problem or 'Not explicitly identified in text'}</div>
+                </div>""",
+                unsafe_allow_html=True,
+            )
+            st.markdown(
+                f"""<div class="hierarchy-path" style="margin-bottom:12px;">
+                    <div style="font-weight:700;color:#60A5FA;font-size:0.95rem;margin-bottom:4px;">🎯 Research Objective</div>
+                    <div style="color:#E5E7EB;font-size:0.9rem;">{p.objective or 'Not explicitly identified in text'}</div>
+                </div>""",
+                unsafe_allow_html=True,
+            )
+            proposed_name = p.proposed_method.get('name', 'N/A') if isinstance(p.proposed_method, dict) else str(p.proposed_method)
+            proposed_desc = p.proposed_method.get('description', '') if isinstance(p.proposed_method, dict) else ''
+            st.markdown(
+                f"""<div class="hierarchy-path" style="margin-bottom:12px;">
+                    <div style="font-weight:700;color:#34D399;font-size:0.95rem;margin-bottom:4px;">🛠️ Proposed Method</div>
+                    <div style="color:#FFFFFF;font-weight:600;font-size:0.92rem;">{proposed_name}</div>
+                    <div style="color:rgba(229,231,235,0.85);font-size:0.86rem;margin-top:2px;">{proposed_desc}</div>
+                </div>""",
+                unsafe_allow_html=True,
+            )
             if p.models:
-                st.markdown(f"**Models:** {', '.join(p.models)}")
-            if p.algorithms:
-                st.markdown(f"**Algorithms:** {', '.join(p.algorithms)}")
+                st.markdown(
+                    f"""<div class="hierarchy-path" style="margin-bottom:12px;">
+                        <div style="font-weight:700;color:#FBBF24;font-size:0.95rem;margin-bottom:4px;">🧠 Models & Architectures</div>
+                        <div style="color:#E5E7EB;font-size:0.9rem;">{', '.join(p.models)}</div>
+                    </div>""",
+                    unsafe_allow_html=True,
+                )
 
         with col_sec2:
             if p.datasets:
-                st.markdown(f"**Datasets:** {', '.join(p.datasets)}")
+                st.markdown(
+                    f"""<div class="hierarchy-path" style="margin-bottom:12px;">
+                        <div style="font-weight:700;color:#38BDF8;font-size:0.95rem;margin-bottom:4px;">📂 Datasets Used</div>
+                        <div style="color:#E5E7EB;font-size:0.9rem;">{', '.join(p.datasets)}</div>
+                    </div>""",
+                    unsafe_allow_html=True,
+                )
             if p.evaluation_metrics:
-                st.markdown(f"**Evaluation Metrics:** {', '.join(p.evaluation_metrics)}")
+                st.markdown(
+                    f"""<div class="hierarchy-path" style="margin-bottom:12px;">
+                        <div style="font-weight:700;color:#F472B6;font-size:0.95rem;margin-bottom:4px;">📊 Evaluation Metrics</div>
+                        <div style="color:#E5E7EB;font-size:0.9rem;">{', '.join(p.evaluation_metrics)}</div>
+                    </div>""",
+                    unsafe_allow_html=True,
+                )
             if p.results:
-                st.markdown("**Key Results:**")
-                for r in p.results[:3]:
-                    st.markdown(f"- {r}")
-            if p.advantages:
-                st.markdown(f"**Advantages:** {', '.join(p.advantages[:3])}")
-            if p.limitations:
-                st.markdown(f"**Limitations:** {', '.join(p.limitations[:3])}")
+                res_bullets = "".join(f"<li style='margin-bottom:3px;'>{r}</li>" for r in p.results[:3])
+                st.markdown(
+                    f"""<div class="hierarchy-path" style="margin-bottom:12px;">
+                        <div style="font-weight:700;color:#4ADE80;font-size:0.95rem;margin-bottom:4px;">📈 Key Quantitative Results</div>
+                        <ul style="color:#E5E7EB;font-size:0.88rem;padding-left:18px;margin-top:4px;">{res_bullets}</ul>
+                    </div>""",
+                    unsafe_allow_html=True,
+                )
+            if p.advantages or p.limitations:
+                adv_str = ', '.join(p.advantages[:2]) if p.advantages else 'None listed'
+                lim_str = ', '.join(p.limitations[:2]) if p.limitations else 'None listed'
+                st.markdown(
+                    f"""<div class="hierarchy-path" style="margin-bottom:12px;">
+                        <div style="font-weight:700;color:#C084FC;font-size:0.95rem;margin-bottom:4px;">⚖️ Advantages & Limitations</div>
+                        <div style="color:#E5E7EB;font-size:0.88rem;"><b>Pros:</b> {adv_str}</div>
+                        <div style="color:#E5E7EB;font-size:0.88rem;margin-top:2px;"><b>Cons:</b> {lim_str}</div>
+                    </div>""",
+                    unsafe_allow_html=True,
+                )
 
     # ════════════════════════════════════════════════════════════════════════
     # TAB 2 – Source Traceability
@@ -606,32 +732,36 @@ else:
             df = pd.DataFrame(kws[:keyword_top_n])
             if "word" in df.columns:
                 df.columns = [col_name, "Score"]
-                df[col_name] = df[col_name].str.title()
-                df["Score"] = df["Score"].round(4)
-                st.dataframe(df, use_container_width=True, height=350)
+                df[col_name] = df[col_name].astype(str).str.title()
+                df["Score"] = pd.to_numeric(df["Score"], errors="coerce").fillna(1.0).round(4)
 
-                fig = go.Figure(
-                    go.Bar(
-                        x=df["Score"],
-                        y=df[col_name],
-                        orientation="h",
-                        marker_color="#6C63FF",
-                        text=df["Score"].astype(str),
-                        textposition="outside",
+                col_t1, col_t2 = st.columns([1, 1])
+                with col_t1:
+                    st.dataframe(df, use_container_width=True, height=350)
+                with col_t2:
+                    colors = ["#6C63FF" if i % 2 == 0 else "#43BCCD" for i in range(len(df))]
+                    fig = go.Figure(
+                        go.Bar(
+                            x=df["Score"],
+                            y=df[col_name],
+                            orientation="h",
+                            marker=dict(color=colors),
+                            text=df["Score"].astype(str),
+                            textposition="outside",
+                        )
                     )
-                )
-                fig.update_layout(
-                    paper_bgcolor="#0F0F1A",
-                    plot_bgcolor="#0F0F1A",
-                    font=dict(color="#E0E0E0"),
-                    height=400,
-                    margin=dict(l=150, r=20, t=20, b=30),
-                    yaxis=dict(autorange="reversed"),
-                )
-                st.plotly_chart(fig, use_container_width=True)
+                    fig.update_layout(
+                        paper_bgcolor="#0F0F1A",
+                        plot_bgcolor="#0F0F1A",
+                        font=dict(color="#E0E0E0"),
+                        height=350,
+                        margin=dict(l=120, r=30, t=20, b=20),
+                        yaxis=dict(autorange="reversed"),
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
 
         with kw_tab1:
-            merged = [{"word": w, "score": 1.0} for w in p2.all_keywords[:keyword_top_n]]
+            merged = [{"word": w, "score": 1.0 - (i * 0.03)} for i, w in enumerate(p2.all_keywords[:keyword_top_n])]
             kw_table(merged, "Merged Keyword")
 
         with kw_tab2:
@@ -642,6 +772,91 @@ else:
 
         with kw_tab4:
             kw_table(p2.yake_keywords[:keyword_top_n], "YAKE Keyword")
+
+        # ── Below: Keyword Co-occurrence & Semantic Network Graph ─────────────
+        st.markdown("---")
+        st.markdown("#### 🕸️ Keyword Semantic & Co-occurrence Network")
+        st.caption("Visualizing semantic relationships and text associations between the top extracted keywords for this paper:")
+
+        kw_nodes = p2.all_keywords[:15]
+        if kw_nodes:
+            kw_graph = nx.Graph()
+            # Add center paper node
+            center_label = short(p2.title, 35)
+            kw_graph.add_node(center_label, node_type="paper", label=center_label)
+
+            for i, kw_w in enumerate(kw_nodes):
+                kw_title = kw_w.title()
+                kw_graph.add_node(kw_title, node_type="keyword", label=kw_title)
+                kw_graph.add_edge(center_label, kw_title, weight=1.5)
+
+                # Connect keywords that appear in same sentences or share tokens
+                for j in range(i + 1, len(kw_nodes)):
+                    other_kw = kw_nodes[j].title()
+                    w1_tokens = set(kw_w.lower().split())
+                    w2_tokens = set(kw_nodes[j].lower().split())
+                    if w1_tokens & w2_tokens or (len(kw_w) > 3 and kw_w.lower() in kw_nodes[j].lower()):
+                        kw_graph.add_edge(kw_title, other_kw, weight=2.0)
+
+            # Render Plotly network for keywords
+            try:
+                pos_kw = nx.kamada_kawai_layout(kw_graph)
+            except Exception:
+                pos_kw = nx.spring_layout(kw_graph, seed=42)
+
+            k_edge_x, k_edge_y = [], []
+            for u, v in kw_graph.edges():
+                if u in pos_kw and v in pos_kw:
+                    k_edge_x += [pos_kw[u][0], pos_kw[v][0], None]
+                    k_edge_y += [pos_kw[u][1], pos_kw[v][1], None]
+
+            k_edge_trace = go.Scatter(
+                x=k_edge_x, y=k_edge_y,
+                mode="lines",
+                line=dict(width=1.2, color="#444466"),
+                hoverinfo="none",
+            )
+
+            # Node markers
+            k_node_x, k_node_y, k_node_text, k_node_colors, k_node_sizes = [], [], [], [], []
+            for n, attrs in kw_graph.nodes(data=True):
+                if n in pos_kw:
+                    k_node_x.append(pos_kw[n][0])
+                    k_node_y.append(pos_kw[n][1])
+                    k_node_text.append(n)
+                    if attrs.get("node_type") == "paper":
+                        k_node_colors.append("#FF6584")
+                        k_node_sizes.append(22)
+                    else:
+                        k_node_colors.append("#00C49A")
+                        k_node_sizes.append(14)
+
+            k_node_trace = go.Scatter(
+                x=k_node_x, y=k_node_y,
+                mode="markers+text",
+                text=k_node_text,
+                textposition="top center",
+                textfont=dict(size=10, color="#E0E0E0"),
+                marker=dict(
+                    size=k_node_sizes,
+                    color=k_node_colors,
+                    line=dict(width=1.5, color="#111"),
+                ),
+                hovertemplate="<b>%{text}</b><extra></extra>",
+            )
+
+            fig_kw_net = go.Figure(data=[k_edge_trace, k_node_trace])
+            fig_kw_net.update_layout(
+                title=dict(text=f"Keyword Association Network – {short(p2.title, 40)}", font=dict(size=15, color="#00C49A")),
+                paper_bgcolor="#0F0F1A",
+                plot_bgcolor="#0F0F1A",
+                font=dict(color="#E0E0E0"),
+                xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                margin=dict(l=10, r=10, t=40, b=10),
+                height=500,
+            )
+            st.plotly_chart(fig_kw_net, use_container_width=True)
 
     # ════════════════════════════════════════════════════════════════════════
     # TAB 4 – Hierarchy
@@ -665,30 +880,53 @@ else:
         )
 
         tree = p3.concept_hierarchy
+        if not tree and (p3.research_concepts or p3.all_keywords):
+            tree, _ = builder.build(
+                concepts=p3.research_concepts or [],
+                keywords=p3.all_keywords or [],
+                text=p3.full_text[:20_000] if p3.full_text else "",
+            )
+            p3.concept_hierarchy = tree
 
-        with hier_tab1:
-            if tree:
+        if not tree:
+            st.info("ℹ️ No concept hierarchy data available for this paper. Make sure paper analysis is completed.")
+        else:
+            with hier_tab1:
                 fig_sb = hier_viz.sunburst(tree, title=f"Sunburst – {short(p3.title, 50)}")
                 st.plotly_chart(fig_sb, use_container_width=True)
 
-        with hier_tab2:
-            if tree:
+            with hier_tab2:
                 fig_tm = hier_viz.treemap(tree, title=f"Treemap – {short(p3.title, 50)}")
                 st.plotly_chart(fig_tm, use_container_width=True)
 
-        with hier_tab3:
-            if tree:
+            with hier_tab3:
                 fig_ic = hier_viz.icicle(tree, title=f"Icicle – {short(p3.title, 50)}")
                 st.plotly_chart(fig_ic, use_container_width=True)
 
-        with hier_tab4:
-            paths = builder.get_hierarchy_paths(tree)
-            if paths:
-                for path in paths[:50]:
-                    st.markdown(
-                        f'<div class="hierarchy-path">📍 {path}</div>',
-                        unsafe_allow_html=True,
-                    )
+            with hier_tab4:
+                col_p1, col_p2 = st.columns([2, 1])
+                with col_p2:
+                    only_main = st.checkbox("Only Main Concepts", value=True, help="Hide miscellaneous/uncategorized terms and show only structured domain concept taxonomies.")
+                with col_p1:
+                    filter_txt = st.text_input("🔍 Filter paths", "", placeholder="Type concept name (e.g. BERT, NLP, Attention)...", key="hier_path_filter")
+
+                paths = builder.get_hierarchy_paths(tree, only_main_concepts=only_main)
+                if paths:
+                    st.caption(f"Showing {len(paths)} main concept lineage pathways:")
+                    filtered_paths = [p for p in paths if filter_txt.lower() in p.lower()] if filter_txt else paths
+                    
+                    for path in filtered_paths[:100]:
+                        parts = [p.strip() for p in path.split(">")]
+                        badge_html = " <span style='color:#6C63FF;font-weight:bold;'>→</span> ".join(
+                            f"<span style='background:rgba(108,99,255,0.15);border:1px solid rgba(108,99,255,0.3);padding:2px 8px;border-radius:6px;font-size:13px;color:#E0E0E0;'>{p}</span>"
+                            for p in parts
+                        )
+                        st.markdown(
+                            f'<div class="hierarchy-path" style="margin-bottom:8px;padding:8px 12px;background:rgba(255,255,255,0.03);border-radius:8px;">📍 {badge_html}</div>',
+                            unsafe_allow_html=True,
+                        )
+                else:
+                    st.caption("No main hierarchy paths found for this selection.")
 
     # ════════════════════════════════════════════════════════════════════════
     # TAB 5 – Knowledge Graph
@@ -767,28 +1005,9 @@ else:
             st.plotly_chart(fig_kg, use_container_width=True)
 
     # ════════════════════════════════════════════════════════════════════════
-    # TAB 6 – Mind Map
+    # TAB 6 – Similarity Analysis
     # ════════════════════════════════════════════════════════════════════════
     with tabs[5]:
-        st.markdown('<div class="section-header">🧠 Mind Map</div>', unsafe_allow_html=True)
-
-        paper_sel_mm = st.selectbox(
-            "Select Paper",
-            options=range(len(papers)),
-            format_func=lambda i: papers[i].file_name,
-            key="mm_sel",
-        )
-        pm = papers[paper_sel_mm]
-        mm_depth = st.slider("Depth", 1, 4, 3, key="mm_depth")
-
-        mm_viz = MindMapViz()
-        fig_mm = mm_viz.build(pm.title, pm.concept_hierarchy, max_depth=mm_depth)
-        st.plotly_chart(fig_mm, use_container_width=True)
-
-    # ════════════════════════════════════════════════════════════════════════
-    # TAB 7 – Similarity Analysis
-    # ════════════════════════════════════════════════════════════════════════
-    with tabs[6]:
         st.markdown('<div class="section-header">📊 Pairwise Similarity Analysis</div>', unsafe_allow_html=True)
 
         if len(papers) < 2 or sim_results.get("similarity_status") == "insufficient_papers":
@@ -819,7 +1038,9 @@ else:
 
             with sim_tab4:
                 st.markdown("**Most Similar Paper Pairs**")
-                matrix = sim_results.get("combined_matrix") or sim_results.get("tfidf_matrix")
+                matrix = sim_results.get("combined_matrix")
+                if matrix is None:
+                    matrix = sim_results.get("tfidf_matrix")
                 if matrix is not None:
                     from similarity.similarity_engine import SimilarityEngine
                     se = SimilarityEngine()
@@ -837,62 +1058,9 @@ else:
                         )
 
     # ════════════════════════════════════════════════════════════════════════
-    # TAB 8 – Search Concepts & Keywords
+    # TAB 7 – Literature Review
     # ════════════════════════════════════════════════════════════════════════
-    with tabs[7]:
-        st.markdown('<div class="section-header">🔍 Search Concepts & Keywords</div>', unsafe_allow_html=True)
-
-        search_query = st.text_input(
-            "Search",
-            placeholder="e.g. 'transformer', 'adversarial training', 'BERT'…",
-            label_visibility="collapsed",
-        )
-        search_in = st.radio(
-            "Search in",
-            ["all", "keywords", "concepts", "text"],
-            horizontal=True,
-        )
-
-        if search_query:
-            engine = SearchEngine()
-            papers_data_search = [
-                {
-                    "title":           p.title,
-                    "keywords":        p.all_keywords,
-                    "technical_terms": p.technical_terms,
-                    "research_domains":p.research_domains,
-                    "abstract":        p.abstract,
-                    "full_text":       p.full_text[:8000],
-                }
-                for p in papers
-            ]
-            results = engine.search(search_query, papers_data_search, search_in=search_in)
-
-            if results:
-                st.success(f"Found **{len(results)}** result(s)")
-                for r in results[:25]:
-                    badge_color = {"keyword": "#6C63FF", "concept": "#43BCCD",
-                                   "domain": "#F9A826", "text": "#00C49A"}.get(r.match_type, "#888")
-                    st.markdown(
-                        f"""<div class="search-result">
-                            <span style="background:{badge_color};color:white;border-radius:4px;padding:1px 8px;font-size:.72rem">
-                                {r.match_type}
-                            </span>
-                            <strong style="color:#E0E0E0;margin-left:.5rem">
-                                {short(r.paper_title, 40)}
-                            </strong>
-                            <span style="color:#F9A826;margin-left:.5rem">
-                                Score: {r.score:.3f}
-                            </span>
-                            <div style="margin-top:.3rem">{r.highlighted or r.matched_term}</div>
-                        </div>""",
-                        unsafe_allow_html=True,
-                    )
-
-    # ════════════════════════════════════════════════════════════════════════
-    # TAB 9 – Literature Review
-    # ════════════════════════════════════════════════════════════════════════
-    with tabs[8]:
+    with tabs[6]:
         st.markdown('<div class="section-header">📚 Literature Review & Comparison</div>', unsafe_allow_html=True)
         comparison_path = ROOT / "Consolidated_Paper_Comparison.xlsx"
         if comparison_path.exists():
@@ -903,9 +1071,9 @@ else:
                 st.error(f"Error loading comparison matrix: {e}")
 
     # ════════════════════════════════════════════════════════════════════════
-    # TAB 10 – Export & Section 6 Structured JSON
+    # TAB 8 – Export & Section 6 Structured JSON
     # ════════════════════════════════════════════════════════════════════════
-    with tabs[9]:
+    with tabs[7]:
         st.markdown('<div class="section-header">💾 Export Results & Section 6 JSON</div>', unsafe_allow_html=True)
         paper_sel_ex = st.selectbox(
             "Select Paper to Export",
