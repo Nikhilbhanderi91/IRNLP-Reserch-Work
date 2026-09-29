@@ -71,6 +71,7 @@ class Paper:
     # ── Hierarchy & Visualizations ────────────────────
     concept_hierarchy: Dict = field(default_factory=dict)      # nested dict tree
     mindmap: Dict = field(default_factory=dict)
+    ccc_mapping: Dict[str, Any] = field(default_factory=dict)  # Concept-to-Concept & Cross-Domain mapping
 
     # ── Metadata ───────────────────────────────────────
     page_count: int = 0
@@ -135,7 +136,8 @@ class Paper:
             "embeddings": {"cls_embedding": self.embedding} if self.embedding else {},
             "similarity": self.similarity_data,
             "hierarchy": self.concept_hierarchy,
-            "mindmap": self.mindmap if self.mindmap else {"root": self.title, "children": self.concept_hierarchy}
+            "mindmap": self.mindmap if self.mindmap else {"root": self.title, "children": self.concept_hierarchy},
+            "ccc_mapping": self.ccc_mapping
         }
 
     def __repr__(self) -> str:

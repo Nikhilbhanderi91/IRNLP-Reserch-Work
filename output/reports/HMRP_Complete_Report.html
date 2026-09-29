@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HMRP Master Research & Visualization Report</title>
+    <style>
+        :root {
+            --primary: #1A365D;
+            --accent: #2B6CB0;
+            --bg: #F7FAFC;
+            --card-bg: #FFFFFF;
+            --text: #2D3748;
+            --border: #E2E8F0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1250px;
+            margin: 0 auto;
+        }
+        .header {
+            background: linear-gradient(135deg, #1A365D 0%, #2B6CB0 100%);
+            color: white;
+            padding: 45px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+        .header h1 { margin: 0 0 10px 0; font-size: 2.3rem; font-weight: 800; }
+        .header p { margin: 0; opacity: 0.92; font-size: 1.15rem; }
+        .report-section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 35px;
+            margin-bottom: 35px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        h2 {
+            color: #1A365D;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 8px;
+            margin-top: 0;
+            font-size: 1.5rem;
+        }
+        .figures-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .figure-card {
+            background: #FAFAFA;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 18px;
+            text-align: left;
+        }
+        .img-wrapper {
+            background: white;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #EDF2F7;
+            text-align: center;
+        }
+        .img-wrapper img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+        }
+        .figure-card h3 { margin: 15px 0 5px 0; font-size: 1.15rem; color: #1A365D; }
+        .caption { font-size: 0.9rem; color: #4A5568; margin-bottom: 12px; font-style: italic; }
+        .btn {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 7px 14px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 600;
+        }
+        .btn:hover { background: #2C5282; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        th { background-color: #EDF2F7; color: #1A365D; font-weight: 700; }
+        .badge {
+            background-color: #EBF8FF;
+            color: #2B6CB0;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔬 HMRP: Master Research & Visualization Report</h1>
+            <p>Comprehensive Multidisciplinary Analysis, Hierarchical Taxonomies & Cross-Domain Semantic Evaluation</p>
+        </div>
+
+        
+        <div class="report-section">
+            <h2>1. Dataset Overview</h2>
+            <div class="figures-grid">
+                
+            <div class="figure-card">
+                <div class="img-wrapper">
+                    <img src="../summary/images/papers_per_domain.png" alt="Papers per Domain Distribution">
+                </div>
+                <h3>Papers per Domain Distribution</h3>
+                <p class="caption">Figure 1: Distribution of ingested research publications across academic domains in the HMRP corpus.</p>
+                
+            </div>
+            
+            <div class="figure-card">
+                <div class="img-wrapper">
+                    <img src="../summary/images/dataset_domain_distribution.png" alt="Proportional Domain Representation">
+                </div>
+                <h3>Proportional Domain Representation</h3>
+                <p class="caption">Figure 2: Relative percentage contribution of each scientific discipline to the evaluated corpus.</p>
+                
+            </div>
+            
+            <div class="figure-card">
+                <div class="img-wrapper">
+                    <img src="../summary/images/dataset_statistics.png" alt="Corpus Ingestion Summary Metrics">
+                </div>
+                <h3>Corpus Ingestion Summary Metrics</h3>
+                <p class="caption">Figure 3: Key extraction and statistical metrics summarizing the size and lexical density of the analyzed papers.</p>
+                
+            </div>
+            
+            </div>
+        </div>
+        
+        <div class="report-section">
+            <h2>2. TF-IDF Analysis</h2>
+            <div class="figures-grid">
+                
+            <div class="figure-card">
+                <div class="img-wrapper">
+                    <img src="../tfidf/images/tfidf_document_term_heatmap.png" alt="Document-Term Matrix Heatmap">
+                </div>
+                <h3>Document-Term Matrix Heatmap</h3>
+                <p class="caption">Figure 4: Salient TF-IDF term weights computed across individual research papers.</p>
+                
+            </div>
+            
+            <div class="figure-card">
+                <div class="img-wrapper">
+                    <img src="../tfidf/images/tfidf_term_importance.png" alt="TF-IDF Term Importance">
+                </div>
+                <h3>TF-IDF Term Importance</h3>
+                <p class="caption">Figure 5: Highest-weighted vocabulary terms extracted via corpus-wide TF-IDF scoring.</p>
+                
+            </div>
+            
+            <div class="figure-card">
+                <div class="img-wrapper">
+                    <img src="../tfidf/images/tfidf_similarity_heatmap.png" alt="TF-IDF Pairwise Document Similarity">
+                </div>
+                <h3>TF-IDF Pairwise Document Similarity</h3>
+                <p class="caption">Figure 6: Pairwise lexical similarity matrix between papers derived from TF-IDF vector representations.</p>
+                <a href='../tfidf/html/tfidf_similarity_heatmap.html' target='_blank' class='btn'>Open Interactive Version</a>
+            </div>
+            
+            </div>
+        </div>
+        
+        <div class="report-section">
+            <h2>3. Keyword Extraction</h2>
+            <div class="figures-grid">
+                
+            <div class="figure-card">
+                <div class="img-wrapper">
+                    <img src="../keyword_extraction/images/top_keywords.png" alt="Ensemble Keyword Frequency">
+                </div>
+                <h3>Ensemble Keyword Frequency</h3>
+                <p class="caption">Figure 8: High-confidence technical keywords extracted and validated across KeyBERT, YAKE, and TF-IDF.</p>
+                
+            </div>
+            
+            <div class="figure-card">
+                <div class="img-wrapper">
+                    <img src="../keyword_extraction/images/keyword_engine_comparison.png" alt="Engine Confidence Score Distribution">
+                </div>
+                <h3>Engine Confidence Score Distribution</h3>
+                <p class="caption">Figure 9: Statistical distribution of extraction confidence scores compared across KeyBERT, YAKE, and TF-IDF.</p>
+                
+            </div>
+            
+            </div>
+        </div>
+        
+        <div class="report-section">
+            <h2>4. Dense Embeddings</h2>
+            <div class="figures-grid">
+                
+            <div class="figure-card">
+                <div class="img-wrapper">
+                    <img src="../embeddings/images/embedding_pca.png" alt="PCA Embedding Projection">
+                </div>
+                <h3>PCA Embedding Projection</h3>
+                <p class="caption">Figure 10: 2D Principal Component Analysis (PCA) projection of dense paper embeddings color-coded by domain.</p>
+                
+            </div>
+            
+            <div class="figure-card">
+                <div class="img-wrapper">
+                    <img src="../embeddings/images/embedding_tsne.png" alt="t-SNE Manifold Projection">
+                </div>
+                <h3>t-SNE Manifold Projection</h3>
+                <p class="caption">Figure 11: Non-linear t-SNE clustering illustrating semantic closeness of multidisciplinary publications.</p>
+                
+            </div>
+            
+            </div>
+        </div>
+        
+        <div class="report-section">
+            <h2>5. Semantic Similarity</h2>
+            <div class="figures-grid">
+                
+            <div class="figure-card">
+                <div class="img-wrapper">
+                    <img src="../cosine_similarity/images/semantic_similarity_heatmap.png" alt="Dense Embedding Similarity Heatmap">
+                </div>
+                <h3>Dense Embedding Similarity Heatmap</h3>
+                <p class="caption">Figure 12: Pairwise cosine similarity matrix calculated using deep contextual transformer embeddings.</p>
+                <a href='../cosine_similarity/html/semantic_similarity_heatmap.html' target='_blank' class='btn'>Open Interactive Version</a>
+            </div>
+            
+            <div class="figure-card">
+                <div class="img-wrapper">
+                    <img src="../cosine_similarity/images/semantic_top_similar_pairs.png" alt="Top Semantically Similar Pairs">
+                </div>
+                <h3>Top Semantically Similar Pairs</h3>
+                <p class="caption">Figure 13: Paper pairs demonstrating highest contextual semantic alignment.</p>
+                
+            </div>
+            
+            <div class="figure-card">
+                <div class="img-wrapper">
+                    <img src="../cosine_similarity/images/hybrid_combined_similarity.png" alt="Hybrid Combined Similarity Heatmap">
+                </div>
+                <h3>Hybrid Combined Similarity Heatmap</h3>
+                <p class="caption">Figure 14: Comprehensive hybrid similarity matrix combining TF-IDF lexical overlap and dense semantic representations.</p>
+                <a href='../cosine_similarity/html/hybrid_combined_similarity.html' target='_blank' class='btn'>Open Interactive Version</a>
+            </div>
+            
+            </div>
+        </div>
+        
+        <div class="report-section">
+            <h2>6. Hierarchical Concept Mapping</h2>
+            <div class="figures-grid">
+                
+            <div class="figure-card">
+                <div class="img-wrapper">
+                    <img src="../hierarchy/images/hierarchy_sunburst.png" alt="Concentric Concept Sunburst">
+                </div>
+                <h3>Concentric Concept Sunburst</h3>
+                <p class="caption">Figure 15: Radial multi-tiered concept taxonomy for 'arXiv:2608.29600v1 [cs.LG] 30 Aug 2026'.</p>
+                <a href='../hierarchy/html/hierarchy_sunburst.html' target='_blank' class='btn'>Open Interactive Version</a>
+            </div>
+            
+            <div class="figure-card">
+                <div class="img-wrapper">
+                    <img src="../hierarchy/images/hierarchy_treemap.png" alt="Hierarchical Concept Treemap">
+                </div>
+                <h3>Hierarchical Concept Treemap</h3>
+                <p class="caption">Figure 16: Nested rectangular concept partitioning for 'arXiv:2608.29600v1 [cs.LG] 30 Aug 2026'.</p>
+                <a href='../hierarchy/html/hierarchy_treemap.html' target='_blank' class='btn'>Open Interactive Version</a>
+            </div>
+            
+            <div class="figure-card">
+                <div class="img-wrapper">
+                    <img src="../hierarchy/images/hierarchy_icicle.png" alt="Top-Down Concept Icicle Diagram">
+                </div>
+                <h3>Top-Down Concept Icicle Diagram</h3>
+                <p class="caption">Figure 17: Top-down hierarchical breakdown of technical sub-domains for 'arXiv:2608.29600v1 [cs.LG] 30 Aug 2026'.</p>
+                <a href='../hierarchy/html/hierarchy_icicle.html' target='_blank' class='btn'>Open Interactive Version</a>
+            </div>
+            
+            <div class="figure-card">
+                <div class="img-wrapper">
+                    <img src="../hierarchy/images/hierarchy_tree.png" alt="Hierarchical Concept Network Tree">
+                </div>
+                <h3>Hierarchical Concept Network Tree</h3>
+                <p class="caption">Figure 18: Directed graph visualization of parent-child conceptual relationships for 'arXiv:2608.29600v1 [cs.LG] 30 Aug 2026'.</p>
+                
+            </div>
+            
+            </div>
+        </div>
+        
+        <div class="report-section">
+            <h2>7. Concept Analysis</h2>
+            <div class="figures-grid">
+                
+            <div class="figure-card">
+                <div class="img-wrapper">
+                    <img src="../concepts/images/top_concepts.png" alt="Top Technical Concepts">
+                </div>
+                <h3>Top Technical Concepts</h3>
+                <p class="caption">Figure 19: Most prominent technical terms and concepts identified across the corpus.</p>
+                
+            </div>
+            
+            <div class="figure-card">
+                <div class="img-wrapper">
+                    <img src="../concepts/images/concept_cooccurrence.png" alt="Concept Co-occurrence Associations">
+                </div>
+                <h3>Concept Co-occurrence Associations</h3>
+                <p class="caption">Figure 21: High-frequency pairwise concept associations discovered across the paper corpus.</p>
+                
+            </div>
+            
+            </div>
+        </div>
+        
+        <div class="report-section">
+            <h2>8. Knowledge Graph</h2>
+            <div class="figures-grid">
+                
+            <div class="figure-card">
+                <div class="img-wrapper">
+                    <img src="../knowledge_graph/images/knowledge_graph.png" alt="Corpus Semantic Knowledge Graph">
+                </div>
+                <h3>Corpus Semantic Knowledge Graph</h3>
+                <p class="caption">Figure 22: Heterogeneous semantic network connecting research publications, academic fields, concepts, and keywords.</p>
+                <a href='../knowledge_graph/html/knowledge_graph_plotly.html' target='_blank' class='btn'>Open Interactive Version</a>
+            </div>
+            
+            </div>
+        </div>
+        
+        <div class="report-section">
+            <h2>9. Radial Mind Map</h2>
+            <div class="figures-grid">
+                
+            <div class="figure-card">
+                <div class="img-wrapper">
+                    <img src="../mindmap/images/hmrp_mindmap.png" alt="Concentric Concept Mind Map">
+                </div>
+                <h3>Concentric Concept Mind Map</h3>
+                <p class="caption">Figure 23: Concentric radial concept graph illustrating hierarchical topic dispersion for 'arXiv:2608.29600v1 [cs.LG] 30 Aug 2'.</p>
+                <a href='../mindmap/html/hmrp_mindmap.html' target='_blank' class='btn'>Open Interactive Version</a>
+            </div>
+            
+            </div>
+        </div>
+        
+
+        <!-- Summary Tables -->
+        <div class="report-section">
+            <h2>Corpus Synthesis & Cross-Domain Bridges</h2>
+            <h3>🌟 Identified Bridge Concepts</h3>
+            <table>
+                <thead>
+                    <tr><th>Concept Name</th><th>Corpus Frequency</th><th>Connected Domains</th></tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+
+            <h3 style="margin-top: 30px;">📄 Ingested Publications</h3>
+            <table>
+                <thead>
+                    <tr><th>Paper ID</th><th>Title</th><th>Domains</th><th>Concepts</th><th>Keywords</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><b>paper_3ae873a30afd</b></td><td>arXiv:2608.29600v1 [cs.LG] 30 Aug 2026</td><td>Artificial Intelligence, Data Science, Bioinformatics, Natural Language Processing</td><td>60</td><td>34</td></tr><tr><td><b>paper_771c86b60179</b></td><td>arXiv:2609.04255v1 [cs.IR] 1 Sep 2026</td><td>Artificial Intelligence, Computer Vision, Natural Language Processing, Bioinformatics</td><td>60</td><td>30</td></tr><tr><td><b>paper_58d70c57e642</b></td><td>arXiv:2609.01846v1 [cs.CL] 1 Sep 2026</td><td>Artificial Intelligence, Natural Language Processing, Bioinformatics, Computer Vision</td><td>60</td><td>31</td></tr><tr><td><b>paper_bf9a4f4052df</b></td><td>arXiv:2609.01067v1 [cs.IR] 1 Sep 2026</td><td>Artificial Intelligence, Natural Language Processing, Bioinformatics</td><td>60</td><td>30</td></tr><tr><td><b>paper_d00f30e537ab</b></td><td>arXiv:2608.30384v1 [cs.LG] 31 Aug 2026</td><td>Artificial Intelligence, Natural Language Processing, Cloud & Systems, Data Science</td><td>60</td><td>30</td></tr><tr><td><b>paper_0f68e4dcd72b</b></td><td>Understanding before verifying: Claim normalization for automated citation verification</td><td>Artificial Intelligence, Data Science, Natural Language Processing, Bioinformatics</td><td>60</td><td>30</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

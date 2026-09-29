@@ -97,6 +97,35 @@ class KnowledgeGraph:
         self._add_tree_edges(tree, paper_title)
         return self
 
+    def build_from_ccc(self, ccc_data: Dict, paper_title: str = "Paper") -> "KnowledgeGraph":
+        """Build an interactive graph directly from Concept-to-Concept (CCC) mapping."""
+        self.G = nx.Graph()
+        self.G.add_node(paper_title, node_type="paper", label=paper_title)
+
+        nodes = ccc_data.get("nodes", [])
+        edges = ccc_data.get("c2c_edges", [])
+        bridges = ccc_data.get("cross_domain_bridges", [])
+        alignments = ccc_data.get("domain_alignments", {})
+
+        # Add domain nodes
+        for domain, d_concepts in alignments.items():
+            self.G.add_node(domain, node_type="domain", label=domain)
+            self.G.add_edge(paper_title, domain, weight=1.0)
+            for c in d_concepts[:10]:
+                self.G.add_node(c, node_type="concept", label=c)
+                self.G.add_edge(domain, c, weight=0.8)
+
+        # Add concept-to-concept direct edges
+        for e in edges:
+            u, v = e.get("source"), e.get("target")
+            w = e.get("weight", 0.5)
+            if u and v:
+                self.G.add_node(u, node_type="concept", label=u)
+                self.G.add_node(v, node_type="concept", label=v)
+                self.G.add_edge(u, v, weight=w, relation=e.get("relation", "association"))
+
+        return self
+
     # ──────────────────────────────────────────────────────────────────────────
     # Rendering
     # ──────────────────────────────────────────────────────────────────────────

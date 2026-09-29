@@ -1,0 +1,16 @@
+Domain,Target,Valid_Papers,ArXiv_Categories,Status
+Natural Language Processing,50,0,cs.CL,PENDING
+Information Retrieval,50,0,cs.IR,PENDING
+Computer Vision,50,0,cs.CV,PENDING
+Robotics,50,2,cs.RO,PENDING
+Artificial Intelligence,50,0,cs.AI,PENDING
+Statistics & Machine Learning,50,0,"stat.ML, cs.LG",PENDING
+Applied Mathematics & Optimization,50,0,"math.OC, math.PR",PENDING
+Astrophysics & Cosmology,50,0,"astro-ph.CO, astro-ph.GA",PENDING
+Quantum Physics & Optics,50,0,"quant-ph, physics.optics",PENDING
+Biomedical & Genomics,50,0,"q-bio.BM, q-bio.GN",PENDING
+Computational Neuroscience,50,0,q-bio.NC,PENDING
+Signal Processing,50,0,eess.SP,PENDING
+Systems & Control Engineering,50,0,eess.SY,PENDING
+Quantitative Finance,50,0,"q-fin.PM, q-fin.RM",PENDING
+Econometrics & Economics,50,0,"econ.EM, econ.TH",PENDING

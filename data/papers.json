@@ -1,0 +1,51 @@
+[
+  {
+    "paper_id": "arxiv_2609_34018",
+    "title": "Estimate, Don't Imitate: Reusing Differentiable State-Based Policies for Visuomotor Control",
+    "authors": [
+      "Denis Shcherba",
+      "Adrian Abel",
+      "Eckart Cobo-Briesewitz",
+      "Wojciech Samek",
+      "Marc Toussaint"
+    ],
+    "abstract": "Simulation-trained manipulation policies can exploit privileged state information to learn effective contact-rich behaviours, but deployment requires acting from partial observations such as noisy camera images. A common solution is teacher-student distillation, in which a visuomotor policy is trained to reproduce the actions of the privileged expert. This requires the student to jointly infer the task-relevant state and relearn the expert's action mapping that is already available. An alternative is to reuse the state-based expert and learn only a perceptual interface that reconstructs its missing state inputs. However, minimising the state estimate error alone does not necessarily minimise the downstream control error induced by these estimates. To bridge this gap, we train a visual state estimator using both direct state supervision and an action-consistency loss backpropagated through the frozen, differentiable expert. A scheduled objective first establishes a physically meaningful state estimate and progressively emphasises errors that affect the expert's actions. Across five goal-conditioned manipulation tasks, retaining the expert consistently outperforms direct pixel-to-action imitation from the same expert demonstration corpus. We further demonstrate sim-to-real transfer on a physical Panda robot, achieving 76% success without retraining the underlying expert.",
+    "domain": "Robotics",
+    "arxiv_id": "2609.34018",
+    "categories": [
+      "cs.RO",
+      "cs.LG"
+    ],
+    "published_date": "2026-09-27T23:26:13Z",
+    "updated_date": "2026-09-27T23:26:13Z",
+    "pdf_path": "/Users/nikhilbhanderi/Documents/Reserch Work/Reserch Project/HMRP_Dataset/PDFs/Robotics/2609.34018.pdf",
+    "text_path": "",
+    "page_count": 9,
+    "word_count": 7165,
+    "year": "2026"
+  },
+  {
+    "paper_id": "arxiv_2609_34035",
+    "title": "3D Point Tracking with State Space Models",
+    "authors": [
+      "Masahiro Ogawa",
+      "Qi An",
+      "Atsushi Yamashita"
+    ],
+    "abstract": "Tracking any point of a dynamic scene in metric 3D - in absolute meters, not up to an unknown scale - underpins 3D and 4D reconstruction, robot navigation, and autonomous driving, where decisions are made in meters, not pixels. Our objective is a 3D point tracker accurate in those absolute terms and operating within a single commodity GPU, pose-free, monocular budget. Our method rests on one observation: once a point's 2D image trajectory is fixed, the quantity that governs its metric accuracy is the depth along its pixel ray. Rather than learning tracking end-to-end, we therefore compose two frozen front-ends - dense optical flow for 2D correspondence and a monocular metric-depth network for the third dimension - and learn only the residual they cannot supply: that depth, refined by a compact state space model (Mamba-3) conditioned on appearance features (DINOv3). A state space model rather than the transformers the strongest 3D trackers adopt is what makes a single-GPU budget attainable: it summarises a track in a fixed-size recurrent state whose memory cost is constant in the number of frames, whereas attention requires a key-value cache that grows linearly with them. On the TAPVid-3D minival benchmark our best configuration attains the highest absolute metric accuracy among methods evaluated under identical conditions (mean metric Average Jaccard, 0.256), exceeding strong feed-forward trackers, while a companion analysis, reproduced with each competitor's own evaluator, explains why several published trackers lose most of their accuracy under this budget.",
+    "domain": "Robotics",
+    "arxiv_id": "2609.34035",
+    "categories": [
+      "cs.CV",
+      "cs.LG",
+      "cs.RO"
+    ],
+    "published_date": "2026-09-27T23:56:35Z",
+    "updated_date": "2026-09-27T23:56:35Z",
+    "pdf_path": "/Users/nikhilbhanderi/Documents/Reserch Work/Reserch Project/HMRP_Dataset/PDFs/Robotics/2609.34035.pdf",
+    "text_path": "",
+    "page_count": 20,
+    "word_count": 16762,
+    "year": "2026"
+  }
+]

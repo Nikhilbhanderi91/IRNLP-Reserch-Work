@@ -30,17 +30,34 @@ PDF_DIR = Path(__file__).resolve().parent / "PDFs"
 PROCESSED_DIR = Path(__file__).resolve().parent / "processed"
 PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
 
-DOMAINS = ["NLP", "IR", "AI", "ML", "CV"]
+from HMRP_Dataset.config import DOMAINS, DOMAIN_DIR_NAMES
+
 SEED = 42
 
 def find_all_pdfs():
     """Find all PDFs in subfolders or base directory."""
     all_pdfs = []
-    for d in DOMAINS:
-        dp = PDF_DIR / d
+    # Scan configured multidisciplinary domain directories
+    for domain_name, dir_name in DOMAIN_DIR_NAMES.items():
+        dp = PDF_DIR / dir_name
         if dp.exists():
             for f in sorted(dp.glob("*.pdf")):
-                all_pdfs.append((d, f))
+                all_pdfs.append((domain_name, f))
+
+    # Also scan legacy shorthand folders (NLP, IR, AI, ML, CV) if present
+    legacy_map = {
+        "NLP": "Natural Language Processing",
+        "IR": "Information Retrieval",
+        "AI": "Artificial Intelligence",
+        "ML": "Statistics & Machine Learning",
+        "CV": "Computer Vision"
+    }
+    for leg_d, full_dom in legacy_map.items():
+        dp = PDF_DIR / leg_d
+        if dp.exists():
+            for f in sorted(dp.glob("*.pdf")):
+                all_pdfs.append((full_dom, f))
+
     # Also check base PDF_DIR for any loose PDFs
     for f in sorted(PDF_DIR.glob("*.pdf")):
         all_pdfs.append(("UNCATEGORIZED", f))

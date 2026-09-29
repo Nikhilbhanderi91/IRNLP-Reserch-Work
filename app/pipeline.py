@@ -18,6 +18,7 @@ from extraction.text_processor import TextProcessor
 from extraction.keyword_extractor import KeywordExtractor
 from extraction.concept_extractor import ConceptExtractor
 from hierarchy.hierarchy_builder import HierarchyBuilder
+from hierarchy.ccc_mapper import CCCMapper
 from similarity.similarity_engine import SimilarityEngine
 from utils.validator import PaperValidator
 from utils.logger import get_logger
@@ -32,13 +33,14 @@ class AnalysisPipeline:
     """
 
     def __init__(self) -> None:
-        self._pdf       = PDFExtractor()
-        self._text      = TextProcessor()
-        self._keywords  = KeywordExtractor()
-        self._concepts  = ConceptExtractor()
-        self._hierarchy = HierarchyBuilder()
+        self._pdf        = PDFExtractor()
+        self._text       = TextProcessor()
+        self._keywords   = KeywordExtractor()
+        self._concepts   = ConceptExtractor()
+        self._hierarchy  = HierarchyBuilder()
+        self._ccc_mapper = CCCMapper()
         self._similarity = SimilarityEngine()
-        self._validator = PaperValidator()
+        self._validator  = PaperValidator()
 
     def process_papers(
         self,
@@ -207,5 +209,13 @@ class AnalysisPipeline:
         paper.concept_hierarchy = tree
         paper.research_domains  = domains
         paper.mindmap = {"root": paper.title, "children": tree}
+
+        # Concept-to-Concept & Cross-Domain Mapping (CCC)
+        paper.ccc_mapping = self._ccc_mapper.map_paper_ccc(
+            concepts=paper.research_concepts,
+            keywords=paper.all_keywords,
+            domains=domains,
+            text=paper.full_text[:20_000],
+        )
 
         return paper

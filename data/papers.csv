@@ -1,0 +1,3 @@
+paper_id,domain,arxiv_id,title,authors,year,page_count,word_count,pdf_path,categories
+arxiv_2609_34018,Robotics,2609.34018,"Estimate, Don't Imitate: Reusing Differentiable State-Based Policies for Visuomotor Control","Denis Shcherba, Adrian Abel, Eckart Cobo-Briesewitz, Wojciech Samek, Marc Toussaint",2026,9,7165,/Users/nikhilbhanderi/Documents/Reserch Work/Reserch Project/HMRP_Dataset/PDFs/Robotics/2609.34018.pdf,"cs.RO, cs.LG"
+arxiv_2609_34035,Robotics,2609.34035,3D Point Tracking with State Space Models,"Masahiro Ogawa, Qi An, Atsushi Yamashita",2026,20,16762,/Users/nikhilbhanderi/Documents/Reserch Work/Reserch Project/HMRP_Dataset/PDFs/Robotics/2609.34035.pdf,"cs.CV, cs.LG, cs.RO"

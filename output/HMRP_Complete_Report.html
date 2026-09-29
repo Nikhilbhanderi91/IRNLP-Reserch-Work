@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HMRP: Hierarchical Multidisciplinary Research Report</title>
+    <style>
+        :root {
+            --primary: #2C3E50;
+            --accent: #3498DB;
+            --bg: #F8F9FA;
+            --card-bg: #FFFFFF;
+            --text: #2C3E50;
+            --border: #E2E8F0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            background: linear-gradient(135deg, #1A365D 0%, #2B6CB0 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+        .header h1 { margin: 0 0 10px 0; font-size: 2.2rem; }
+        .header p { margin: 0; opacity: 0.9; font-size: 1.1rem; }
+        .section {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 35px;
+            margin-bottom: 35px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        h2 {
+            color: #1A365D;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 8px;
+            margin-top: 0;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .img-card {
+            background: #FAFAFA;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        .img-card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .img-card h4 { margin: 10px 0 5px 0; color: #333; }
+        .img-card p { margin: 0; font-size: 0.88rem; color: #666; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        th { background-color: #F1F5F9; color: #1E293B; }
+        .badge {
+            background-color: #EBF8FF;
+            color: #2B6CB0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .btn {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .btn:hover { background: #2980B9; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔬 HMRP: Comprehensive Multidisciplinary Research Report</h1>
+            <p>Evaluation, Semantic Taxonomy Visualizations, Concept Bridges & Cross-Domain Similarity Analysis</p>
+        </div>
+
+        <!-- 1. Project Overview -->
+        <div class="section">
+            <h2>1. Project Overview & Methodology</h2>
+            <p>The <b>Hierarchical Multidisciplinary Research Platform (HMRP)</b> systematically analyzes research publications across diverse scientific domains. The pipeline leverages multi-engine NLP extraction (KeyBERT, YAKE, TF-IDF, spaCy) to construct hierarchical concept taxonomies, computes hybrid inter-paper similarity matrices, and maps Concept-to-Concept (CCC) cross-domain bridges.</p>
+        </div>
+
+        <!-- 2. Dataset Statistics -->
+        <div class="section">
+            <h2>2. Dataset Statistics & Corpus Overview</h2>
+            <div class="grid">
+                <div class="img-card">
+                    <img src="summary/images/dataset_statistics.png" alt="Dataset Summary Statistics">
+                    <h4>Corpus Ingestion Summary</h4>
+                    <p>Total papers, concepts, keywords, and text volume metrics.</p>
+                </div>
+                <div class="img-card">
+                    <img src="summary/images/papers_per_domain.png" alt="Papers Per Domain">
+                    <h4>Annotated Papers Per Domain</h4>
+                    <p>Volume of publications across academic fields.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Paper Distribution -->
+        <div class="section">
+            <h2>3. Multidisciplinary Domain Distribution</h2>
+            <div class="grid">
+                <div class="img-card">
+                    <img src="summary/images/dataset_domain_distribution.png" alt="Domain Distribution Pie Chart">
+                    <h4>Proportional Domain Representation</h4>
+                    <p>Percentage breakdown across disciplines.</p>
+                </div>
+                <div class="img-card">
+                    <img src="concepts/images/domain_concept_distribution.png" alt="Domain Concept Distribution">
+                    <h4>Domain-to-Concept Volume</h4>
+                    <p>Density of extracted technical terms by domain.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. TF-IDF Similarity -->
+        <div class="section">
+            <h2>4. Lexical TF-IDF Similarity Analysis</h2>
+            <div class="grid">
+                <div class="img-card">
+                    <img src="similarity/images/tfidf_similarity_heatmap.png" alt="TF-IDF Similarity Heatmap">
+                    <h4>TF-IDF Lexical Similarity Heatmap</h4>
+                    <p><a href="heatmaps/tfidf_similarity_heatmap.html" target="_blank" class="btn">View Interactive Heatmap</a></p>
+                </div>
+                <div class="img-card">
+                    <img src="similarity/images/tfidf_top_similar_pairs.png" alt="Top TF-IDF Similar Pairs">
+                    <h4>Top Similar Paper Pairs (TF-IDF)</h4>
+                    <p>Highest lexical overlap between research papers.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Semantic Similarity -->
+        <div class="section">
+            <h2>5. Dense Semantic & Cosine Embedding Similarity</h2>
+            <div class="grid">
+                <div class="img-card">
+                    <img src="similarity/images/semantic_similarity_heatmap.png" alt="Dense Semantic Similarity Heatmap">
+                    <h4>Dense Semantic Embedding Heatmap</h4>
+                    <p><a href="heatmaps/semantic_similarity_heatmap.html" target="_blank" class="btn">View Interactive Heatmap</a></p>
+                </div>
+                <div class="img-card">
+                    <img src="similarity/images/tfidf_vs_semantic_similarity.png" alt="TF-IDF vs Semantic Comparison">
+                    <h4>Lexical vs. Dense Semantic Comparison</h4>
+                    <p>Correlation between vocabulary overlap and embedding distance.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. Hierarchical Concept Mapping -->
+        <div class="section">
+            <h2>6. Hierarchical Concept Taxonomy Visualizations</h2>
+            <p>Multilevel taxonomic decomposition from broad research domains down to specialized concepts and keywords.</p>
+            <div class="grid">
+                <div class="img-card">
+                    <img src="hierarchy/images/hierarchy_sunburst.png" alt="Sunburst Hierarchy">
+                    <h4>Concentric Concept Sunburst</h4>
+                    <p><a href="hierarchy/hierarchy_sunburst.html" target="_blank" class="btn">Interactive Sunburst</a></p>
+                </div>
+                <div class="img-card">
+                    <img src="hierarchy/images/hierarchy_treemap.png" alt="Treemap Hierarchy">
+                    <h4>Hierarchical Treemap</h4>
+                    <p><a href="hierarchy/hierarchy_treemap.html" target="_blank" class="btn">Interactive Treemap</a></p>
+                </div>
+                <div class="img-card">
+                    <img src="hierarchy/images/hierarchy_icicle.png" alt="Icicle Diagram">
+                    <h4>Top-Down Concept Icicle</h4>
+                    <p><a href="hierarchy/hierarchy_icicle.html" target="_blank" class="btn">Interactive Icicle</a></p>
+                </div>
+                <div class="img-card">
+                    <img src="hierarchy/images/hierarchy_tree.png" alt="Tree Diagram">
+                    <h4>Hierarchical Concept Network Tree</h4>
+                    <p>Directed tree graph showing parent-child technical derivations.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. Concept Analysis -->
+        <div class="section">
+            <h2>7. Concept & Keyword Analysis</h2>
+            <div class="grid">
+                <div class="img-card">
+                    <img src="concepts/images/top_concepts.png" alt="Top Concepts">
+                    <h4>Most Frequent Technical Concepts</h4>
+                    <p>High-frequency terms across the multidisciplinary corpus.</p>
+                </div>
+                <div class="img-card">
+                    <img src="concepts/images/cross_domain_bridge_concepts.png" alt="Cross-Domain Bridges">
+                    <h4>Cross-Domain Bridge Concepts</h4>
+                    <p>Concepts connecting disjoint scientific disciplines.</p>
+                </div>
+                <div class="img-card">
+                    <img src="concepts/images/concept_cooccurrence.png" alt="Concept Co-occurrence">
+                    <h4>Concept Co-occurrence (C2C) Associations</h4>
+                    <p>Frequently paired technical concepts.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. Knowledge Graph -->
+        <div class="section">
+            <h2>8. Multidisciplinary Knowledge Graph</h2>
+            <div class="img-card" style="margin-top: 15px;">
+                <img src="knowledge_graph/knowledge_graph.png" alt="Knowledge Graph">
+                <h4>Global Corpus Semantic Knowledge Graph</h4>
+                <p>
+                    <a href="knowledge_graph/knowledge_graph_plotly.html" target="_blank" class="btn">Open Interactive Plotly Graph</a>
+                    <a href="knowledge_graph/knowledge_graph_pyvis.html" target="_blank" class="btn" style="background:#8E44AD; margin-left: 10px;">Open Interactive PyVis Physics Graph</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- 9. Mind Map -->
+        <div class="section">
+            <h2>9. Radial Concept Mind Map</h2>
+            <div class="img-card" style="margin-top: 15px;">
+                <img src="mindmap/hmrp_mindmap.png" alt="Radial Mind Map">
+                <h4>Concentric Concept Mind Map</h4>
+                <p>
+                    <a href="mindmap/hmrp_mindmap.html" target="_blank" class="btn">Open Interactive Mind Map</a>
+                </p>
+            </div>
+        </div>
+
+        <!-- 10. Overall Findings -->
+        <div class="section">
+            <h2>10. Overall Findings & Bridge Ranking</h2>
+            <h3>🌟 Top Cross-Domain Bridge Concepts</h3>
+            <table>
+                <thead>
+                    <tr><th>Concept Name</th><th>Frequency</th><th>Connected Domains</th></tr>
+                </thead>
+                <tbody>
+                    
+                </tbody>
+            </table>
+
+            <h3 style="margin-top: 30px;">📄 Evaluated Research Publications</h3>
+            <table>
+                <thead>
+                    <tr><th>Paper ID</th><th>Title</th><th>Research Domains</th><th>Concepts</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><b>paper_3ae873a30afd</b></td><td>arXiv:2608.29600v1 [cs.LG] 30 Aug 2026</td><td>Artificial Intelligence, Data Science, Bioinformatics, Natural Language Processing</td><td>60</td></tr><tr><td><b>paper_771c86b60179</b></td><td>arXiv:2609.04255v1 [cs.IR] 1 Sep 2026</td><td>Artificial Intelligence, Computer Vision, Natural Language Processing, Bioinformatics</td><td>60</td></tr><tr><td><b>paper_58d70c57e642</b></td><td>arXiv:2609.01846v1 [cs.CL] 1 Sep 2026</td><td>Natural Language Processing, Artificial Intelligence, Bioinformatics, Computer Vision</td><td>60</td></tr><tr><td><b>paper_bf9a4f4052df</b></td><td>arXiv:2609.01067v1 [cs.IR] 1 Sep 2026</td><td>Artificial Intelligence, Natural Language Processing, Bioinformatics</td><td>60</td></tr><tr><td><b>paper_d00f30e537ab</b></td><td>arXiv:2608.30384v1 [cs.LG] 31 Aug 2026</td><td>Artificial Intelligence, Natural Language Processing, Cloud & Systems, Data Science</td><td>60</td></tr><tr><td><b>paper_0f68e4dcd72b</b></td><td>Understanding before verifying: Claim normalization for automated citation verification</td><td>Artificial Intelligence, Data Science, Natural Language Processing, Bioinformatics</td><td>60</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 11. Output Index -->
+        <div class="section">
+            <h2>11. Complete Generated Output Artifacts Index</h2>
+            <ul>
+                <li><b>Final Report:</b> <code>output/HMRP_Complete_Report.html</code></li>
+                <li><b>Summary Charts:</b> <code>output/summary/images/</code> (PNG)</li>
+                <li><b>Similarity & Heatmaps:</b> <code>output/similarity/images/</code> & <code>output/heatmaps/</code> (PNG & HTML)</li>
+                <li><b>Hierarchical Diagrams:</b> <code>output/hierarchy/images/</code> & <code>output/hierarchy/</code> (PNG & HTML)</li>
+                <li><b>Concept Visuals:</b> <code>output/concepts/images/</code> (PNG)</li>
+                <li><b>Knowledge Graphs:</b> <code>output/knowledge_graph/</code> (PNG, Plotly HTML, PyVis HTML)</li>
+                <li><b>Mind Maps:</b> <code>output/mindmap/</code> (PNG, SVG, HTML)</li>
+                <li><b>Structured Reports:</b> <code>output/reports/hmrp_evaluation_report.json</code></li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

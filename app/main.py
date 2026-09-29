@@ -698,7 +698,7 @@ else:
 
         kg_mode = st.radio(
             "Graph mode",
-            ["All Papers (combined)", "Single Paper hierarchy"],
+            ["All Papers (combined)", "Single Paper hierarchy", "Concept-to-Concept (CCC) Semantic Network"],
             horizontal=True,
         )
 
@@ -717,6 +717,42 @@ else:
             kg.build_from_papers(papers_data_list)
             fig_kg = kg.to_plotly(title="Combined Knowledge Graph")
             st.plotly_chart(fig_kg, use_container_width=True)
+
+        elif kg_mode == "Concept-to-Concept (CCC) Semantic Network":
+            paper_sel_kg = st.selectbox(
+                "Select Paper for CCC Analysis",
+                options=range(len(papers)),
+                format_func=lambda i: f"{papers[i].file_name} – {short(papers[i].title)}",
+                key="ccc_sel",
+            )
+            pk = papers[paper_sel_kg]
+            ccc_info = getattr(pk, "ccc_mapping", {})
+            if ccc_info:
+                kg.build_from_ccc(ccc_info, pk.title[:50])
+                fig_kg = kg.to_plotly(title=f"CCC Concept Network – {short(pk.title)}")
+                st.plotly_chart(fig_kg, use_container_width=True)
+
+                # Show CCC stats
+                c1, c2 = st.columns(2)
+                with c1:
+                    st.markdown("**🌉 Cross-Domain Bridge Concepts:**")
+                    bridges = ccc_info.get("cross_domain_bridges", [])
+                    if bridges:
+                        for b in bridges:
+                            st.markdown(f"- **{b['concept']}** (Spans: {', '.join(b['connected_domains'])})")
+                    else:
+                        st.info("No cross-domain bridges detected for this single paper.")
+
+                with c2:
+                    st.markdown("**🔗 Top Concept-to-Concept (C2C) Associations:**")
+                    edges = ccc_info.get("c2c_edges", [])
+                    if edges:
+                        for e in edges[:8]:
+                            st.markdown(f"- `{e['source']}` ⟷ `{e['target']}` (Weight: {e['weight']:.2f})")
+                    else:
+                        st.info("No C2C edges extracted.")
+            else:
+                st.warning("CCC mapping data not available for this paper.")
 
         else:
             paper_sel_kg = st.selectbox(
