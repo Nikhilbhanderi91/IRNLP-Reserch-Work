@@ -1,0 +1,489 @@
+\documentclass[10pt,conference]{IEEEtran}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{caption}
+\usepackage{xcolor}
+\usepackage{balance}
+\usepackage[hidelinks]{hyperref}
+
+\captionsetup{font=small,labelfont=bf}
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\setlength{\intextsep}{8pt plus 2pt minus 2pt}
+
+\begin{document}
+
+\title{Automated Acronym Understanding and Hierarchical Concept Mapping\\
+for Scientific Text: From Research Design to Prototype Implementation (HMRP)}
+
+\author{
+\IEEEauthorblockN{Research Project Team\IEEEauthorrefmark{1}}
+\IEEEauthorblockA{\IEEEauthorrefmark{1}Department of Computer Science and Engineering\\
+\textit{Affiliation to be inserted by submitting authors}\\
+Email: \textit{corresponding-author@institution.edu}}
+}
+
+\maketitle
+
+\begin{abstract}
+Scientific and technical documents rely heavily on acronyms and abbreviations, and automatically identifying and correctly interpreting these short forms remains an open problem in Natural Language Processing (NLP). This paper synthesizes two linked bodies of work produced within the same project: (1) a research design phase, spanning a six-paper core literature review extended to a 22-paper consolidated comparison across four themes, that surveys the state of the art in Acronym Identification (AI) and Acronym Disambiguation (AD) and proposes a ten-module pipeline extending flat acronym resolution into a Concept--Category--Context (CCC) hierarchical knowledge representation with an interactive visualization layer; and (2) a working prototype, referred to in the project artifacts as HMRP (Hierarchical Concept Mapping for Research Paper Similarity Analysis), which implements PDF ingestion, multi-engine keyword/concept extraction (TF-IDF, KeyBERT, YAKE, spaCy NER), a fine-tuned SciBERT-based acronym identification and sequence-classification model, domain-taxonomy-driven hierarchy construction, an interactive knowledge-graph/visualization layer, and dual-engine (lexical + dense-embedding) paper similarity analysis. The prototype was evaluated on a curated, leakage-free 50-paper arXiv corpus (1{,}123 pages, document-level 70/14/16 train/validation/test split). Reported results show an increase in extracted concepts per paper from a 15-concept unigram baseline to 60 concepts under the multi-engine pipeline, 100\% page/sentence evidence traceability (versus 0\% for the baseline), and a 0\% hallucination rate as enforced by an 8-rule paper validator, alongside pairwise semantic similarity statistics on the test partition (mean cosine similarity 0.2424, standard deviation 0.0667). We map the implemented modules explicitly against the originally proposed ten-module CCC architecture, showing that Modules~1--6 (PDF processing through disambiguation-oriented sequence classification) and a simplified version of Modules~9--10 (domain-taxonomy hierarchy and knowledge-graph visualization) are realized in the prototype, while full CCC chain construction, typed semantic-relationship extraction, and formal benchmarking against the SciAI/SciAD gold-standard datasets remain unimplemented and are identified as concrete future work. This paper reports only what is evidenced in the project's own documentation, code structure, dataset reports, and accuracy reports, and explicitly marks unverified or unmeasured claims as \emph{Not Available}.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Acronym Identification, Acronym Disambiguation, Scientific Document Understanding, SciBERT, Concept--Category--Context (CCC) Mapping, Hierarchical Knowledge Representation, Knowledge Graph, Keyword Extraction, KeyBERT, TF-IDF, Semantic Similarity, Scientific NLP
+\end{IEEEkeywords}
+
+\section{Introduction}
+Scientific writing makes pervasive use of acronyms and technical abbreviations. Correctly detecting a short form (e.g., ``CNN''), correctly resolving its full form when several candidate meanings exist, and organizing the resolved terms into a structure a reader can navigate are three progressively harder problems. A large body of NLP research has addressed the first two problems --- Acronym Identification (AI) and Acronym Disambiguation (AD) --- largely as flat, sentence-level classification tasks, pushing benchmark accuracy from the mid-80s to the low-to-mid-90s (Macro-F1) against a human-performance ceiling of roughly 96\%. However, as documented in this project's own literature review and its extension to 22 papers, no reviewed system organizes resolved acronyms into a higher-level, explorable knowledge structure.
+
+This project proceeded in two stages, both documented in the underlying project materials and reported here without alteration of their substance.
+
+\emph{Stage 1 --- Research design.} A six-phase design process (Phases~1--6, consolidated in a Project Report and extended by a Research Blueprint) reviews six core AI/AD papers (later extended to 22 papers across four themes), identifies a research gap, and proposes a ten-module pipeline culminating in Concept--Category--Context (CCC) mapping, hierarchy generation, knowledge-graph construction, and interactive visualization.
+
+\emph{Stage 2 --- Implementation.} A working system, referred to as HMRP, is documented in a final report, a dataset report, and a model accuracy report. HMRP is a Streamlit-based research-paper analysis platform that ingests PDFs, extracts keywords/concepts through a multi-engine pipeline, applies a fine-tuned SciBERT model for acronym-related token and sequence classification, builds a domain-taxonomy hierarchy and knowledge graph, computes pairwise paper similarity, and enforces an 8-rule validation protocol against data leakage and hallucination.
+
+The purpose of this paper is to present these two stages as a single, honest research narrative: what was proposed, what was actually built and measured, and where the two diverge. Wherever the implementation stage does not provide direct evidence for a claim made in the design stage, that gap is stated explicitly rather than assumed to be closed.
+
+This framing matters because research-to-prototype transitions are common in applied NLP projects, yet the resulting papers frequently blur the line between what was designed and what was measured. A ten-module architecture that is fully specified on paper is not the same artifact as a codebase in which six of those modules have working, tested implementations and four are partially realized or absent. Treating the two as interchangeable would overstate the project's contribution; treating the implementation as a failure to meet the design would understate the genuine engineering work involved in building an evidence-grounded, leakage-free, multi-engine extraction system on top of a smaller and differently scoped foundation. This paper's organizing principle is therefore traceability at the level of the paper itself: every claim made in Sections~\ref{sec:architecture}--\ref{sec:comparative} is anchored either to a reviewed publication, a design-phase document, or an implementation-stage report, and the source is identified wherever the distinction affects how the claim should be read.
+
+\subsection{Problem Statement}
+Scientific and technical documents make heavy use of acronyms and abbreviations, but automatically recognizing these short forms and correctly resolving their meaning remains an unsolved problem for NLP systems. Two coupled sub-problems exist. \emph{Acronym Identification (AI)}: given a sentence, detect which spans are acronyms (short forms) and which are their corresponding long forms (definitions). \emph{Acronym Disambiguation (AD)}: given an acronym with multiple possible expansions (e.g., ``CNN'' $\rightarrow$ Convolutional Neural Network or Cable News Network), determine the correct long form from surrounding context.
+
+Historically, research on these tasks was limited by datasets that were small, generated through noisy rule-based heuristics, or narrowly confined to the biomedical domain. Even after large benchmark datasets (SciAI, SciAD) were introduced, subsequent work revealed additional problems --- annotation noise, duplicate examples with conflicting labels, and a persistent performance gap between the best models ($\sim$81--94\% Macro-F1) and human-level accuracy ($\sim$96\% F1).
+
+Beyond identification and disambiguation, a second, largely unaddressed problem motivates this project: once an acronym is correctly resolved, no reviewed system organizes the result into a structured, explorable representation of how the underlying concept relates to other concepts in the same document or corpus. Separately, at the systems level, researchers surveying large PDF corpora face information overload, reliance on surface keyword search, and risk of hallucinated or cross-document-contaminated output from automated summarization tools --- a practical problem that the implemented HMRP prototype targets directly.
+
+\subsection{Motivation}
+Acronyms are pervasive in technical writing: roughly 15\% of PubMed queries and a large share of scientific/clinical text contain abbreviations. Misinterpreting an acronym can propagate errors into downstream NLP applications such as question answering, information retrieval, and definition extraction. Acronyms are frequently ambiguous, and their correct meaning often depends on distant contextual cues rather than immediately adjacent words. Prior benchmark datasets (SciAI, SciAD) were shown to contain noise, duplication, and conflicting labels, which both limits model training and biases reported evaluation results. No unified, publicly available, multi-domain tool existed, as of the reviewed literature, that both resolves acronyms and organizes the result into structured, explorable knowledge. Independently, researchers reviewing dozens of papers at once need automated tools that avoid keyword-only search, provide verifiable (non-hallucinated) evidence for every extracted claim, and prevent information from one paper leaking into the analysis of another --- the practical motivation behind HMRP's evidence-grounding and 8-rule validation design.
+
+\section{Related Work / Literature Review}
+Two literature reviews were conducted within this project: an initial six-paper core review, and an extended, 22-paper consolidated comparison spanning four themes. Table~\ref{tab:core_review} summarizes the core review.
+
+\begin{table*}[t]
+\caption{Core Literature Review: Six Papers on Scientific Acronym Identification and Disambiguation}
+\label{tab:core_review}
+\centering
+\small
+\begin{tabular}{@{}p{0.03\textwidth}p{0.15\textwidth}p{0.24\textwidth}p{0.16\textwidth}p{0.09\textwidth}p{0.20\textwidth}@{}}
+\toprule
+\textbf{\#} & \textbf{Paper} & \textbf{Method} & \textbf{Dataset} & \textbf{F1} & \textbf{Key Limitation} \\
+\midrule
+1 & Veyseh et al., 2020 (COLING) & LSTM-CRF (AI); GAD = BiLSTM+GCN over dependency tree (AD) & SciAI (17{,}506 sent.), SciAD (62{,}441 samples) & 86.55 (AI); 81.90 (AD); human $\approx$96.1 & Well below human performance; annotation noise \\
+2 & Zhu et al., 2021 (AAAI-21 SDU) & Fine-tuned BERT / SciBERT / RoBERTa / ALBERT / ELECTRA + FGM adversarial training + ensembling & SciAI (14{,}006/ 1{,}717/1{,}750 split) & 94.12 (AI, AT-BERT-E) & $\sim$2$\times$ training cost; still below human \\
+3 & Veyseh et al., 2021 (EACL Demos) & Rule-based AI (extended Schwartz--Hearst) + BiLSTM AD (DOG glossary + MAD dataset) & DOG (426{,}389 acronyms), MAD (46M records) & 88.12 (AI); 88.49 (AD) & 64\,GB storage; no visualization beyond lookup \\
+4 & Pan et al., 2021 (AAAI-21 SDU) & SciBERT binary classifier + dynamic negative sampling + TAPT + adversarial training + pseudo-labeling & SciAD (62{,}441 samples) & P 0.9695 / R 0.9132 / F1 0.9405 & Struggles with near-synonymous candidates \\
+5 & Zhong et al., 2021 (AAAI-21 SDU) & hdBERT: dual-path RoBERTa + SciBERT $\rightarrow$ MLP & SciAD\_BI (352K/28K/28K) & 93.73 & Below human recall; sensitive to noisy labels \\
+6 & Egan \& Bohannon, 2021 (AAAI-21 SDU) & XLNet ensemble (AI); Siamese/Twin retrieval network (AD) & SciAI, SciAD, AuxAI, AuxAD, SciAD-dedupe & 92.60 (AI); 91.58 (AD) & Retrieval fails without similar examples; found 12{,}672 duplicate/conflicting SciAD labels \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\textbf{Common thread:} every paper in the core review improves accuracy on a flat, sentence-level task. None asks what happens after an acronym is correctly resolved.
+
+\subsection{Extended Review: 22 Papers Across Four Themes}
+A consolidated comparison spreadsheet extends the review with 16 additional papers, organized into three further themes alongside Theme~A (the six core papers above).
+
+\textbf{Theme B --- Clinical/Biomedical Abbreviation Detection \& Disambiguation (8 papers):} Zilio et al.\ 2022 (PLOD, 160K+ segments, LREC); Wagh \& Khanna 2023 (ClinicalBERT vs.\ SciBERT vs.\ BioBERT on CASI, best F 91.49\%); Wen, Lu \& Reddy 2020 (MeDAL, 14.3M PubMed articles, a pretraining resource); Skreta et al.\ 2021 (ontology-aware CNN, $+$17\% via biomedical-ontology augmentation, \emph{Nature Communications}); a 2024 JMIR study (One-to-All BlueBERT, 95--98\% accuracy on MSH~WSD/UMN, truncated by BERT's 512-token limit); Adams et al.\ 2020 (Latent Meaning Cells, zero-shot clinical acronym expansion); a 2024 PubMed/JAMIA-adjacent study (zero-shot LLM clinical acronym disambiguation).
+
+\textbf{Theme C --- Knowledge Graph / Concept Map Construction (6 papers):} Zhong et al.\ 2023 (\emph{ACM Computing Surveys} --- a 300+ method KG-construction survey with a three-step acquisition/refinement/evolution pipeline); Yang et al.\ 2024 (Graphusion --- zero-shot LLM-based KG construction and fusion for NLP-education content, with a TutorQA benchmark); NLP-AKG 2025 (a large-scale academic KG over the ACL Anthology, 620{,}353 entities, 2{,}271{,}584 relations); Sahrawat et al.\ 2019/2020 (SciBERT-based scientific keyphrase extraction on ScienceIE); GT-D2G 2022 (NAACL Findings --- task-guided neural concept-map generation); Automated Concept Map Extraction from Text 2024 (an open-source modular concept-map system, METEOR 25.69).
+
+\textbf{Theme D --- Taxonomy / Hierarchy Construction (3 papers):} Mao et al.\ 2018 (TaxoRL, ACL --- reinforcement-learning taxonomy construction); Zhang et al.\ 2018 (TaxoGen, KDD --- unsupervised clustering-based topic taxonomy); Shang et al.\ 2018 (HiExpan, KDD --- seed-taxonomy expansion).
+
+\textbf{Cross-theme observation:} Themes~A and B (14 papers) solve identification/disambiguation but stop at a flat resolved label; none link the output onward into a concept, category, or hierarchy. Themes~C and D (9 papers, with Graphusion bridging A/C) solve concept/knowledge organization but never start from a resolved abbreviation --- they extract concepts from raw text or a pre-given term list. Within Theme~D specifically, TaxoRL, TaxoGen, and HiExpan each demonstrate that hierarchy construction from free text or seed taxonomies is a mature sub-problem in its own right, with reinforcement-learning, clustering-based, and expansion-based solutions respectively; none of the three, however, is designed to consume a resolved abbreviation as its starting node, which is precisely the linkage the research gap statement below identifies as missing. This positions the proposed ten-module design not as a replacement for Theme~D methods, but as a bridge that would need to adapt one of these hierarchy-construction strategies to operate downstream of Themes~A/B's abbreviation-resolution output --- a combination that, per this review, no single system in the literature currently attempts end-to-end.
+
+\subsection{Chronological Evolution (Six Core Papers)}
+The field moved from (a) dataset construction and a first syntactic baseline (Veyseh et al., 2020) $\rightarrow$ (b) transformer fine-tuning with robustness tricks (AT-BERT, 2021) $\rightarrow$ (c) task reframing as binary classification / IR-based disambiguation (Pan et al.; Egan \& Bohannon, 2021) $\rightarrow$ (d) domain-knowledge fusion (hdBERT, 2021) $\rightarrow$ (e) auditing and correcting benchmark data quality itself (Egan \& Bohannon's SciAD-dedupe). By late 2021, both AI ($\sim$92--94\% F1) and AD ($\sim$91--94\% F1) had closed most, but not all, of the gap to human performance ($\sim$96\% F1); remaining bottlenecks shifted from raw model capacity toward data quality and hard residual cases (long-distance dependency, near-synonymous candidates).
+
+\section{Research Gap}
+\subsection{Six-Paper Gap Statement}
+Existing studies on scientific acronym understanding focus almost entirely on two flat, sentence-level sub-tasks: identifying acronym/long-form spans, and disambiguating an acronym's correct meaning from a set of candidates. State-of-the-art methods --- spanning syntactic graph models (GAD), adversarially trained transformer ensembles (AT-BERT), rule-based multi-domain systems (MadDog), multi-strategy binary classifiers (Pan et al.), dual-path domain-fused transformers (hdBERT), and retrieval-based disambiguation (Primer AI) --- push accuracy close to human level ($\sim$91--94\% F1 vs.\ $\sim$96\% human). None of these systems organizes resolved acronyms into higher-level concepts, establishes semantic relationships between them, builds a hierarchical or graph-based knowledge structure, or provides an interactive way for a reader to explore how the concepts in a paper relate to one another.
+
+\subsection{22-Paper Extended Gap Statement}
+Extending the review to 22 papers across four themes confirms and sharpens the gap: no paper in either group performs CCC-style (Concept--Category--Context) mapping, i.e., an explicit category assignment plus per-concept sentence/document provenance chained upward from a resolved acronym, and no paper combines interactive visualization with abbreviation resolution end-to-end. MadDog offers direct lookup only, and the concept-map papers (GT-D2G, Automated Concept Map Extraction) are disconnected from any abbreviation pipeline.
+
+\textbf{Research Gap Statement:} No single reviewed system takes an abbreviation from raw text all the way through disambiguation into a structured, hierarchical, and visually explorable concept representation, with each layer's evidence traceable to source text. This gap statement is the basis for the proposed ten-module methodology (Section~\ref{sec:methodology}) and is the framing against which the implemented prototype is evaluated (Sections~\ref{sec:dataset}--\ref{sec:comparative}).
+
+\section{Objectives}
+\subsection{Objectives from the Research Design Phase}
+(1)~Build/use large-scale, high-quality, human-annotated datasets for acronym identification and disambiguation in the scientific domain. (2)~Design or apply deep learning models that identify acronym--long form pairs in text. (3)~Design or apply models that disambiguate acronyms with multiple candidate meanings using sentence-level context. (4)~Evaluate and benchmark these models using standard metrics (Precision, Recall, Macro-F1) against existing baselines and human performance. (5)~Identify and, where possible, correct data-quality issues that bias evaluation. (6)~Explore CCC (Concept--Category--Context) mapping, hierarchy generation, knowledge-graph construction, and interactive visualization as a novel extension beyond flat acronym resolution. (7)~(Optional) Package the approach into a usable, deployable system.
+
+\subsection{Objectives Realized in the Implementation Stage (HMRP)}
+(1)~Automated PDF parsing: recursively scan, ingest, and parse academic PDFs, extracting text, sections, and metadata. (2)~Multi-engine concept/keyword extraction merging statistical, contextual-embedding, n-gram, and linguistic-entity extractors. (3)~Domain-specific scientific term identification via a fine-tuned SciBERT model. (4)~Hierarchical taxonomy generation mapping extracted concepts to broad research domains. (5)~Multi-modal pairwise similarity computation to cluster related papers. (6)~Strict paper isolation and leakage-free validation (8 mandatory rules). (7)~Full source traceability linking every extracted keyword/concept to a verbatim sentence and page number. (8)~Interactive web dashboard and multi-format export.
+
+\textbf{Note on alignment.} Objectives 2(1)--2(3) and 2(6)--2(7) above are directly evidenced in the implementation documentation. Objective 1(6) --- CCC mapping, hierarchy, knowledge graph, and visualization as a dedicated, per-acronym recursive structure with typed semantic edges --- is only partially realized: the implemented system provides a domain-taxonomy hierarchy and a knowledge graph, but not the specific CCC chain-construction algorithm or the typed relationship-extraction step (\textit{used\_for}, \textit{is\_a}, \textit{part\_of}, etc.) described in the design phase. This distinction is maintained throughout the paper and revisited in Sections~\ref{sec:comparative}--\ref{sec:future}.
+
+Objectives 1(1)--1(5), which concern building or using large-scale human-annotated benchmark datasets and formally evaluating against Precision/Recall/Macro-F1, were the primary focus of the design-phase literature review rather than the implementation stage: the six-paper and 22-paper reviews document what such datasets and metrics look like in the reviewed literature (Section~II), but the implementation stage substitutes a differently scoped, project-curated 50-paper corpus and a differently defined set of evaluation metrics (Section~\ref{sec:results}). Readers seeking a like-for-like benchmark against SciAI/SciAD should therefore treat Objectives 1(1)--1(5) as addressed at the literature-review level and not at the implementation level.
+
+\section{Methodology / Proposed Approach}
+\label{sec:methodology}
+The methodology below is the design produced in the research design phase and is presented here as the proposed target architecture; later sections report which parts were actually implemented.
+
+\subsection{Input and Output Specification}
+\textbf{Input:} a research paper as a PDF, or raw extracted text. \textbf{Output (proposed, full chain):} abbreviation list $\rightarrow$ disambiguated full forms $\rightarrow$ concept categories $\rightarrow$ CCC mapping (Concept--Category--Context) $\rightarrow$ hierarchical tree $\rightarrow$ knowledge graph $\rightarrow$ interactive visualization. An illustrative output chain from the design documents is: CNN $\rightarrow$ Convolutional Neural Network $\rightarrow$ Deep Learning $\rightarrow$ Machine Learning $\rightarrow$ Artificial Intelligence.
+
+\subsection{Ten-Module Design}
+Table~\ref{tab:tenmodule} lists the ten proposed modules, their grounding in the reviewed literature, and their implementation status; Fig.~\ref{fig:modules} visualizes the pipeline with implementation status color-coded.
+
+\begin{table}[t]
+\caption{Proposed Ten-Module Design and Implementation Status}
+\label{tab:tenmodule}
+\centering
+\small
+\begin{tabular}{@{}p{0.03\textwidth}p{0.16\textwidth}p{0.24\textwidth}@{}}
+\toprule
+\textbf{\#} & \textbf{Module} & \textbf{Status} \\
+\midrule
+1 & PDF Processing & Implemented \\
+2 & Text Extraction & Implemented \\
+3 & Preprocessing & Implemented \\
+4 & Abbreviation Detection (BIO tagging) & Implemented (SciBERT token classifier) \\
+5 & Long Form Extraction & Implemented (rule-based/dictionary) \\
+6 & Disambiguation & Partial (SciBERT sequence classifier; not a multi-candidate argmax disambiguator) \\
+7 & Concept Extraction & Partial (domain-taxonomy keyword matching, not embedding-anchor mapping) \\
+8 & CCC Mapping & Not implemented as a discrete chain-construction algorithm \\
+9 & Hierarchy Generation & Implemented (domain-taxonomy parent-child tree) \\
+10 & Knowledge Graph + Visualization & Implemented (NetworkX + PyVis + Plotly), without typed semantic edges \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig4_modules.pdf}
+\caption{Proposed ten-module CCC pipeline with implementation status. Green: implemented; amber: partially implemented; red: not implemented.}
+\label{fig:modules}
+\end{figure}
+
+\subsection{Module-Level Algorithm Summaries (as Designed)}
+\textbf{Module 4 (Abbreviation Detection):} SciBERT encoder with a linear BIO classification head; optional FGM adversarial perturbation during fine-tuning (following AT-BERT), with a rule-based fallback (all-uppercase tokens, length 2--6, in parentheses). \textbf{Module 5 (Long Form Extraction):} Parenthesis rule and Schwartz--Hearst initialism alignment, with dictionary lookup fallback and Levenshtein-distance normalization. \textbf{Module 6 (Disambiguation):} Proposed as an hdBERT-style dual-path fusion (RoBERTa + SciBERT $\rightarrow$ MLP sigmoid), layered with Pan et al.'s training strategies (dynamic negative sampling, TAPT, adversarial training, pseudo-labeling), with a retrieval-based fallback (Siamese network) when no fixed candidate set exists. \textbf{Module 7 (Concept Extraction, novel):} Dictionary lookup against a curated AI/CS taxonomy, with an embedding-similarity fallback below a confidence threshold. \textbf{Module 8 (CCC Mapping, novel/core):} a recursive function that walks a category taxonomy from the resolved concept upward to a root concept (e.g., Artificial Intelligence), retaining the originating sentence/section as ``Context'' provenance. \textbf{Module 9 (Hierarchy Generation):} parent-child adjacency construction from CCC chains, $O(n{\cdot}d)$ construction and $O(V)$ traversal. \textbf{Module 8b/10 (Relationship Extraction + Knowledge Graph):} pattern-matching over a fixed relation vocabulary (\textit{used\_for}, \textit{belongs\_to}, \textit{part\_of}, \textit{extends}, \textit{improves}, \textit{depends\_on}, \textit{similar\_to}), with a transformer-based fallback classifier, assembled with NetworkX. \textbf{Module 10b (Visualization):} tree, force-directed, or radial mind-map rendering (PyVis/Cytoscape.js/D3.js), with click-to-expand and hover-for-context interactivity.
+
+\subsection{Technology Stack (as Proposed)}
+PDF processing: PyMuPDF, pdfplumber. NLP cleaning/tokenization: spaCy, SciSpaCy. Transformer backbone: SciBERT, BERT. Abbreviation detection: SciAI-based sequence labeling or rule-based methods. Disambiguation: SciBERT/hdBERT-style dual-path model. Concept/relationship and graph processing: NetworkX (with Neo4j as an optional storage layer at scale). Visualization: PyVis, D3.js, Cytoscape.
+
+\subsection{Proposed Evaluation Plan (Two Tiers)}
+\textbf{Tier 1} (Modules~1--6): benchmarking against the six core papers using Precision/Recall/Macro-F1 on SciAI/SciAD/SciAD-dedupe, with $\sim$96\% human performance as the ceiling reference. \textbf{Tier 2} (Modules~7--10): expert judgment of hierarchy correctness/depth, precision of concept-to-category assignment against a domain taxonomy (e.g., ACM CCS), sampled manual review of extracted relationships, and a small user study comparing the CCC/knowledge-graph view against a flat acronym-list baseline. \textbf{Status:} Tier~1 evaluation against the SciAI/SciAD gold benchmarks was not carried out in the implementation stage (\emph{Not Available}). Tier~2's formal user study was also not carried out (\emph{Not Available}). What was measured is reported in Section~\ref{sec:results}, using metrics the implementation team actually defined (concept-extraction depth, evidence traceability, hallucination rate, and pairwise similarity statistics); these are related to, but not the same as, the Tier~1/Tier~2 plan above. This distinction is treated as a limitation in Section~\ref{sec:limitations}.
+
+\section{System Architecture}
+\label{sec:architecture}
+The proposed ten-module pipeline was instantiated in practice as the HMRP system, organized into eight functional layers, shown in Fig.~\ref{fig:architecture}: (1)~Input \& Ingestion Layer (Streamlit UI, CLI, or batch dataset); (2)~Extraction \& Parsing Layer (PyMuPDF + pdfplumber fallback, SHA-256 fingerprinting, section extraction); (3)~Preprocessing \& Normalization (NLTK tokenizer/lemmatizer, domain stopword removal, noise cleaning); (4)~Multi-Engine Concept \& Keyword Extraction (TF-IDF, YAKE, KeyBERT, spaCy NER, SciBERT); (5)~Hierarchy \& Taxonomy Construction Layer (domain scoring, ConceptHierarchy tree builder, traceability engine); (6)~Similarity \& Clustering Engine (TF-IDF cosine, dense semantic embedding similarity, hybrid mean-pooled matrix); (7)~Validation \& Isolation Enforcer (PaperValidator, 8 mandatory rules); and (8)~Visualization, Search \& Export Layer (Streamlit dashboard, Sunburst/Treemap/Icicle charts, interactive knowledge graph, radial mind map, similarity heatmap, fuzzy search, multi-format export).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig1_architecture.pdf}
+\caption{Eight-layer HMRP system architecture, from PDF ingestion through visualization and export.}
+\label{fig:architecture}
+\end{figure}
+
+\subsection{Mapping to the Proposed Ten-Module Design}
+Table~\ref{tab:mapping} maps the proposed modules to their implemented architectural layers and source files. Layer~7 (Validation \& Isolation Enforcer) has no direct counterpart in the original ten-module design; it was added during implementation specifically to address the ``concept hallucination and identity drift'' problem identified in the HMRP problem statement, and is a genuine, additional engineering contribution beyond the original research design.
+
+\begin{table}[t]
+\caption{Mapping of Proposed Modules to Implemented Layers}
+\label{tab:mapping}
+\centering
+\small
+\begin{tabular}{@{}p{0.19\textwidth}p{0.24\textwidth}@{}}
+\toprule
+\textbf{Proposed Module} & \textbf{Implemented Layer / File} \\
+\midrule
+1--3. PDF Processing, Extraction, Preprocessing & Layers 2--3 (\texttt{pdf\_extractor.py}, \texttt{text\_processor.py}) \\
+4. Abbreviation Detection & Layer 4, SciBERT token classifier \\
+5. Long Form Extraction & Layer 4, \texttt{concept\_extractor.py} \\
+6. Disambiguation & Layer 4, SciBERT sequence classifier (simplified) \\
+7. Concept Extraction & Layers 4--5, \texttt{keyword\_extractor.py} + \texttt{concept\_extractor.py} (simplified) \\
+8. CCC Mapping & Not implemented as a discrete module \\
+9. Hierarchy Generation & Layer 5, \texttt{concept\_hierarchy.py}, \texttt{hierarchy\_builder.py} \\
+10. Knowledge Graph + Visualization & Layer 8, \texttt{knowledge\_graph.py}, \texttt{hierarchy\_viz.py}, \texttt{mindmap\_viz.py}, \texttt{heatmap\_viz.py} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The eight-layer decomposition reflects a separation of concerns that is common in production NLP systems but is worth making explicit here: Layers~2--3 are domain-agnostic text-engineering concerns that could, in principle, sit in front of any downstream NLP task; Layers~4--6 are where the project's scientific-document-specific modeling choices live (the multi-engine extractor, the taxonomy-driven hierarchy, and the dual similarity engine); and Layers~7--8 are cross-cutting concerns --- correctness enforcement and presentation --- that apply uniformly across whatever Layers~4--6 produce. This structure is why Layer~7 could be added without disturbing the rest of the pipeline: it observes the outputs of Layers~4--6 rather than participating in their internal computation, which is also why its 8-rule validation logic could be extended to cover the still-unimplemented CCC and typed-relationship modules (Section~\ref{sec:future}) without a redesign of the layers that already exist.
+
+\subsection{Project Structure and Inference Pipeline}
+The codebase is organized into top-level packages: \texttt{app/} (Streamlit UI and pipeline orchestrator), \texttt{extraction/} (PDF, text, keyword, and concept extraction), \texttt{hierarchy/} (taxonomy tree construction), \texttt{similarity/} (pairwise similarity engine), \texttt{visualization/} (chart and graph renderers), \texttt{search/} (fuzzy search), \texttt{export/} (multi-format exporter), \texttt{models/} (Paper dataclass, SciBERT embedder), \texttt{utils/} (logging, helpers, PaperValidator), \texttt{HMRP\_Dataset/} (raw PDFs, processed splits, dataset scripts), \texttt{data/} (runtime uploads/exports), and \texttt{tests/} (pytest suite).
+
+When a user submits a new PDF, the system executes the nine-step pipeline shown in Fig.~\ref{fig:pipeline}: upload; ingestion and SHA-256 extraction; preprocessing (noise cleaning, normalization, tokenization, lemmatization); multi-engine keyword extraction (TF-IDF, KeyBERT, YAKE merged into a unified ranked list); concept extraction (spaCy NER plus technical regex, each concept linked to a verbatim sentence and page); hierarchy construction (domain scoring against a fixed taxonomy); pairwise similarity computation; validation (all 8 PaperValidator checks); and visualization/rendering across eight dashboard tabs.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig2_pipeline.pdf}
+\caption{End-to-end, nine-step HMRP inference pipeline executed per submitted PDF.}
+\label{fig:pipeline}
+\end{figure}
+
+\subsection{Model and Algorithmic Components}
+Table~\ref{tab:models} summarizes the four categories of models/algorithms used in the implemented system. The fine-tuned acronym model bundles two SciBERT-based heads, referred to internally as Module~4 (token classifier for BIO-tag abbreviation span detection, described in the model accuracy report as highly sensitive to sub-word prefixes when capitalized in isolated sentences) and Module~6 (binary sequence classifier, reporting a mean output probability $P(\text{Class 1}) \approx 0.35$--$0.48$ across sampled test-partition sentences). Module~6 classifies whether a sentence is scientific/acronym-context-relevant rather than selecting among multiple explicit candidate long forms, so it is a simplified realization of the disambiguation step envisioned in the design phase; no evidence shows Module~6 performing multi-candidate argmax disambiguation. The similarity engine computes TF-IDF cosine similarity (lexical overlap) and dense semantic similarity using both \texttt{all-MiniLM-L6-v2} (384-d) and a SciBERT-based mean-pooled embedder (768-d). The validation engine (\texttt{PaperValidator}) enforces eight mandatory rules --- title match, author match, concept verification, hierarchy integrity, mind-map origin check, embedding validation, and stale-term rejection --- and is the mechanism credited with the reported 0.0\% hallucination rate.
+
+\begin{table}[t]
+\caption{Models and Algorithms in the Implemented System}
+\label{tab:models}
+\centering
+\footnotesize
+\begin{tabular}{@{}p{0.12\textwidth}p{0.13\textwidth}p{0.08\textwidth}@{}}
+\toprule
+\textbf{Component} & \textbf{Model / Algorithm} & \textbf{Status} \\
+\midrule
+Acronym ID (M4) & BertForToken- Classification, SciBERT & Fine-tuned \\
+Seq. Classifier (M6) & BertForSequence- Classification, SciBERT & Fine-tuned \\
+Keyword Ranker & KeyBERT (MiniLM-L6 + MMR) & Pre-trained \\
+Lexical Ranker & scikit-learn TF-IDF & Fit on corpus \\
+Statistical Extractor & YAKE & Unsupervised \\
+Named Entity Rec. & spaCy \texttt{\footnotesize en\_core\_web\_sm} & Pre-trained \\
+Semantic Embedder & sentence-transformers MiniLM-L6-v2 & Pre-trained \\
+Domain/Concept Embedder & SciBertEmbedder (mean-pool) & Pre-trained \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Dataset}
+\label{sec:dataset}
+The system is evaluated on the HMRP Dataset, a curated 50-paper arXiv corpus. Table~\ref{tab:corpus} summarizes corpus statistics.
+
+\begin{table}[t]
+\caption{HMRP Corpus Statistics}
+\label{tab:corpus}
+\centering
+\small
+\begin{tabular}{@{}p{0.22\textwidth}p{0.16\textwidth}@{}}
+\toprule
+\textbf{Metric} & \textbf{Value} \\
+\midrule
+Total source PDFs scanned & 50 files \\
+Valid papers processed & 50 (100.0\%) \\
+Corrupted / unreadable files & 0 (0.0\%) \\
+Duplicate documents removed (SHA-256) & 0 \\
+Total corpus page count & 1{,}123 pages \\
+Average pages per paper & 22.46 (min 9, max 50) \\
+Average word count per paper & 9{,}233 words (461{,}659 total) \\
+Average keywords per paper & 30.72 \\
+Average concepts extracted per paper & 60.00 \\
+Primary research domains & NLP, AI, ML, CV, Bioinformatics \\
+arXiv categories represented & cs.CL, cs.IR, cs.AI, cs.LG, cs.CV, cs.SE, cs.MA \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Document-Level Leakage-Free Partitioning}
+Splits are strictly isolated at the paper-ID level, so that no sentence or section from a test paper is used in training or corpus-wide vocabulary construction: Train (70\%): 35 papers ($\sim$786 pages); Validation (14\%): 7 papers ($\sim$157 pages); Test (16\%): 8 papers ($\sim$180 pages).
+
+\subsection{Processed Dataset Artifacts}
+\texttt{dataset\_full.json} (complete structured JSON for all 50 papers); \texttt{train.json}/\texttt{val.json}/\texttt{test.json} (the 35/7/8-paper splits); \texttt{metadata\_summary.csv} (page counts, word counts, domain tags); \texttt{dataset\_summary.json} (corpus-level statistical summary). Auxiliary sources include runtime PDF uploads (\texttt{data/uploads/}), a domain-taxonomy seed dictionary (\texttt{DOMAIN\_TAXONOMY} in \texttt{app/config.py}, 8 domains and 80+ seed terms), and the fine-tuned acronym model weights (\texttt{acronym\_model.pkl}).
+
+\textbf{Note.} The 50-paper HMRP corpus is distinct from the standard SciAI/SciAD benchmark datasets used by the six core reviewed papers. No evidence in the project materials indicates that HMRP was evaluated against SciAI, SciAD, or SciAD-dedupe; this is marked explicitly as a limitation in Section~\ref{sec:limitations}.
+
+\subsection{Data Preprocessing}
+Fig.~\ref{fig:dataset} illustrates the preprocessing pipeline. Key steps: (1)~\textbf{SHA-256 content hashing} --- each PDF is uniquely identified (\texttt{paper\_<hash[:12]>}) for immutable tracking and duplicate detection; zero duplicates were found in the 50-paper corpus. (2)~\textbf{Text normalization} --- strips headers/footers, watermark artifacts, and equation-formatting noise; case is deliberately preserved (not globally lowercased) because capitalization is a primary acronym-detection signal. (3)~\textbf{Structured section parsing} --- automatically identifies problem statement, objective, proposed methods, datasets, limitations, and future-work sections. (4)~\textbf{Evidence grounding} --- every extracted concept is cross-referenced with a verbatim occurrence in the source text and assigned a page number and context sentence, which is the mechanism that yields the 100\% traceability figure reported in Section~\ref{sec:results}.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig3_dataset.pdf}
+\caption{Dataset construction and preprocessing pipeline, from raw arXiv PDFs to leakage-free train/validation/test splits.}
+\label{fig:dataset}
+\end{figure}
+
+Documents from the same paper/source never cross train/evaluation split boundaries, and no sentence or section from a test paper contributes to training or corpus-wide vocabulary (TF-IDF) construction. This directly targets a limitation the project's own literature review identified in the SciAD benchmark (duplicate/conflicting labels; Egan \& Bohannon, 2021).
+
+\section{Experimental Setup}
+\textbf{Corpus:} the 50-paper HMRP Dataset with the document-level 70/14/16 train/validation/test split. \textbf{Evaluation partition:} the dedicated 8-paper test split, used for the accuracy and similarity benchmarks. \textbf{Baseline comparator:} a ``basic frequency/unigram'' pipeline, used throughout the model accuracy report as the point of comparison for the enhanced multi-engine pipeline. \textbf{Reproducibility artifacts:} a dataset construction script and an accuracy benchmarking script. \textbf{Automated test suite:} \texttt{test\_paper\_isolation.py}, \texttt{test\_pipeline.py}, and \texttt{test\_scibert.py}, run via \texttt{pytest}. \textbf{Hardware/compute environment:} \emph{Not Available} --- no GPU/CPU specification, batch size, or training-run configuration is reported for the SciBERT fine-tuning step (only inference-time performance figures are given; Section~\ref{sec:results}). \textbf{Random seed:} \texttt{SEED = 42}, per the project's reproducibility notes.
+
+\section{Results \& Evaluation}
+\label{sec:results}
+All figures in this section are taken directly from the project's model accuracy and final reports; no figures have been recalculated or estimated.
+
+\subsection{Baseline vs. Enhanced Pipeline}
+Table~\ref{tab:baseline} and Fig.~\ref{fig:baseline} compare the naive unigram/frequency baseline against the enhanced multi-engine HMRP pipeline.
+
+\begin{table}[t]
+\caption{Baseline vs. Enhanced Pipeline --- Accuracy and Quality Comparison}
+\label{tab:baseline}
+\centering
+\small
+\begin{tabular}{@{}p{0.14\textwidth}p{0.09\textwidth}p{0.09\textwidth}@{}}
+\toprule
+\textbf{Metric} & \textbf{Baseline} & \textbf{Enhanced} \\
+\midrule
+Concepts extracted / paper & 15.0 & 60.0 (+300\%) \\
+Extraction mode & Single (word counts) & Hybrid (KeyBERT+NER+SciBERT+YAKE) \\
+Domain taxonomy hierarchy & Disabled (flat list) & Automated Sunburst/Treemap \\
+Source evidence traceability & 0.0\% & 100.0\% \\
+Hallucination / stale-data rate & 12.5\% & 0.0\% \\
+Hierarchy taxonomy coverage & 0.0\% & 8 domains, 40+ sub-branches \\
+Zero-leakage compliance & Not enforced & 100.0\% verified at paper-ID level \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig5_baseline_comparison.pdf}
+\caption{Baseline (unigram/frequency) vs.\ enhanced multi-engine HMRP pipeline on three headline metrics.}
+\label{fig:baseline}
+\end{figure}
+
+\subsection{Acronym / Technical-Entity Benchmark (Test Partition)}
+Evaluation of the SciBERT acronym model on unseen test-split papers reported 5 true-positive exact acronym matches, with verified domain terms/acronyms sampled including GPT-2, UMAP, AAAI, ORCID, and ANR-10; false-discovery control applied stopword suppression for 2-letter tokens (WE, IN, AN, FOR). \textbf{Important caveat (stated explicitly in the project documentation):} this is a small, sampled qualitative check (5 true positives on the test partition), not a full Precision/Recall/Macro-F1 benchmark comparable to the SciAI/SciAD figures reported for the core six papers (Table~\ref{tab:core_review}). No test-set-wide Precision, Recall, or F1 number for acronym identification or disambiguation is reported anywhere in the project materials; this is marked \emph{Not Available} and discussed further in Section~\ref{sec:discussion}.
+
+\subsection{Semantic Similarity and Clustering Evaluation}
+Computed with the dual engine (TF-IDF + \texttt{all-MiniLM-L6-v2}): mean pairwise similarity 0.2424 (distinct separation between diverse topics), standard deviation 0.0667 (well-distributed cosine-distance space), maximum pairwise similarity 0.4008 (high alignment between related agent/LLM papers), and minimum pairwise similarity 0.1093 (strong orthogonality between distant domains). Fig.~\ref{fig:similarity} visualizes these statistics. The top similar test-paper pairs by cosine similarity were: a paper on progress bars in LLM agents paired with a paper on LLM sycophancy under pressure (0.4008); a paper on literary periodization with LLMs paired with a paper on political authorship stylometry (0.3537); and the LLM-agent progress paper paired with a paper on record grouping in language models (0.3535).
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig6_similarity_stats.pdf}
+\caption{Pairwise semantic similarity statistics on the 8-paper test partition (dual TF-IDF + dense-embedding engine).}
+\label{fig:similarity}
+\end{figure}
+
+\subsection{Sample Input/Output Comparison}
+For the test sample on political-text authorship attribution via inductive stylometry, the baseline extraction produced generic unigrams (``political,'' ``text,'' ``authorship,'' ``model,'' ``analysis''). The enhanced HMRP output identified the proposed method (inductive stylometry for speech and text authorship attribution), technical terms (UMAP, cluster analysis, stylometric vectors, cosine distance), the domain (NLP and computational linguistics), a hierarchical path (AI/NLP $\rightarrow$ Stylometry $\rightarrow$ UMAP Clustering $\rightarrow$ Authorship Verification), and page/paragraph-level evidence grounding.
+
+\subsection{Automated Test Suite and Performance Measurements}
+Table~\ref{tab:tests} summarizes the automated test suite results (22/24 passed overall); no root-cause detail for the two \texttt{test\_pipeline.py} failures is given in the project documentation. Inference-time performance: PDF ingestion and extraction, $\sim$0.8--1.5\,s per 20-page PDF; KeyBERT + YAKE extraction, $\sim$1.2\,s per paper; SciBERT acronym inference, $\sim$0.05\,s per sentence (CPU/MPS); pairwise similarity matrix over 50$\times$50 papers, $<$0.2\,s; peak memory footprint, $\sim$1.2\,GB RAM.
+
+\begin{table}[t]
+\caption{Automated Test Suite Results}
+\label{tab:tests}
+\centering
+\small
+\begin{tabular}{@{}p{0.145\textwidth}p{0.08\textwidth}@{}}
+\toprule
+\textbf{Test Module} & \textbf{Result} \\
+\midrule
+\texttt{\footnotesize test\_paper\_} \newline \texttt{\footnotesize isolation.py} & 7/7 \\
+\texttt{\footnotesize test\_scibert.py} & 1/1 \\
+\texttt{\footnotesize test\_pipeline.py} & 14/16 \\
+\midrule
+\textbf{Total} & \textbf{22/24} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Comparative Analysis}
+\label{sec:comparative}
+\subsection{Stage-Coverage Comparison Against the Reviewed Literature}
+Table~\ref{tab:coverage} extends the stage-mapping table from the research design phase with a column for what was actually built. The comparison shows that the implementation closes the interactive-visualization and hierarchy portions of the identified research gap in a generalized, domain-taxonomy-driven form, but does not close the specific CCC-mapping / typed-relationship-extraction portion of the gap as originally scoped.
+
+\begin{table}[t]
+\caption{Pipeline-Stage Coverage: Literature vs.\ Design vs.\ HMRP}
+\label{tab:coverage}
+\centering
+\small
+\begin{tabular}{@{}p{0.11\textwidth}p{0.06\textwidth}p{0.06\textwidth}p{0.10\textwidth}@{}}
+\toprule
+\textbf{Stage} & \textbf{Lit.} & \textbf{Design} & \textbf{HMRP} \\
+\midrule
+PDF/Text Extraction & Yes & Yes & Yes \\
+Abbreviation ID & Yes & Yes & Yes (BIO) \\
+Long Form Extraction & Yes & Yes & Yes (regex) \\
+Multi-candidate Disambig. & Yes & Yes & Partial (binary) \\
+Concept Identification & No & Yes & Partial \\
+CCC Mapping & No & Yes & No \\
+Hierarchy Generation & No & Yes & Yes (domain tree) \\
+Knowledge Graph & No & Yes & Yes (untyped) \\
+Typed Relationships & No & Yes & No \\
+Interactive Visualization & No & Yes & Yes \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Quantitative Comparability to the Core Six Papers}
+A direct numerical comparison between HMRP's acronym-related components and the Macro-F1 scores reported by the six core papers (range 81.90--94.12 F1 on SciAI/SciAD) is not possible with the evidence available: HMRP's acronym model was evaluated on a small, non-standard sample (5 true positives on an 8-paper test split), not on SciAI, SciAD, or SciAD-dedupe. Any numerical comparison would therefore be invalid and is deliberately omitted. What can be compared is HMRP's own before/after pipeline comparison (unigram baseline vs.\ multi-engine hybrid), which is an internally consistent, project-defined benchmark rather than one shared with the reviewed literature.
+
+\subsection{Comparison Against Clinical/Biomedical and Knowledge-Graph Themes}
+Compared with Theme~B systems (e.g., BlueBERT at 95--98\% accuracy on MSH~WSD/UMN), HMRP's SciBERT modules operate on a different domain (general AI/CS arXiv papers vs.\ clinical notes) and were not evaluated on a comparable disambiguation benchmark, so no direct comparison is possible. Compared with Theme~C systems (e.g., Graphusion, NLP-AKG), HMRP's knowledge graph is smaller in scope (per-corpus, 50 papers, domain-taxonomy-seeded) rather than a large-scale, LLM-extracted academic knowledge graph (NLP-AKG: 620{,}353 entities). HMRP's design choice --- deterministic taxonomy/dictionary lookup rather than LLM-based triplet extraction --- was explicitly motivated by Graphusion's documented hallucination risk, and is corroborated by HMRP's own 0.0\% measured hallucination rate, though the two hallucination-rate figures are not measuring identical things (Graphusion's concerns triplet correctness; HMRP's concerns PaperValidator-caught cross-document contamination).
+
+Compared with Theme~D systems (TaxoRL, TaxoGen, HiExpan), HMRP's hierarchy construction is taxonomy-seeded and domain-scored rather than learned end-to-end from corpus statistics or reinforcement signals; this is a simpler, more deterministic mechanism that trades the adaptivity of a learned taxonomy-induction method for the traceability guarantees enforced by PaperValidator. No project document reports an attempt to benchmark HMRP's hierarchy quality against TaxoGen's clustering-based taxonomies or HiExpan's seed-expansion output, so this remains a qualitative design-level contrast rather than a quantitative comparison. Taken together, the three sub-comparisons in this section reinforce a single point: HMRP's measured contribution is strongest where it can be compared to its own unigram baseline (Section~\ref{sec:results}), and weakest where a comparison would require external gold-standard benchmarks that the implementation stage did not evaluate against.
+
+\section{Discussion}
+\label{sec:discussion}
+The project's two stages tell a coherent but only partially convergent story. The research-design stage correctly identifies, through a systematic review of 6 and then 22 papers, that the field's unmet need is not further incremental gains in Acronym Identification/Disambiguation accuracy (which had already reached 91--94\% F1 by 2021) but a structured, evidence-grounded, and visually explorable layer on top of resolved acronyms. The implementation stage responds to this need but generalizes the target: rather than building a strict, per-acronym CCC chain with typed semantic edges, HMRP builds a domain-level hierarchy and knowledge graph driven by a fixed taxonomy and a multi-engine keyword/concept extractor, with every node traceable to a verbatim sentence and page --- satisfying the ``Context'' component of CCC even though the ``Category'' component is domain-level rather than acronym-specific.
+
+This generalization is a reasonable engineering trade-off: it sidesteps the harder, still partially unsolved sub-problem of multi-candidate acronym disambiguation (which Papers~4 and~5 report as their hardest residual error class --- near-synonymous candidates and context-insufficient sentences) and instead delivers a system that is measurably better than a naive baseline (300\% more concepts per paper, 100\% traceability, 0\% hallucination) on the metrics the project team chose to track. The cost of this trade-off is that the implemented system's contribution is best framed as ``multi-engine, evidence-grounded literature-mapping for a paper corpus'' rather than ``acronym-to-CCC-hierarchy resolution'' as originally scoped --- a narrower and, evidentially, better-supported claim.
+
+The most significant unresolved item is disambiguation: the design phase's Module~6 specifies choosing among multiple named candidate long forms for an ambiguous acronym (e.g., ``AD'' $\rightarrow$ Acronym Disambiguation vs.\ Alzheimer's Disease vs.\ Anno Domini), whereas the implemented Module~6 is a binary sequence classifier whose output is not documented as being wired to a candidate-selection step. This is consistent with the project's own accuracy report, which never states an AD accuracy figure, in contrast to its explicit AI-related figures.
+
+A second point worth surfacing explicitly is what the 0\% hallucination rate does and does not demonstrate. It is enforced by PaperValidator's eight rules, which check title/author match, concept verification against source text, hierarchy integrity, mind-map origin, embedding validation, and stale-term rejection --- in other words, it certifies that extracted concepts are not fabricated and are not carried over from a different paper. It does not certify that the SciBERT acronym model's identifications or the sequence classifier's relevance judgments are themselves accurate in the Precision/Recall sense used by the reviewed literature; those two properties (non-hallucination and identification accuracy) are complementary but distinct, and only the former has full-corpus evidence behind it in the project materials. Framed this way, HMRP's strongest empirical claim is about the reliability and traceability of what it extracts, not about the correctness of every acronym-related judgment it makes --- a distinction that is easy to blur if the 0\% figure is read in isolation from the acronym-benchmark caveat regarding sample size noted in Section~\ref{sec:results}.
+
+\section{Limitations}
+\label{sec:limitations}
+The following limitations are drawn directly from the project's own documentation and supplemented with limitations that follow from the design-vs-implementation gap established in the preceding sections.
+
+\textbf{Documented in the project's own materials:} (1)~\emph{Scanned/image PDFs} require an OCR preprocessing step (Tesseract/pdf2image) not currently integrated into the main pipeline. (2)~\emph{Single-node, in-memory design}: pairwise similarity is computed in-memory with NumPy; corpora beyond roughly 5{,}000 papers would require an external approximate-nearest-neighbor vector index. (3)~\emph{English-only}: stopword lists and domain taxonomies are tailored to English academic literature.
+
+\textbf{Identified through this paper's cross-check of design vs.\ implementation:} (4)~No standard-benchmark evaluation of acronym identification/disambiguation is reported (no Precision/Recall/Macro-F1 figures on SciAI, SciAD, or SciAD-dedupe), so the acronym-related components cannot be positioned on the same scale as the six core papers. (5)~CCC mapping and typed relationship extraction --- the ``core proposed contribution'' of the design phase --- have no corresponding code module in the documented project structure. (6)~Multi-candidate disambiguation is unimplemented; Module~6, as built, is a binary relevance/sequence classifier, not a candidate-selection disambiguator. (7)~The only acronym-specific accuracy evidence is a 5-true-positive qualitative check on an 8-paper test split, which is not statistically representative. (8)~Two of 24 automated tests fail, with no documented root cause. (9)~No hardware/training configuration is documented for the SciBERT fine-tuning step that produced the acronym model, limiting reproducibility of that specific artifact. (10)~The Tier-2 evaluation plan (expert/human judgment of hierarchy quality, CCC-precision spot-checks, relationship-correctness review, and a user study) was never executed, so the usability benefit of the implemented hierarchy/graph/visualization layer over a flat list --- the central motivating claim of the whole project --- is asserted in the design documents but not empirically demonstrated in the implementation documents.
+
+\section{Future Work}
+\label{sec:future}
+\subsection{Already Identified by the Project Team}
+An OCR ingestion pipeline for scanned/historical paper archives; dynamic knowledge-graph merging across papers via external citation APIs (e.g., OpenAlex, Semantic Scholar); cross-lingual embedding models for multilingual scientific text; distributed vector-database integration (e.g., Milvus/Qdrant) for corpora beyond $\sim$100{,}000 papers; and automatic citation-network resolution via the CrossRef API.
+
+\subsection{Implied by the Design-vs-Implementation Gap}
+Implement the CCC Mapping module (Module~8) as originally specified: a recursive, per-concept chain from resolved acronym $\rightarrow$ concept $\rightarrow$ category $\rightarrow$ root domain, with sentence/section provenance retained at each link, rather than the current domain-level hierarchy alone. Implement multi-candidate acronym disambiguation (Module~6 as designed): either an hdBERT-style dual-path fusion model or a retrieval-based Siamese approach, evaluated against explicit candidate long-form sets. Implement typed relationship extraction (Module~8b) using the pattern-matching-plus-fallback-classifier design already specified, to move the knowledge graph from an entity/domain graph to a semantically typed graph. Run the Tier-1 evaluation (Precision/Recall/Macro-F1 on SciAI, SciAD, and SciAD-dedupe) to make the acronym-related components directly comparable to the six core papers. Run the Tier-2 evaluation (expert hierarchy-quality review, CCC-precision spot-check against ACM CCS, relationship-correctness review, and the planned user study) to empirically substantiate the usability claims currently only asserted in the design documents. Diagnose and fix the two failing \texttt{test\_pipeline.py} cases, and document the training configuration used to produce the acronym model, to close the reproducibility gaps identified in Section~\ref{sec:limitations}. Extend beyond the AI/CS domain, following the multi-domain feasibility already demonstrated by MadDog and the clinical-domain literature reviewed in Theme~B, once the AI/CS-domain pipeline is fully validated against Tier~1 and Tier~2.
+
+\section{Conclusion}
+This paper has presented a single, evidence-based account of a two-stage research project: a systematic literature review and gap analysis (6 papers, extended to 22 across four themes) that motivates a ten-module CCC-mapping pipeline for scientific acronym understanding, and a working prototype (HMRP) that implements a substantial, but not complete, subset of that pipeline. The prototype demonstrably improves concept-extraction depth ($+$300\%), evidence traceability (0\%~$\rightarrow$~100\%), and hallucination avoidance (12.5\%~$\rightarrow$~0\%) over a naive unigram baseline on a 50-paper, leakage-free arXiv corpus, and provides an interactive, multi-format visualization and export layer that directly addresses the ``no interactive visualization'' gap identified in the literature review. At the same time, the prototype does not implement the specific CCC chain-construction algorithm, typed semantic-relationship extraction, or multi-candidate acronym disambiguation that the design phase identified as its core novel contribution, and it has not been benchmarked against the SciAI/SciAD gold-standard datasets used throughout the reviewed literature. The research gap identified in the design phase therefore remains only partially closed: the hierarchy-and-visualization half of the gap has working, measured evidence behind it, while the CCC-mapping, disambiguation, and typed-relationship half remains a well-specified but unimplemented direction for future work. Reporting both facts together, rather than either alone, is the central contribution of this paper.
+
+\balance
+\begin{thebibliography}{99}
+
+\bibitem{veyseh2020} A. P. B. Veyseh, F. Dernoncourt, Q. H. Tran, and T. H. Nguyen, ``What Does This Acronym Mean? Introducing a New Dataset for Acronym Identification and Disambiguation,'' in \emph{Proc. 28th Int. Conf. Computational Linguistics (COLING)}, 2020. arXiv:2010.14678.
+
+\bibitem{zhu2021} D. Zhu, W. Lin, Y. Zhang, Q. Zhong, G. Zeng, W. Wu, and J. Tang, ``AT-BERT: Adversarial Training BERT for Acronym Identification (Winning Solution for SDU@AAAI-21),'' in \emph{AAAI-21 Workshop on Scientific Document Understanding (SDU)}, 2021. arXiv:2101.03700; CEUR-WS Vol-2831.
+
+\bibitem{veyseh2021} A. P. B. Veyseh, F. Dernoncourt, W. Chang, and T. H. Nguyen, ``MadDog: A Web-based System for Acronym Identification and Disambiguation,'' in \emph{Proc. 16th Conf. European Chapter of the ACL (EACL), System Demonstrations}, 2021. arXiv:2101.09893.
+
+\bibitem{pan2021} C. Pan, B. Song, S. Wang, and Z. Luo, ``BERT-based Acronym Disambiguation with Multiple Training Strategies,'' in \emph{AAAI-21 Workshop on Scientific Document Understanding (SDU)}, 2021. arXiv:2103.00488; CEUR-WS Vol-2831.
+
+\bibitem{zhong2021} Q. Zhong, G. Zeng, D. Zhu, Y. Zhang, W. Lin, B. Chen, and J. Tang, ``Leveraging Domain Agnostic and Specific Knowledge for Acronym Disambiguation,'' in \emph{AAAI-21 Workshop on Scientific Document Understanding (SDU)}, 2021. arXiv:2107.00316; CEUR-WS Vol-2831.
+
+\bibitem{egan2021} N. Egan and J. Bohannon, ``Primer AI's Systems for Acronym Identification and Disambiguation,'' in \emph{AAAI-21 Workshop on Scientific Document Understanding (SDU)}, 2021. arXiv:2012.08013; CEUR-WS Vol-2831.
+
+\bibitem{zilio2022} L. Zilio \emph{et al.}, ``PLOD: An Abbreviation Detection Dataset for Scientific Documents,'' in \emph{Proc. LREC}, 2022. arXiv:2204.12061.
+
+\bibitem{wagh2023} V. Wagh and N. Khanna, ``Clinical Abbreviation Disambiguation with Domain-Specific BERT Variants,'' in \emph{MIWAI}, Springer LNCS 14078, 2023.
+
+\bibitem{wen2020} Z. Wen, X. H. Lu, and S. Reddy, ``MeDAL: Medical Abbreviation Disambiguation Dataset for Natural Language Understanding Pretraining,'' in \emph{Proc. 3rd Clinical NLP Workshop (ACL)}, 2020.
+
+\bibitem{skreta2021} M. Skreta, A. Arbabi, J. Wang, \emph{et al.}, ``Ontology-Aware Data Augmentation for Medical Acronym Disambiguation with Scarce Labeled Data,'' \emph{Nature Communications}, 2021.
+
+\bibitem{jmir2024} JMIR Medical Informatics, ``Enhancing the One-to-All Framework for Clinical Abbreviation Expansion with Fine-Tuned Clinical BERT Variants,'' 2024.
+
+\bibitem{adams2020} G. Adams, M. Ketenci, S. Bhave, A. Perotte, and N. Elhadad, ``Zero-Shot Clinical Acronym Expansion via Latent Meaning Cells,'' in \emph{ML4H Workshop, NeurIPS}, 2020.
+
+\bibitem{jamia2024} [PubMed/JAMIA-adjacent venue], ``Evaluating Large Language Models for Zero-Shot Clinical Acronym Disambiguation,'' 2024.
+
+\bibitem{zhong2023} L. Zhong, J. Wu, Q. Li, H. Peng, and X. Wu, ``A Comprehensive Survey on Automatic Knowledge Graph Construction,'' \emph{ACM Computing Surveys}, 2023.
+
+\bibitem{yang2024} R. Yang \emph{et al.}, ``Graphusion: A Zero-Shot Knowledge Graph Construction and Fusion Framework for Education,'' 2024. arXiv:2407.10794.
+
+\bibitem{nlpakg2025} NLP-AKG, ``Constructing a Large-Scale Academic Knowledge Graph for the NLP Research Domain,'' 2025. arXiv:2502.14192.
+
+\bibitem{sahrawat2019} D. Sahrawat \emph{et al.}, ``Keyphrase Extraction from Scholarly Articles Using Contextualized Embeddings,'' \emph{AAAI Workshop}, 2019/2020. arXiv:1910.08840.
+
+\bibitem{gtd2g2022} GT-D2G, ``Task-Guided Neural Concept Map Generation via Graph Translation,'' in \emph{Findings of NAACL}, 2022.
+
+\bibitem{concept2024} ``Automated Concept Map Extraction from Text,'' OpenReview, 2024.
+
+\bibitem{mao2018} Y. Mao \emph{et al.}, ``End-to-End Reinforcement Learning for Automatic Taxonomy Induction (TaxoRL),'' in \emph{Proc. ACL}, 2018.
+
+\bibitem{zhang2018} C. Zhang \emph{et al.}, ``TaxoGen: Unsupervised Topic Taxonomy Construction by Adaptive Term Embedding and Clustering,'' in \emph{Proc. KDD}, 2018.
+
+\bibitem{shang2018} J. Shang \emph{et al.}, ``HiExpan: Task-Guided Taxonomy Construction by Hierarchical Tree Expansion,'' in \emph{Proc. KDD}, 2018.
+
+\bibitem{proj_phases} Research Project Team, ``Phase 1 -- Problem Understanding; Phase 2 -- Literature Review; Phase 3 -- Research Gap Analysis; Phase 4 -- Proposed Methodology; Phase 5 -- Dataset Collection \& Preparation; Phase 6 -- Algorithm \& Model Design,'' Internal Project Report, 2026.
+
+\bibitem{proj_blueprint} Research Project Team, ``Research Blueprint Report: Automated Acronym Understanding and CCC-Based Concept Mapping -- Consolidated Literature Comparison, Research Gap, and Proposed Solution,'' Internal Project Report, 2026.
+
+\bibitem{proj_final} Research Project Team, ``HMRP Research Project Complete Final Report,'' Internal Project Documentation, 2026.
+
+\bibitem{proj_dataset} Research Project Team, ``HMRP Dataset Integration Report,'' Internal Project Documentation, 2026.
+
+\bibitem{proj_accuracy} Research Project Team, ``HMRP Model Accuracy \& Benchmark Report,'' Internal Project Documentation, 2026.
+
+\end{thebibliography}
+
+\end{document}

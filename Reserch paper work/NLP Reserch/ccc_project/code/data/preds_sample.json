@@ -1,0 +1,43 @@
+[
+  {
+    "id": "ex1",
+    "tokens": [
+      "The",
+      "main",
+      "key",
+      "performance",
+      "indicator",
+      ",",
+      "herein",
+      "referred",
+      "to",
+      "as",
+      "KPI",
+      ",",
+      "is",
+      "the",
+      "E2E",
+      "throughput",
+      "."
+    ],
+    "pred_labels": [
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "O",
+      "B-short",
+      "O",
+      "O",
+      "O",
+      "B-short",
+      "O",
+      "O"
+    ]
+  }
+]
