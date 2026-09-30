@@ -111,13 +111,15 @@ The end-to-end architecture is organized into modular functional layers:
                                                  |
                                                  v
 +--------------------------------------------------------------------------------------------------+
-|                              8. VISUALIZATION, SEARCH & EXPORT LAYER                             |
-|   • Streamlit Dashboard (`app/main.py`)                                                          |
-|   • Sunburst / Treemap / Icicle Charts (`hierarchy_viz.py`)                                      |
-|   • Interactive Knowledge Graph (`NetworkX` + `PyVis` + `Plotly`)                                |
-|   • Radial Mind Map (`mindmap_viz.py`) & Similarity Heatmap (`heatmap_viz.py`)                   |
-|   • Fuzzy Search Engine (`search_engine.py`)                                                     |
-|   • Exporter (CSV, Excel, JSON, PNG, SVG, HTML)                                                  |
+|                                    8. WEB UI & VISUALIZATION LAYER                               |
+|   • Enterprise Streamlit Web Platform (`app/main.py`)                                            |
+|   • Sunburst / Treemap / Icicle Hierarchies (`hierarchy_viz.py`)                                 |
+|   • Interactive Knowledge Graph & CCC Semantic Networks (`knowledge_graph.py`)                  |
+|   • Keyword Co-occurrence Network & Frequency Distributions (`main.py`)                          |
+|   • Pairwise Similarity Matrix & Clustered Heatmaps (`heatmap_viz.py`)                           |
+|   • Verbatim Source Traceability & Grounded Sentence Citations (`main.py`)                       |
+|   • Multi-Paper Consolidated Literature Review Matrix (`Consolidated_Paper_Comparison.xlsx`)     |
+|   • Academic Section 6 Structured JSON & Multi-Format Exporter (`exporter.py`)                   |
 +--------------------------------------------------------------------------------------------------+
 ```
 
@@ -129,7 +131,7 @@ The end-to-end architecture is organized into modular functional layers:
 /Users/nikhilbhanderi/Documents/Reserch Work/Reserch Project/
 ├── app/
 │   ├── config.py                 # Global constants, paths, model names, domain taxonomy
-│   ├── main.py                   # Streamlit web application dashboard (Tabs: Papers, Keywords, Hierarchy, Graph, Mindmap, Similarity, Search, Export)
+│   ├── main.py                   # Streamlit web application dashboard (8 Tabs: Overview, Traceability, Keywords, Hierarchy, Graph, Similarity, Review, Export)
 │   └── pipeline.py               # AnalysisPipeline orchestrator coordinating extraction, processing, and validation
 ├── extraction/
 │   ├── __init__.py
@@ -383,20 +385,20 @@ When a user provides a new PDF via the Streamlit UI (`app/main.py`) or CLI (`run
 
 ---
 
-## 12. Output Generation
+## 12. Output Generation & Platform Modules
 
-HMRP generates 8 distinct output modalities:
+HMRP generates 8 distinct output modalities aligned with the interactive web platform:
 
-| Output Type | Generating Component | Influencing Dataset / Context | Operation Type |
+| Module / Output Modality | Generating Component | Influencing Context | Operation Type |
 | :--- | :--- | :--- | :--- |
-| **Paper Metadata & Summary** | `models/paper.py`, `PDFExtractor` | Source PDF Text | Extraction & Rule-based Parsing |
-| **Confidence-Scored Keywords** | `KeywordExtractor` | Corpus TF-IDF + Document Embeddings | Hybrid Ranking & Score Merging |
-| **Traceable Research Concepts** | `ConceptExtractor` | spaCy NER + Verbatim Sentences & Pages | Extraction & Evidence Linking |
-| **Hierarchical Concept Trees** | `ConceptHierarchy`, `HierarchyBuilder` | `DOMAIN_TAXONOMY` + Paper Concepts | Tree Construction & Pruning |
-| **Sunburst / Treemap Visualizations** | `hierarchy_viz.py` | Hierarchical Tree Dict | Plotly Interactive Visual Generation |
-| **Interactive Knowledge Graph** | `knowledge_graph.py` | Extracted Entities & Domains | NetworkX Topology + PyVis / Plotly |
-| **Pairwise Similarity Heatmap** | `similarity_engine.py`, `heatmap_viz.py` | TF-IDF + Dense Vector Embeddings | Cosine Matrix Computation |
-| **Exportable Files (CSV/XLSX/JSON/SVG)** | `exporter.py` | Complete Paper Data Schema | Multi-Format Data Serialization |
+| **1. Paper Overview & Metadata** | `models/paper.py`, `PDFExtractor` | Source PDF Text | Structural Parsing (Problem, Objective, Methods, Results, Datasets) |
+| **2. Source Traceability & Grounding** | `ConceptExtractor` | spaCy NER + Verbatim Sentences & Pages | Extraction, Confidence Scoring & Sentence Grounding |
+| **3. Keywords & Semantic Network** | `KeywordExtractor`, `NetworkX` | TF-IDF + KeyBERT + YAKE Embeddings | Tri-Model Ranking & Keyword Association Graph |
+| **4. Hierarchical Concept Maps** | `ConceptHierarchy`, `hierarchy_viz.py` | `DOMAIN_TAXONOMY` + Paper Concepts | Multi-Tier Sunburst, Treemap, Icicle & Filterable Path Lists |
+| **5. Multi-Paper Knowledge Graphs** | `knowledge_graph.py` | Extracted Entities, Bridges & Domains | Kamada-Kawai Network Topology & CCC Semantic Networks |
+| **6. Pairwise Similarity & Heatmaps** | `similarity_engine.py`, `heatmap_viz.py` | TF-IDF + Dense Vector Embeddings | Cosine Matrix Computation, Clustered Heatmaps & Ranked Pairs |
+| **7. Literature Review Synthesis** | `Consolidated_Paper_Comparison.xlsx` | 50-Paper Comparative Corpus | Cross-Paper Matrix (Objectives, Methods, Metrics, Datasets) |
+| **8. Academic Section 6 JSON Export** | `exporter.py`, `Paper.to_structured_json` | Complete Paper Data Schema | Standardized Section 6 JSON Serialization & Multi-Format Downloads |
 
 ---
 
