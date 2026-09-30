@@ -1,5 +1,8 @@
 # 🔬 HMRP — Hierarchical Concept Mapping for Research Paper Similarity Analysis
 
+### 🎓 **Marwadi University** · **Department of Information and Communication Technology (ICT)**
+#### 📚 **Subject:** Information Retrieval & Natural Language Processing (IRNLP) Research Project
+
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![Streamlit App](https://img.shields.io/badge/Streamlit-1.40%2B-FF4B4B.svg)](https://streamlit.io)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)

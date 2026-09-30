@@ -22,8 +22,8 @@ class HierarchyViz:
     """Creates sunburst, treemap, and icicle charts from a concept tree."""
 
     def __init__(self) -> None:
-        self._bg = "#0F0F1A"
-        self._font_color = "#E0E0E0"
+        self._bg = "#0B0F19"
+        self._font_color = "#F1F5F9"
 
     # ──────────────────────────────────────────────────────────────────────────
     # Public API
@@ -255,10 +255,13 @@ class HierarchyViz:
 
     def _style(self, fig: go.Figure, title: str) -> None:
         fig.update_layout(
-            title=dict(text=title, font=dict(size=18, color="#6C63FF")),
+            title=dict(
+                text=f"<b style='color:#38BDF8;'>{title}</b>",
+                font=dict(size=17, color="#38BDF8", family="Plus Jakarta Sans"),
+            ),
             paper_bgcolor=self._bg,
-            font=dict(color=self._font_color, size=12),
-            margin=dict(t=60, l=10, r=10, b=10),
+            font=dict(color=self._font_color, size=12, family="Plus Jakarta Sans"),
+            margin=dict(t=50, l=10, r=10, b=10),
             height=600,
         )
 
@@ -266,13 +269,13 @@ class HierarchyViz:
     def _empty_fig(title: str) -> go.Figure:
         fig = go.Figure()
         fig.add_annotation(
-            text="No data to visualize",
+            text="No hierarchy data available",
             x=0.5, y=0.5, showarrow=False,
-            font=dict(size=16, color="#888"),
+            font=dict(size=15, color="#94A3B8"),
         )
         fig.update_layout(
-            title=title,
-            paper_bgcolor="#0F0F1A",
-            font=dict(color="#E0E0E0"),
+            title=dict(text=title, font=dict(color="#38BDF8")),
+            paper_bgcolor="#0B0F19",
+            font=dict(color="#F1F5F9"),
         )
         return fig

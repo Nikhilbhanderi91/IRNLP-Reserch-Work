@@ -60,268 +60,341 @@ st.markdown(
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
+    :root {
+        --bg-dark: #090D16;
+        --card-bg: rgba(15, 23, 42, 0.7);
+        --card-border: rgba(56, 189, 248, 0.18);
+        --card-hover-border: rgba(56, 189, 248, 0.5);
+        --accent-cyan: #38BDF8;
+        --accent-indigo: #818CF8;
+        --accent-rose: #FB7185;
+        --accent-emerald: #34D399;
+        --accent-amber: #FBBF24;
+    }
+
     * {
-        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
     }
 
     code, pre, .hierarchy-path {
         font-family: 'JetBrains Mono', monospace !important;
     }
 
-    /* ── Global background ── */
+    /* ── Global Background & Container ── */
     .stApp {
-        background: radial-gradient(circle at 15% 15%, #15122e 0%, #0c0a18 50%, #07060e 100%) !important;
-        color: #F0F2F6;
+        background: radial-gradient(ellipse 80% 60% at 50% -20%, rgba(99, 102, 241, 0.18), rgba(9, 13, 22, 1) 75%) !important;
+        background-color: var(--bg-dark) !important;
+        color: #F1F5F9;
     }
     .block-container { 
-        padding: 2.5rem 3rem 4rem !important; 
-        max-width: 1400px;
+        padding: 2rem 2.5rem 3.5rem !important; 
+        max-width: 1440px;
     }
 
-    /* ── Hero banner ── */
-    .hero-banner {
-        background: linear-gradient(135deg, rgba(30, 24, 66, 0.85) 0%, rgba(20, 27, 65, 0.8) 50%, rgba(12, 38, 70, 0.75) 100%);
+    /* ── Futuristic Top Navigation Bar ── */
+    .saas-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(15, 23, 42, 0.65);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 18px;
+        padding: 0.9rem 1.6rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+    .saas-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .brand-icon {
+        background: linear-gradient(135deg, #6366F1, #38BDF8);
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+    }
+    .brand-title {
+        font-weight: 800;
+        font-size: 1.15rem;
+        letter-spacing: -0.3px;
+        background: linear-gradient(90deg, #FFFFFF 0%, #E2E8F0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    .brand-tag {
+        font-size: 0.72rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        background: rgba(56, 189, 248, 0.12);
+        color: #38BDF8;
+        padding: 3px 8px;
+        border-radius: 6px;
+        border: 1px solid rgba(56, 189, 248, 0.25);
+    }
+    .nav-status {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.82rem;
+        color: #94A3B8;
+        font-weight: 500;
+    }
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #10B981;
+        box-shadow: 0 0 10px #10B981;
+        animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+        0%, 100% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    /* ── Metric Cards ── */
+    .metric-card {
+        background: rgba(15, 23, 42, 0.65);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
-        border: 1px solid rgba(139, 92, 246, 0.35);
-        box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-        border-radius: 24px;
-        padding: 2.8rem 3rem;
-        margin-bottom: 2.2rem;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 1.25rem 1rem;
         text-align: center;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         position: relative;
         overflow: hidden;
     }
-    .hero-banner::before {
-        content: '';
-        position: absolute;
-        top: -60%;
-        left: -40%;
-        width: 180%;
-        height: 180%;
-        background: radial-gradient(circle, rgba(108,99,255,0.18) 0%, rgba(67,188,205,0.08) 35%, transparent 70%);
-        animation: pulse 6s ease-in-out infinite;
-        pointer-events: none;
-    }
-    @keyframes pulse {
-        0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.7; }
-        50%       { transform: scale(1.15) rotate(3deg); opacity: 1; }
-    }
-    .hero-title {
-        font-size: 2.8rem;
-        font-weight: 800;
-        background: linear-gradient(90deg, #A78BFA 0%, #60A5FA 40%, #34D399 80%, #FBBF24 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        letter-spacing: -0.5px;
-        margin: 0;
-        position: relative;
-        text-shadow: 0 10px 30px rgba(108, 99, 255, 0.2);
-    }
-    .hero-sub {
-        color: rgba(240, 242, 246, 0.75);
-        font-size: 1.05rem;
-        font-weight: 400;
-        margin-top: 0.75rem;
-        letter-spacing: 0.2px;
-        position: relative;
-    }
-
-    /* ── Metric cards ── */
-    .metric-card {
-        background: rgba(22, 20, 48, 0.6);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(139, 92, 246, 0.25);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-        border-radius: 18px;
-        padding: 1.4rem 1.2rem;
-        text-align: center;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
     .metric-card:hover {
-        transform: translateY(-5px);
-        border-color: rgba(139, 92, 246, 0.6);
-        box-shadow: 0 16px 36px rgba(108, 99, 255, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        transform: translateY(-4px);
+        border-color: rgba(56, 189, 248, 0.4);
+        box-shadow: 0 16px 32px -8px rgba(56, 189, 248, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.15);
     }
     .metric-value {
-        font-size: 2.2rem;
+        font-size: 1.85rem;
         font-weight: 800;
-        background: linear-gradient(135deg, #A78BFA 0%, #60A5FA 100%);
+        letter-spacing: -0.5px;
+        background: linear-gradient(135deg, #FFFFFF 0%, #94A3B8 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         line-height: 1.2;
     }
     .metric-label {
-        font-size: 0.8rem;
-        color: rgba(224, 224, 255, 0.6);
+        font-size: 0.76rem;
+        color: #64748B;
         text-transform: uppercase;
-        letter-spacing: 1.2px;
-        font-weight: 600;
-        margin-top: 0.4rem;
+        letter-spacing: 1px;
+        font-weight: 700;
+        margin-top: 0.35rem;
     }
 
-    /* ── Section headers ── */
+    /* ── Section Headers ── */
     .section-header {
-        font-size: 1.4rem;
+        font-size: 1.25rem;
         font-weight: 700;
-        color: #F3F4F6;
-        border-left: 4px solid #8B5CF6;
-        padding-left: 0.9rem;
-        margin: 1.8rem 0 1.2rem 0;
+        color: #F8FAFC;
+        border-left: 3px solid #38BDF8;
+        padding-left: 0.8rem;
+        margin: 1.6rem 0 1.1rem 0;
         letter-spacing: -0.2px;
         display: flex;
         align-items: center;
         gap: 0.5rem;
     }
 
-    /* ── Keyword chips ── */
+    /* ── Feature Cards ── */
+    .feature-card {
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 16px;
+        padding: 1.4rem;
+        transition: all 0.25s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+    .feature-card:hover {
+        transform: translateY(-4px);
+        border-color: rgba(99, 102, 241, 0.4);
+        box-shadow: 0 12px 28px -6px rgba(99, 102, 241, 0.18);
+        background: rgba(20, 30, 55, 0.7);
+    }
+    .feature-icon-wrapper {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        background: rgba(56, 189, 248, 0.1);
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        margin-bottom: 0.9rem;
+    }
+
+    /* ── Smart Keyword Chips ── */
     .kw-chip {
         display: inline-flex;
         align-items: center;
-        background: linear-gradient(135deg, rgba(139, 92, 246, 0.18), rgba(59, 130, 246, 0.18));
-        border: 1px solid rgba(139, 92, 246, 0.4);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        border-radius: 9999px;
-        padding: 0.35rem 0.9rem;
-        font-size: 0.82rem;
+        background: rgba(30, 41, 59, 0.7);
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        padding: 0.3rem 0.75rem;
+        font-size: 0.8rem;
         font-weight: 500;
-        color: #DDD6FE;
-        margin: 0.25rem;
-        transition: all 0.2s ease;
+        color: #E2E8F0;
+        margin: 0.2rem;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .kw-chip:hover {
-        background: rgba(139, 92, 246, 0.45);
-        color: #FFFFFF;
-        transform: scale(1.05);
-        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.35);
+        background: rgba(56, 189, 248, 0.15);
+        border-color: rgba(56, 189, 248, 0.5);
+        color: #38BDF8;
+        transform: scale(1.04);
     }
 
-    /* ── Abstract box ── */
+    /* ── Abstract & Detail Boxes ── */
     .abstract-box {
-        background: rgba(18, 16, 38, 0.7);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(139, 92, 246, 0.25);
-        border-radius: 16px;
-        padding: 1.4rem 1.8rem;
-        color: rgba(240, 242, 246, 0.9);
-        font-size: 0.93rem;
-        line-height: 1.8;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        background: rgba(15, 23, 42, 0.6);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 14px;
+        padding: 1.3rem 1.6rem;
+        color: #E2E8F0;
+        font-size: 0.92rem;
+        line-height: 1.75;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
     }
 
-    /* ── Hierarchy path ── */
+    /* ── Hierarchy Pathways ── */
     .hierarchy-path {
-        background: rgba(22, 20, 48, 0.5);
-        border: 1px solid rgba(139, 92, 246, 0.2);
+        background: rgba(15, 23, 42, 0.55);
+        border: 1px solid rgba(255, 255, 255, 0.06);
         border-radius: 12px;
-        padding: 0.75rem 1.2rem;
-        margin: 0.5rem 0;
-        color: #DDD6FE;
-        font-size: 0.88rem;
+        padding: 0.8rem 1.1rem;
+        margin: 0.45rem 0;
+        color: #E2E8F0;
+        font-size: 0.86rem;
         transition: all 0.2s ease;
     }
     .hierarchy-path:hover {
-        border-color: rgba(139, 92, 246, 0.5);
-        background: rgba(26, 23, 58, 0.75);
+        border-color: rgba(56, 189, 248, 0.4);
+        background: rgba(20, 30, 55, 0.7);
     }
 
-    /* ── Similarity pair ── */
+    /* ── Similarity Pair Cards ── */
     .sim-pair {
         display: flex;
         align-items: center;
-        gap: 1.2rem;
-        padding: 0.85rem 1.4rem;
+        gap: 1rem;
+        padding: 0.8rem 1.2rem;
         border-radius: 12px;
-        background: rgba(25, 22, 50, 0.6);
-        border: 1px solid rgba(139, 92, 246, 0.25);
-        margin: 0.45rem 0;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        background: rgba(15, 23, 42, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        margin: 0.4rem 0;
         transition: all 0.2s ease;
     }
     .sim-pair:hover {
-        border-color: rgba(249, 168, 38, 0.6);
-        background: rgba(32, 28, 64, 0.8);
+        border-color: rgba(56, 189, 248, 0.45);
+        background: rgba(20, 30, 55, 0.8);
         transform: translateX(4px);
     }
     .sim-score {
         font-weight: 800;
-        color: #FBBF24;
+        font-size: 1rem;
         min-width: 60px;
         text-align: right;
-        font-size: 1.05rem;
+        font-family: 'JetBrains Mono', monospace;
     }
 
-    /* ── Sidebar ── */
+    /* ── Sidebar Redesign ── */
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #0f0c22 0%, #080614 100%) !important;
-        border-right: 1px solid rgba(139, 92, 246, 0.25) !important;
+        background: #0B0F19 !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.07) !important;
+    }
+    [data-testid="stSidebar"] hr {
+        border-color: rgba(255, 255, 255, 0.07) !important;
     }
 
-    /* ── Tabs ── */
+    /* ── Polished Tabs ── */
     .stTabs [data-baseweb="tab-list"] {
-        gap: 8px;
-        background: rgba(14, 12, 30, 0.5);
+        gap: 6px;
+        background: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(12px);
         padding: 6px;
-        border-radius: 14px;
-        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        margin-bottom: 1.5rem;
     }
     .stTabs [data-baseweb="tab"] {
         background: transparent;
         border: 1px solid transparent;
-        border-radius: 10px;
-        color: rgba(224, 224, 255, 0.75);
+        border-radius: 8px;
+        color: #94A3B8;
         font-weight: 600;
-        font-size: 0.9rem;
-        padding: 0.6rem 1.3rem;
+        font-size: 0.88rem;
+        padding: 0.55rem 1.1rem;
         transition: all 0.2s ease;
     }
     .stTabs [data-baseweb="tab"]:hover {
-        color: #FFFFFF;
-        background: rgba(139, 92, 246, 0.15);
+        color: #F1F5F9;
+        background: rgba(255, 255, 255, 0.05);
     }
     .stTabs [aria-selected="true"] {
-        background: linear-gradient(135deg, #7C3AED 0%, #3B82F6 100%) !important;
+        background: linear-gradient(135deg, rgba(99, 102, 241, 0.9), rgba(56, 189, 248, 0.9)) !important;
         color: #FFFFFF !important;
-        box-shadow: 0 4px 16px rgba(124, 58, 237, 0.4);
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        font-weight: 700 !important;
+        box-shadow: 0 4px 14px rgba(56, 189, 248, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
     }
 
-    /* ── Buttons ── */
+    /* ── Button Glow ── */
     .stButton > button {
-        background: linear-gradient(135deg, #7C3AED 0%, #2563EB 100%) !important;
+        background: linear-gradient(135deg, #6366F1 0%, #38BDF8 100%) !important;
         color: white !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        border-radius: 12px !important;
+        border: 1px solid rgba(255, 255, 255, 0.25) !important;
+        border-radius: 10px !important;
         font-weight: 700 !important;
-        padding: 0.65rem 1.8rem !important;
-        box-shadow: 0 6px 20px rgba(124, 58, 237, 0.35) !important;
-        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        padding: 0.6rem 1.6rem !important;
+        box-shadow: 0 4px 16px rgba(99, 102, 241, 0.35) !important;
+        transition: all 0.2s ease !important;
     }
     .stButton > button:hover {
-        opacity: 0.95;
-        transform: translateY(-2px) scale(1.02);
-        box-shadow: 0 10px 28px rgba(124, 58, 237, 0.5) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(56, 189, 248, 0.45) !important;
+        filter: brightness(1.08);
     }
 
-    /* ── Streamlit elements polish ── */
-    [data-testid="stMetricValue"] {
-        font-weight: 800 !important;
-        color: #A78BFA !important;
-    }
+    /* ── DataFrames ── */
     .stDataFrame {
         border-radius: 12px;
         overflow: hidden;
-        border: 1px solid rgba(139, 92, 246, 0.2) !important;
+        border: 1px solid rgba(255, 255, 255, 0.07) !important;
     }
 
     /* ── Scrollbar ── */
-    ::-webkit-scrollbar { width: 7px; height: 7px; }
-    ::-webkit-scrollbar-track { background: #07060e; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #090D16; }
     ::-webkit-scrollbar-thumb { 
-        background: linear-gradient(180deg, #7C3AED, #3B82F6); 
-        border-radius: 4px; 
+        background: rgba(148, 163, 184, 0.25); 
+        border-radius: 3px; 
+    }
+    ::-webkit-scrollbar-thumb:hover { 
+        background: rgba(56, 189, 248, 0.5); 
     }
     </style>
     """,
@@ -376,19 +449,8 @@ def short(text: str, n: int = 60) -> str:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Hero Banner
+# Sidebar – upload & controls
 # ─────────────────────────────────────────────────────────────────────────────
-st.markdown(
-    """
-    <div class="hero-banner">
-        <div class="hero-title">🔬 Hierarchical Concept Mapper</div>
-        <div class="hero-sub">
-            Paper-Isolated Analysis · Source Traceability · Similarity Matrix · Concept Hierarchy
-        </div>
-    </div>
-    """,
-    unsafe_allow_html=True,
-)
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -479,47 +541,69 @@ if analyse_btn and uploaded_files:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
-# Main content (shown only after processing)
+# Top Brand Bar
 # ─────────────────────────────────────────────────────────────────────────────
 papers: List[Paper] = st.session_state.papers
 sim_results: Dict   = st.session_state.sim_results
+
+status_badge = f'<span class="status-dot"></span> {len(papers)} Papers Loaded' if papers else '<span class="status-dot" style="background:#64748B;box-shadow:none;"></span> Ready for Ingestion'
+
+st.markdown(
+    f"""
+    <div class="saas-nav">
+        <div class="saas-brand">
+            <div class="brand-icon">⚡</div>
+            <div>
+                <span class="brand-title">IRNLP Concept Intelligence</span>
+                <span class="brand-tag">v2.4 Enterprise</span>
+            </div>
+        </div>
+        <div class="nav-status">
+            {status_badge}
+        </div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 if not papers:
     # ── Landing state ────────────────────────────────────────────────────────
     st.markdown(
         """
-        <div style="text-align:center; padding: 3rem 1rem 2rem;">
-            <div style="font-size:4.5rem; animation: pulse 3s infinite;">🔬</div>
-            <h2 style="font-size:2.2rem; font-weight:800; background:linear-gradient(90deg,#A78BFA,#60A5FA,#34D399); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-top:0.5rem;">
-                Intelligent Research Paper Analysis Suite
-            </h2>
-            <p style="color:rgba(224,224,255,0.7); max-width:650px; margin:0.8rem auto 2.5rem; font-size:1.05rem; line-height:1.6;">
-                Upload one or multiple PDF research papers in the sidebar to automatically extract concepts, construct multi-tier taxonomic hierarchies, compute semantic similarities, and explore interactive knowledge graphs.
+        <div style="text-align:center; padding: 2rem 1rem 2.5rem;">
+            <div style="display:inline-block; margin-bottom:1rem; background:rgba(56,189,248,0.1); border:1px solid rgba(56,189,248,0.3); padding:6px 18px; border-radius:9999px;">
+                <span style="color:#38BDF8; font-size:0.85rem; font-weight:700; letter-spacing:0.5px;">✨ NEXT-GEN AGENTIC RESEARCH INTELLIGENCE</span>
+            </div>
+            <h1 style="font-size:2.8rem; font-weight:800; letter-spacing:-1px; margin:0 auto 1rem; max-width:850px; background:linear-gradient(135deg, #FFFFFF 30%, #94A3B8 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
+                Hierarchical Concept Extraction & Cross-Paper Semantic Discovery
+            </h1>
+            <p style="color:#94A3B8; max-width:680px; margin:0 auto 2.5rem; font-size:1.05rem; line-height:1.7;">
+                Accelerate literature reviews with automated zero-leakage paper isolation, multi-tiered taxonomy mapping, tri-model keyword extraction, and dynamic semantic knowledge graphs.
             </p>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    st.markdown("### ⚡ Core Capabilities")
+    st.markdown('<div class="section-header">⚡ Platform Capabilities</div>', unsafe_allow_html=True)
     features = [
-        ("📑", "Identity & Isolation", "SHA-256 zero-leakage paper isolation & schema validation"),
-        ("🔑", "Tri-Model Keywords", "Ranked comparisons using TF-IDF, KeyBERT, & YAKE algorithms"),
-        ("🌳", "Multi-Tier Hierarchy", "Interactive Sunburst, Treemap, & Icicle concept visualizers"),
-        ("🔗", "Semantic Similarity", "Pairwise cosine matrix & dense SentenceTransformer embeddings"),
-        ("🕸️", "Knowledge Graph", "Cross-domain and CCC concept-to-concept semantic networks"),
-        ("🔍", "Source Traceability", "Full citation evidence with page numbers and confidence scores"),
-        ("📚", "Literature Review", "Unified comparative analysis across papers, methods, and results"),
-        ("💾", "Structured Export", "Instant Section 6 JSON export compliant with academic standards"),
+        ("📑", "Identity & Isolation", "SHA-256 zero-leakage paper isolation & rigorous section verification."),
+        ("🔑", "Tri-Model Keywords", "Ranked comparative keyword extraction via TF-IDF, KeyBERT, & YAKE algorithms."),
+        ("🌳", "Taxonomy & Hierarchy", "Interactive Sunburst, Treemap, and Icicle visualizers with multi-tier concept lineages."),
+        ("🔗", "Semantic Similarity", "Dense vector embeddings and cosine similarity heatmaps across paper corpuses."),
+        ("🕸️", "Knowledge Graph", "Cross-domain bridge discovery and Concept-to-Concept (CCC) semantic networks."),
+        ("🔍", "Source Traceability", "Grounded sentence citations with page numbers and confidence score validation."),
+        ("📚", "Literature Review", "Unified comparative synthesis across objectives, proposed methods, and metrics."),
+        ("💾", "Structured Export", "Instant Section 6 JSON exports formatted for academic publication pipelines."),
     ]
     cols = st.columns(4)
     for i, (icon, title_f, desc) in enumerate(features):
         with cols[i % 4]:
             st.markdown(
-                f"""<div class="metric-card" style="margin-bottom:1.2rem;min-height:160px;display:flex;flex-direction:column;justify-content:center;">
-                    <div style="font-size:2.2rem">{icon}</div>
-                    <div style="color:#FFFFFF;font-weight:700;font-size:1rem;margin-top:.6rem">{title_f}</div>
-                    <div style="color:rgba(224,224,255,0.65);font-size:.82rem;margin-top:.3rem;line-height:1.4;">{desc}</div>
+                f"""<div class="feature-card" style="margin-bottom:1rem;min-height:165px;">
+                    <div class="feature-icon-wrapper">{icon}</div>
+                    <div style="color:#F8FAFC;font-weight:700;font-size:0.98rem;margin-bottom:0.35rem;">{title_f}</div>
+                    <div style="color:#94A3B8;font-size:0.82rem;line-height:1.5;">{desc}</div>
                 </div>""",
                 unsafe_allow_html=True,
             )
@@ -527,12 +611,12 @@ if not papers:
     st.markdown("<br>", unsafe_allow_html=True)
     st.markdown(
         """
-        <div class="hierarchy-path" style="padding:1.4rem 1.8rem;background:rgba(124,58,237,0.1);border-left:4px solid #7C3AED;border-radius:14px;">
-            <h4 style="margin:0 0 8px 0;color:#A78BFA;font-size:1.1rem;font-weight:700;">🚀 Quick Start Workflow:</h4>
-            <div style="color:#E0E0E0;font-size:0.92rem;line-height:1.7;">
-                1️⃣ Use the left sidebar to upload <b>one or more PDF research papers</b>.<br>
-                2️⃣ Select your preferred <b>Similarity Algorithm</b> (TF-IDF, Semantic, or Combined).<br>
-                3️⃣ Click <b>🚀 Analyse Papers</b> to process papers and generate your interactive concept dashboards!
+        <div class="hierarchy-path" style="padding:1.4rem 1.8rem;background:rgba(56,189,248,0.06);border-left:4px solid #38BDF8;border-radius:14px;">
+            <div style="margin:0 0 8px 0;color:#38BDF8;font-size:1.05rem;font-weight:700;">🚀 Quick Start Workspace:</div>
+            <div style="color:#CBD5E1;font-size:0.92rem;line-height:1.7;">
+                1️⃣ Open the <b>Left Control Sidebar</b> and upload one or more research papers (PDF format).<br>
+                2️⃣ Configure your similarity strategy (<b>TF-IDF</b>, <b>Semantic Embeddings</b>, or <b>Hybrid</b>).<br>
+                3️⃣ Click <b>🚀 Analyse Papers</b> to launch the deep ingestion and visual mapping pipeline!
             </div>
         </div>
         """,
@@ -584,14 +668,23 @@ else:
         )
         p = papers[paper_selector]
 
-        # Identity Card
-        st.info(f"🆔 **Paper ID:** `{p.paper_id}` | 🔒 **File Hash (SHA-256):** `{p.file_hash[:20]}...` | 📅 **Year:** {p.year or 'N/A'}")
-
-        c1, c2, c3, c4 = st.columns(4)
-        with c1: st.metric("Pages", p.page_count)
-        with c2: st.metric("Words", f"{p.word_count:,}")
-        with c3: st.metric("Authors", len(p.authors))
-        with c4: st.metric("Domains", len(p.research_domains))
+        # Identity Card & Quick Stats
+        st.markdown(
+            f"""
+            <div style="background:rgba(15,23,42,0.6);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:1rem 1.4rem;margin-bottom:1.2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;">
+                <div style="font-size:0.88rem;color:#94A3B8;">
+                    🆔 <span style="color:#CBD5E1;font-family:'JetBrains Mono';font-weight:600;">{p.paper_id}</span> &nbsp;|&nbsp; 
+                    🔒 <span style="color:#64748B;font-family:'JetBrains Mono';">{p.file_hash[:22]}...</span>
+                </div>
+                <div style="display:flex;gap:10px;">
+                    <span class="kw-chip" style="color:#38BDF8;background:rgba(56,189,248,0.1);border-color:rgba(56,189,248,0.25);">📅 {p.year or 'N/A'}</span>
+                    <span class="kw-chip" style="color:#34D399;background:rgba(52,211,153,0.1);border-color:rgba(52,211,153,0.25);">📄 {p.page_count} Pages</span>
+                    <span class="kw-chip" style="color:#FBBF24;background:rgba(251,191,36,0.1);border-color:rgba(251,191,36,0.25);">📝 {p.word_count:,} Words</span>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
         st.markdown(f"### 📌 {p.title}")
         if p.authors:
@@ -739,21 +832,21 @@ else:
                 with col_t1:
                     st.dataframe(df, use_container_width=True, height=350)
                 with col_t2:
-                    colors = ["#6C63FF" if i % 2 == 0 else "#43BCCD" for i in range(len(df))]
+                    colors = ["#38BDF8" if i % 2 == 0 else "#818CF8" for i in range(len(df))]
                     fig = go.Figure(
                         go.Bar(
                             x=df["Score"],
                             y=df[col_name],
                             orientation="h",
-                            marker=dict(color=colors),
+                            marker=dict(color=colors, line=dict(width=0)),
                             text=df["Score"].astype(str),
                             textposition="outside",
                         )
                     )
                     fig.update_layout(
-                        paper_bgcolor="#0F0F1A",
-                        plot_bgcolor="#0F0F1A",
-                        font=dict(color="#E0E0E0"),
+                        paper_bgcolor="#0B0F19",
+                        plot_bgcolor="#0B0F19",
+                        font=dict(color="#F1F5F9", family="Plus Jakarta Sans"),
                         height=350,
                         margin=dict(l=120, r=30, t=20, b=20),
                         yaxis=dict(autorange="reversed"),
@@ -813,7 +906,7 @@ else:
             k_edge_trace = go.Scatter(
                 x=k_edge_x, y=k_edge_y,
                 mode="lines",
-                line=dict(width=1.2, color="#444466"),
+                line=dict(width=1.2, color="rgba(148, 163, 184, 0.35)"),
                 hoverinfo="none",
             )
 
@@ -825,10 +918,10 @@ else:
                     k_node_y.append(pos_kw[n][1])
                     k_node_text.append(n)
                     if attrs.get("node_type") == "paper":
-                        k_node_colors.append("#FF6584")
+                        k_node_colors.append("#F43F5E")
                         k_node_sizes.append(22)
                     else:
-                        k_node_colors.append("#00C49A")
+                        k_node_colors.append("#06B6D4")
                         k_node_sizes.append(14)
 
             k_node_trace = go.Scatter(
@@ -836,21 +929,21 @@ else:
                 mode="markers+text",
                 text=k_node_text,
                 textposition="top center",
-                textfont=dict(size=10, color="#E0E0E0"),
+                textfont=dict(size=10, color="#CBD5E1", family="Plus Jakarta Sans"),
                 marker=dict(
                     size=k_node_sizes,
                     color=k_node_colors,
-                    line=dict(width=1.5, color="#111"),
+                    line=dict(width=1.5, color="#0B0F19"),
                 ),
                 hovertemplate="<b>%{text}</b><extra></extra>",
             )
 
             fig_kw_net = go.Figure(data=[k_edge_trace, k_node_trace])
             fig_kw_net.update_layout(
-                title=dict(text=f"Keyword Association Network – {short(p2.title, 40)}", font=dict(size=15, color="#00C49A")),
-                paper_bgcolor="#0F0F1A",
-                plot_bgcolor="#0F0F1A",
-                font=dict(color="#E0E0E0"),
+                title=dict(text=f"<b style='color:#38BDF8;'>Keyword Association Network – {short(p2.title, 40)}</b>", font=dict(size=15, color="#38BDF8", family="Plus Jakarta Sans")),
+                paper_bgcolor="#0B0F19",
+                plot_bgcolor="#0B0F19",
+                font=dict(color="#F1F5F9", family="Plus Jakarta Sans"),
                 xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
                 yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
                 margin=dict(l=10, r=10, t=40, b=10),
@@ -1046,13 +1139,13 @@ else:
                     se = SimilarityEngine()
                     pairs = se.get_top_similar_pairs(matrix, labels, top_n=20)
                     for pair in pairs:
-                        score_color = "#00C49A" if pair["score"] > 0.7 else "#F9A826" if pair["score"] > 0.4 else "#FF6584"
+                        score_color = "#34D399" if pair["score"] > 0.7 else "#FBBF24" if pair["score"] > 0.4 else "#FB7185"
                         st.markdown(
                             f"""<div class="sim-pair">
-                                <span style="color:#ccc;flex:1">{pair['paper_a']}</span>
-                                <span style="color:#666">↔</span>
-                                <span style="color:#ccc;flex:1">{pair['paper_b']}</span>
-                                <span class="sim-score" style="color:{score_color}">{pair['score']:.3f}</span>
+                                <span style="color:#E2E8F0;flex:1;font-weight:500;">{pair['paper_a']}</span>
+                                <span style="color:#64748B;font-weight:700;">⟷</span>
+                                <span style="color:#E2E8F0;flex:1;font-weight:500;">{pair['paper_b']}</span>
+                                <span class="sim-score" style="color:{score_color};background:rgba(255,255,255,0.05);padding:4px 8px;border-radius:6px;">{pair['score']:.4f}</span>
                             </div>""",
                             unsafe_allow_html=True,
                         )
@@ -1101,8 +1194,11 @@ else:
 # ─────────────────────────────────────────────────────────────────────────────
 st.markdown(
     """
-    <div style="text-align:center;padding:2rem 0 1rem;color:rgba(255,255,255,0.2);font-size:0.8rem">
-        HMRP · Hierarchical Concept Mapping for Research Paper Similarity Analysis
+    <div style="text-align:center;padding:2.5rem 0 1.5rem;color:#64748B;font-size:0.82rem;line-height:1.6;border-top:1px solid rgba(255,255,255,0.06);margin-top:3.5rem;">
+        <div style="font-weight:600;color:#94A3B8;">IRNLP Intelligent Concept Discovery Engine · Enterprise Research Edition</div>
+        <div style="font-size:0.75rem;color:#64748B;margin-top:4px;">
+            Marwadi University · Department of Information and Communication Technology (ICT) · Research Paper Ingestion Pipeline
+        </div>
     </div>
     """,
     unsafe_allow_html=True,

@@ -74,12 +74,13 @@ class HeatmapViz:
         )
 
         fig.update_layout(
-            title=dict(text=title, font=dict(size=18, color="#6C63FF")),
-            paper_bgcolor="#0F0F1A",
-            plot_bgcolor="#0F0F1A",
-            font=dict(color="#E0E0E0"),
-            xaxis=dict(tickangle=-45),
-            margin=dict(l=60, r=20, t=60, b=120),
+            title=dict(text=f"<b style='color:#38BDF8;'>{title}</b>", font=dict(size=17, color="#38BDF8", family="Plus Jakarta Sans")),
+            paper_bgcolor="#0B0F19",
+            plot_bgcolor="#0B0F19",
+            font=dict(color="#F1F5F9", family="Plus Jakarta Sans"),
+            xaxis=dict(tickangle=-45, gridcolor="rgba(148, 163, 184, 0.1)"),
+            yaxis=dict(gridcolor="rgba(148, 163, 184, 0.1)"),
+            margin=dict(l=60, r=20, t=50, b=120),
             height=max(400, 80 * len(labels)),
         )
 

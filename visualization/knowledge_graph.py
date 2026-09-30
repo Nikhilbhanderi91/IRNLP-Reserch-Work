@@ -25,13 +25,13 @@ except ImportError:
     HAS_PYVIS = False
     log.warning("pyvis not installed; interactive HTML graph disabled.")
 
-# Node colour by type
+# Node colour by type - Modern Futuristic SaaS Palette
 _TYPE_COLORS = {
-    "paper":   "#FF6584",
-    "domain":  "#6C63FF",
-    "concept": "#43BCCD",
-    "keyword": "#00C49A",
-    "entity":  "#F9A826",
+    "paper":   "#F43F5E",  # Rose
+    "domain":  "#6366F1",  # Indigo
+    "concept": "#06B6D4",  # Cyan
+    "keyword": "#10B981",  # Emerald
+    "entity":  "#F59E0B",  # Amber
 }
 
 
@@ -194,34 +194,34 @@ class KnowledgeGraph:
                     name=ntype.capitalize(),
                     text=nodes,
                     textposition="top center",
-                    textfont=dict(size=8, color="#ccc"),
+                    textfont=dict(size=9, color="#CBD5E1", family="Plus Jakarta Sans"),
                     marker=dict(
                         size=size,
                         color=color,
-                        line=dict(width=1, color="#111"),
-                        opacity=0.9,
+                        line=dict(width=1.5, color="#0F172A"),
+                        opacity=0.95,
                     ),
-                    hovertemplate="<b>%{text}</b><br>Type: " + ntype + "<extra></extra>",
+                    hovertemplate="<b>%{text}</b><br>Type: <span style='color:#38BDF8;'>" + ntype + "</span><extra></extra>",
                 )
             )
 
         fig = go.Figure(data=[edge_trace] + node_traces)
         fig.update_layout(
-            title=dict(text=title, font=dict(size=18, color="#6C63FF")),
+            title=dict(text=f"<b style='color:#38BDF8;'>{title}</b>", font=dict(size=17, color="#38BDF8", family="Plus Jakarta Sans")),
             showlegend=True,
             legend=dict(
-                title="Node Type",
-                bgcolor="#1A1A2E",
-                bordercolor="#444",
-                font=dict(color="#ccc"),
+                title="Node Class",
+                bgcolor="rgba(15, 23, 42, 0.75)",
+                bordercolor="rgba(148, 163, 184, 0.2)",
+                font=dict(color="#CBD5E1", family="Plus Jakarta Sans"),
             ),
-            paper_bgcolor="#0F0F1A",
-            plot_bgcolor="#0F0F1A",
-            font=dict(color="#E0E0E0"),
+            paper_bgcolor="#0B0F19",
+            plot_bgcolor="#0B0F19",
+            font=dict(color="#F1F5F9", family="Plus Jakarta Sans"),
             xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
             yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-            margin=dict(l=10, r=10, t=60, b=10),
-            height=700,
+            margin=dict(l=10, r=10, t=50, b=10),
+            height=680,
         )
         return fig
 
@@ -241,8 +241,8 @@ class KnowledgeGraph:
             notebook=False,
             height="700px",
             width="100%",
-            bgcolor="#0F0F1A",
-            font_color="#E0E0E0",
+            bgcolor="#0B0F19",
+            font_color="#F1F5F9",
             directed=False,
         )
         net.set_options(json.dumps({
